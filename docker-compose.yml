@@ -1,0 +1,96 @@
+---
+version: "2.4"
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/:/etc/nginx/conf.d
+      - pma_data:/var/www/pma
+    ports:
+      - 8080:80
+      - 8081:8081
+      - 5173:5173
+    depends_on:
+      - laravel
+      - phpmyadmin
+      - npm
+
+  laravel:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+      target: app
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - mariadb
+
+  composer:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+      target: composer
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./src:/var/www/html
+
+  artisan:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+      target: artisan
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  mariadb:
+    image: mariadb:10.7
+    volumes:
+      - db_data:/var/lib/mysql
+    env_file:
+      - ./src/.env
+    healthcheck:
+      test: mysqladmin ping -h localhost
+      start_period: 10s
+      start_interval: 1s
+      timeout: 5s
+      retries: 5
+
+  npm:
+    image: node:18-bookworm-slim
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    user: node
+    entrypoint: ["npm"]
+    command: ["run", "dev"]
+
+  phpmyadmin:
+    image: phpmyadmin:fpm
+    volumes:
+      - pma_data:/var/www/html
+    env_file:
+      - ./src/.env
+    depends_on:
+      - mariadb
+
+volumes:
+  db_data:
+  pma_data:
