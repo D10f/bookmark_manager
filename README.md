@@ -89,3 +89,5 @@ This application is built with [Vue](https://v2.vuejs.org/v2/style-guide/) and [
 Home Page is built with Laravel, Vue, Inertia, Vite, Tailwind, Redis, MariaDB, Meilisearch, and many more amazing open source technologies. Thank you to all authors and contributors that made them possible available for the rest of us.
 
 Big thank you, as well, to the entire community built around these projects that helped me by providing guidance, advice or feedback in some capacity.
+
+Vector icon set [Wolf Kit Rounded Line](https://www.svgrepo.com/collection/wolf-kit-rounded-line-icons) by [SVG Repo](https://www.svgrepo.com/) - [CC License](https://www.svgrepo.com/page/licensing/#CC%20Attribution).
