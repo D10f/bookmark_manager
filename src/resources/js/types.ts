@@ -3,7 +3,7 @@ export type Icon = {
 };
 
 export type Bookmark = {
-    name: string;
     key: number;
+    name: string;
     url: string;
 };
