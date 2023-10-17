@@ -19,16 +19,20 @@
                     class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full"
                     @click="() => (isCollapsed = !isCollapsed)"
                 >
-                    <IconChevron />
+                    <IconChevron
+                        class="transition-transform duration-250"
+                        :class="{ 'rotate-180': !isCollapsed }"
+                    />
                 </button>
             </div>
         </header>
 
         <div
-            class="overflow-scroll transition-all ease-linear duration-500 px-4 py-2 max-h-[1000px]"
-            :class="{ '!max-h-0 py-0': isCollapsed }"
+            class="overflow-scroll transition-all duration-300 px-4 py-2 max-h-[50vh] will-change-auto"
+            tabindex="-1"
+            :class="{ '!max-h-0 !duration-200 !py-0': isCollapsed }"
         >
-            <ul class="flex flex-col transition-all" ref="bookmarkList">
+            <ul class="flex flex-col gap-2 transition-all" ref="bookmarkList">
                 <slot />
             </ul>
         </div>
@@ -38,8 +42,10 @@
 <script setup lang="ts">
 import IconChevron from "@/Shared/IconChevron.vue";
 import IconCog from "@/Shared/IconCog.vue";
-import { ref } from "vue";
+import { provide, ref } from "vue";
 
 defineProps<{ title: string }>();
 let isCollapsed = ref(false);
+
+provide("isCollapsed", isCollapsed);
 </script>

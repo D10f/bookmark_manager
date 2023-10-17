@@ -6,7 +6,87 @@ import BookmarkItem from "@/Shared/BookmarkItem.vue";
 import TheNavbar from "@/Shared/TheNavbar.vue";
 import { ref } from "vue";
 
+const educationBookmarks: any[] = [
+    {
+        key: Math.random(),
+        url: "https://tailwindcss.com",
+        name: "TailwindCSS",
+    },
+    {
+        key: Math.random(),
+        url: "https://vuejs.org",
+        name: "Vue",
+    },
+    {
+        key: Math.random(),
+        url: "https://vitejs.dev",
+        name: "Vite",
+    },
+    {
+        key: Math.random(),
+        url: "https://laravel.com",
+        name: "Laravel",
+    },
+];
+
 const entertainmentBookmarks: any[] = [
+    {
+        key: Math.random(),
+        url: "https://odysee.com",
+        name: "Odysee",
+    },
+    {
+        key: Math.random(),
+        url: "https://nebula.com",
+        name: "Nebula",
+    },
+    {
+        key: Math.random(),
+        url: "https://nebula.com",
+        name: "PeerTube",
+    },
+    {
+        key: Math.random(),
+        name: "test",
+    },
+    {
+        key: Math.random(),
+        url: "https://odysee.com",
+        name: "Odysee",
+    },
+    {
+        key: Math.random(),
+        url: "https://nebula.com",
+        name: "Nebula",
+    },
+    {
+        key: Math.random(),
+        url: "https://nebula.com",
+        name: "PeerTube",
+    },
+    {
+        key: Math.random(),
+        name: "test",
+    },
+    {
+        key: Math.random(),
+        url: "https://odysee.com",
+        name: "Odysee",
+    },
+    {
+        key: Math.random(),
+        url: "https://nebula.com",
+        name: "Nebula",
+    },
+    {
+        key: Math.random(),
+        url: "https://nebula.com",
+        name: "PeerTube",
+    },
+    {
+        key: Math.random(),
+        name: "test",
+    },
     {
         key: Math.random(),
         url: "https://odysee.com",
@@ -52,8 +132,6 @@ let showModal = ref(false);
                 :bookmark="bookmark"
                 :key="bookmark.key"
             />
-            <!-- <template v-for="bookmark in entertainmentBookmarks" :key="bookmark.key"> -->
-            <!-- </template> -->
         </BookmarkContainer>
 
         <BookmarkContainer title="Search">
@@ -64,57 +142,70 @@ let showModal = ref(false);
                 <BookmarkItem :bookmark="bookmark" />
             </template>
         </BookmarkContainer>
+
+        <BookmarkContainer title="Education">
+            <template
+                v-for="bookmark in educationBookmarks"
+                :key="bookmark.key"
+            >
+                <BookmarkItem :bookmark="bookmark" />
+            </template>
+        </BookmarkContainer>
     </main>
 
-    <Modal :show="showModal" @closeModal="showModal = false">
-        <template #header>
-            <h3>Create New Bookmark</h3>
-        </template>
+    <Teleport to="body">
+        <Modal :show="showModal" @closeModal="showModal = false">
+            <template #header>
+                <h3>Create New Bookmark</h3>
+            </template>
 
-        <template #default>
-            <form @submit.prevent>
-                <article class="py-2">
-                    <label for="category" class="text-md"> Category: </label>
-                    <input
-                        id="category"
-                        name="category"
-                        class="rounded-sm w-full p-1 text-slate-900 focus:outline-0"
-                        type="text"
-                        placeholder="Enter category"
-                    />
-                </article>
-                <article class="py-2">
-                    <label for="title" class="text-md"> Title: </label>
-                    <input
-                        id="title"
-                        name="title"
-                        class="rounded-sm w-full p-1 text-slate-900"
-                        type="text"
-                        placeholder="Enter title"
-                    />
-                </article>
-                <article class="py-2">
-                    <label for="url" class="text-md"> URL: </label>
-                    <input
-                        id="url"
-                        name="url"
-                        class="rounded-sm w-full p-1 text-slate-900"
-                        type="text"
-                        placeholder="Enter URL"
-                    />
-                </article>
-            </form>
-        </template>
+            <template #default>
+                <form @submit.prevent>
+                    <article class="py-2">
+                        <label for="category" class="text-md">
+                            Category:
+                        </label>
+                        <input
+                            id="category"
+                            name="category"
+                            class="rounded-sm w-full p-1 text-slate-900 focus:outline-0"
+                            type="text"
+                            placeholder="Enter category"
+                        />
+                    </article>
+                    <article class="py-2">
+                        <label for="title" class="text-md"> Title: </label>
+                        <input
+                            id="title"
+                            name="title"
+                            class="rounded-sm w-full p-1 text-slate-900"
+                            type="text"
+                            placeholder="Enter title"
+                        />
+                    </article>
+                    <article class="py-2">
+                        <label for="url" class="text-md"> URL: </label>
+                        <input
+                            id="url"
+                            name="url"
+                            class="rounded-sm w-full p-1 text-slate-900"
+                            type="text"
+                            placeholder="Enter URL"
+                        />
+                    </article>
+                </form>
+            </template>
 
-        <template #footer>
-            <button
-                @click="$emit('submitModal')"
-                class="text-right p-2 rounded-sm text-slate-900 bg-amber-400 hover:bg-amber-600 focus:bg-amber-600"
-            >
-                Submit
-            </button>
-        </template>
-    </Modal>
+            <template #footer>
+                <button
+                    @click="$emit('submitModal')"
+                    class="text-right p-2 rounded-sm text-slate-900 bg-amber-400 hover:bg-amber-600 focus:bg-amber-600"
+                >
+                    Submit
+                </button>
+            </template>
+        </Modal>
+    </Teleport>
 
     <aside class="fixed bottom-8 right-8">
         <button
@@ -130,6 +221,14 @@ let showModal = ref(false);
     />
 
     <div
-        class="absolute blur-2xl w-64 h-64 bg-pink-500 bottom-24 left-10 rounded-full animate-[pulse_40s_linear_infinite]"
+        class="absolute blur-xl w-32 h-32 bg-purple-800 bottom-64 left-48 rounded-full animate-[pulse_30s_linear_infinite]"
+    />
+
+    <div
+        class="absolute blur-xl w-32 h-32 bg-fuchsia-400 bottom-24 left-12 rounded-full animate-[pulse_30s_linear_infinite]"
+    />
+
+    <div
+        class="absolute blur-xl w-64 h-64 bg-pink-500 bottom-24 left-10 rounded-full animate-[pulse_40s_linear_infinite]"
     />
 </template>
