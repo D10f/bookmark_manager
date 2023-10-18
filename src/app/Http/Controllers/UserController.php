@@ -70,4 +70,21 @@ class UserController extends Controller
     {
         return Inertia::render('Users/Create');
     }
+
+    public function loginApi(Request $request)
+    {
+        $credentials = $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        if (auth()->attempt($credentials))
+        {
+            $user = User::where('username', $credentials['username'])->first();
+            $token = $user->createToken('sanctumTokenLabel')->plainTextToken;
+            return $token;
+        }
+
+        return 'Wrong username or password.';
+    }
 }
