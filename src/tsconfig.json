@@ -4,12 +4,15 @@
         "module": "commonjs",
         "baseUrl": "./",
         "paths": {
-            "@/*": ["resources/js/*"]
+            "@/*": [
+                "resources/js/*"
+            ]
         },
         "isolatedModules": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
+        "noImplicitThis": true,
         "skipLibCheck": true
     }
 }

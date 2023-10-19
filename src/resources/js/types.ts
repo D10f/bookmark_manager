@@ -4,6 +4,7 @@ export type Icon = {
 
 export type Bookmark = {
     key: number;
+    icon: string;
     name: string;
     url: string;
 };

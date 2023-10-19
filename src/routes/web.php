@@ -16,7 +16,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Home');
+    return Inertia::render('bookmarks/Index');
 });
 
 // Route::get('/login', [LoginController::class, 'create'])->name('login');

@@ -40,8 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import IconChevron from "@/Shared/IconChevron.vue";
-import IconCog from "@/Shared/IconCog.vue";
+import IconChevron from "@/shared/components/icons/IconChevron.vue";
+import IconCog from "@/shared/components/icons/IconCog.vue";
 import { provide, ref } from "vue";
 
 defineProps<{ title: string }>();
