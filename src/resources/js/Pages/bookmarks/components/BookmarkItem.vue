@@ -1,10 +1,9 @@
 <template>
     <li class="group/item flex justify-between items-center gap-2 rounded-md p-1">
-        <img v-if="bookmark.icon" :src="bookmark.icon" alt="" class="h-12 w-12 mr-2" />
-        <IconWorld v-else class="h-12 w-12 mr-2" />
+        <BookmarkFavicon :icon="favicon" />
 
         <a class="inline-block text-lg w-full h-full hover:text-yellow-500" :tabIndex="isCollapsed ? -1 : 0"
-            :href="bookmark.url ?? '#'">{{ bookmark.name }}</a>
+            :href="url ?? '#'">{{ name }}</a>
         <button class="group/edit md:invisible md:group-hover/item:visible rounded-full hover:bg-slate-600 h-8 w-9 p-2"
             :tabIndex="isCollapsed ? -1 : 0">
             <IconPencil class="group-hover/edit:fill-yellow-500" />
@@ -14,10 +13,19 @@
 
 <script setup lang="ts">
 import IconPencil from "@/shared/components/icons/IconPencil.vue";
-import IconWorld from "@/shared/components/icons/IconWorld.vue";
-import { Bookmark } from "@/types";
-import { inject } from "vue";
+import BookmarkFavicon from "@/Pages/bookmarks/components/BookmarkFavicon.vue";
+import { Bookmark } from "@/models/Bookmark";
+import { computed, inject } from "vue";
 
-defineProps<{ bookmark: Bookmark }>();
+const props = defineProps<{ bookmark: Bookmark }>();
 const isCollapsed = inject("isCollapsed");
+const _bookmark = new Bookmark(
+    props.bookmark.name,
+    props.bookmark.url,
+    props.bookmark.icon,
+);
+
+const favicon = computed(() => _bookmark.icon);
+const name = computed(() => _bookmark.name);
+const url = computed(() => _bookmark.url);
 </script>

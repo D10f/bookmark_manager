@@ -18,7 +18,8 @@
                     </option>
                 </datalist>
 
-                <BaseButton :disabled="loading" class="mt-2" type="submit">Submit</BaseButton>
+                <BaseButton :loading="loading" class="mt-2" type="submit">Submit
+                </BaseButton>
             </form>
         </Modal>
     </Teleport>
@@ -46,14 +47,26 @@ let loading = ref(false);
 async function createNewBookmark() {
     loading.value = true;
 
-    const bookmark = new Bookmark(name.value, url.value);
-
     try {
-        // name.value = "";
-        // url.value = "";
-        // category.value = "";
+        const response = await fetch(`/api/favicon/${url.value}`);
+        const responseType = response.headers.get("content-type");
+        let favicon: string | ArrayBuffer;
+
+        if (responseType?.includes("text/plain")) {
+            favicon = await response.text();
+        } else if (responseType?.includes("application/octet-stream")) {
+            favicon = await response.arrayBuffer();
+        } else {
+            throw new Error("Unable to determine response type.");
+        }
+
+        const bookmark = new Bookmark(name.value, url.value, favicon);
+        bookmarkStore.create(bookmark, category.value);
     } catch (e) {
     } finally {
+        name.value = "";
+        url.value = "";
+        category.value = "";
         loading.value = false;
     }
 }

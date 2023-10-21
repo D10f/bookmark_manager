@@ -4,13 +4,7 @@ import {
     entertainmentBookmarks,
     searchEngineBookmarks,
 } from "./data";
-
-export type Bookmark = {
-    key: number;
-    icon: string;
-    name: string;
-    url: string;
-};
+import { Bookmark } from "@/models/Bookmark";
 
 type BookmarkGroup = {
     title: string;

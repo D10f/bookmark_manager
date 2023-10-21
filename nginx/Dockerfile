@@ -11,4 +11,4 @@ RUN groupadd -g ${GID} ${NGINX_USER} && \
     sed -i -E "s/^user\s+(www-data|nginx)/user\t${NGINX_USER}/g" /etc/nginx/nginx.conf
 
 EXPOSE 80
-
+EXPOSE 443

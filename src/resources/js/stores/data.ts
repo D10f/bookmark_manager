@@ -54,17 +54,17 @@ export const documentationBookmarks: any[] = [
     {
         url: "https://vuejs.org",
         name: "Vue.js",
-        icon: "https:/vuejs.org/logo.svg",
+        // icon: "https:/vuejs.org/logo.svg",
     },
     {
         url: "https://vitejs.dev",
         name: "Vite",
-        icon: "https:/vitejs.dev/logo.svg",
+        // icon: "https:/vitejs.dev/logo.svg",
     },
     {
         url: "https://pinia.vuejs.org",
         name: "Pinia",
-        icon: "https://pinia.vuejs.org/logo.svg",
+        // icon: "https://pinia.vuejs.org/logo.svg",
     },
     // {
     //     url: "https://tailwindcss.com",
