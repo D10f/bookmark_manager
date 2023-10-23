@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookmarkController;
 use Inertia\Inertia;
 
 /*
@@ -15,33 +15,10 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('bookmarks/Index');
+Route::get('/', function() {
+    return Inertia::render('Welcome');
 });
-Route::get('/create', function () {
-    return Inertia::render('bookmarks/Create');
-});
-
-// Route::get('/login', [LoginController::class, 'create'])->name('login');
-// Route::post('/login', [LoginController::class, 'store']);
-// Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth');
-
-// Route::middleware('auth')->group(function () {
-
-//     Route::get('/', function () {
-//         return Inertia::render('Home');
-//     });
-
-//     Route::get('/users', [UserController::class, 'index']);
-//     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->can('edit', 'user');
-//     Route::put('/users/{user}', [UserController::class, 'update']);
-//     Route::post('/users', [UserController::class, 'store']);
-//     Route::get('/users/create', [UserController::class, 'create'])->can('create', User::class);
-
-//     Route::get('/settings', function () {
-//         return Inertia::render('Settings');
-//     });
-
-
-// });
+Route::get('/app', [BookmarkController::class, 'index']);
+Route::get('/app/create', [BookmarkController::class, 'create']);
+Route::get('/app/edit/{id}/edit', [BookmarkController::class, 'edit']);
 

@@ -1,5 +1,5 @@
 <template>
-    <div
+    <section
         class="bg-slate-900 bg-opacity-80 border-b border-b-slate-700 rounded-md shadow-y shadow-sm shadow-slate-900 z-10"
     >
         <header
@@ -10,13 +10,49 @@
                 class="md:opacity-25 md:group-hover:opacity-100 flex gap-3 text-xl"
             >
                 <slot name="actions" />
+                <button
+                    v-show="collapsable"
+                    class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full"
+                    @click="toggleCollapse"
+                >
+                    <IconChevron
+                        class="transition-transform duration-250"
+                        :class="{ 'rotate-180': !isCollapsed }"
+                    />
+                </button>
             </div>
         </header>
 
-        <slot />
-    </div>
+        <div
+            class="overflow-hidden transition-all duration-300 px-4 py-2 max-h-[50vh] will-change-auto"
+            tabindex="-1"
+            :class="{
+                '!max-h-0 !duration-200 !py-0': isCollapsed,
+                'overflow-scroll': !isCollapsing,
+            }"
+        >
+            <slot />
+        </div>
+    </section>
 </template>
 
 <script setup lang="ts">
-defineProps<{ title: string }>();
+import { ref, provide } from "vue";
+import IconChevron from "./icons/IconChevron.vue";
+
+withDefaults(defineProps<{ title: string; collapsable?: boolean }>(), {
+    collapsable: false,
+});
+
+let isCollapsed = ref(false);
+let isCollapsing = ref(false);
+
+function toggleCollapse() {
+    isCollapsed.value = !isCollapsed.value;
+    isCollapsing.value = true;
+
+    setTimeout(() => (isCollapsing.value = false), 250);
+}
+
+provide("isCollapsed", isCollapsed);
 </script>

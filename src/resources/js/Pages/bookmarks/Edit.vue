@@ -5,8 +5,8 @@
             Back
         </ButtonLink>
     </aside>
-    <CardContainer title="Create New Bookmark">
-        <form class="px-4 py-2" @submit.prevent="createNewBookmark">
+    <CardContainer title="Edit Bookmark">
+        <form class="px-4 py-2" @submit.prevent="">
             <BaseInput label="Name" v-model="name" />
 
             <BaseInput label="URL" v-model="url" />
@@ -40,23 +40,23 @@ const url = ref("");
 const category = ref("");
 let loading = ref(false);
 
-async function createNewBookmark() {
-    loading.value = true;
+// async function createNewBookmark() {
+//     loading.value = true;
 
-    try {
-        const response = await fetch(`/api/favicon/${url.value}`);
-        const favicon = await response.arrayBuffer();
-        const bookmark = new Bookmark(name.value, url.value, favicon);
-        bookmarkStore.createBookmark(bookmark, category.value);
-    } catch (e) {
-        console.log((e as Error).message);
-    } finally {
-        name.value = "";
-        url.value = "";
-        category.value = "";
-        loading.value = false;
-    }
-}
+//     try {
+//         const response = await fetch(`/api/favicon/${url.value}`);
+//         const favicon = await response.arrayBuffer();
+//         const bookmark = new Bookmark(name.value, url.value, favicon);
+//         bookmarkStore.createBookmark(bookmark, category.value);
+//     } catch (e) {
+//         console.log((e as Error).message);
+//     } finally {
+//         name.value = "";
+//         url.value = "";
+//         category.value = "";
+//         loading.value = false;
+//     }
+// }
 </script>
 
 <script lang="ts">
