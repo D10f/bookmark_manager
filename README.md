@@ -29,7 +29,7 @@ Home Page includes a settings panel with different options to tweak the look and
 
 2.  ### Clone the repository
 
-        Download, or clone, this repository to your local machine.
+    Download, or clone, this repository to your local machine.
 
     ```console
     $ git clone https://github.com/d10f/home_page.git

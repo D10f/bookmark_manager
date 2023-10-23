@@ -1,5 +1,5 @@
 import { createApp, h } from "vue";
-import { createInertiaApp } from "@inertiajs/vue3";
+import { Head, Link, createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createPinia } from "pinia";
 import AppLayout from "@/shared/Layouts/App.vue";
@@ -32,6 +32,8 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(createPinia())
+            .component("Link", Link)
+            .component("Head", Head)
             .mount(el);
     },
 });

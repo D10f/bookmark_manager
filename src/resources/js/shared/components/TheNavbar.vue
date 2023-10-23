@@ -1,6 +1,6 @@
 <template>
     <header
-        class="z-9 font-bold text-md text-white bg-slate-950 border-b border-b-slate-700 rounded-md shadow-y shadow-sm shadow-slate-900 p-4 flex justify-between items-center">
+        class="relative z-10 font-bold text-md text-white bg-slate-950 border-b border-b-slate-700 rounded-md shadow-y shadow-sm shadow-slate-900 p-4 flex justify-between items-center">
         <h3>Welcome back, Test User!</h3>
 
         <div class="flex gap-2 text-xl">

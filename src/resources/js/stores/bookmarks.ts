@@ -5,66 +5,51 @@ import {
     searchEngineBookmarks,
 } from "./data";
 import { Bookmark } from "@/models/Bookmark";
+import { computed, ref } from "vue";
 
-type BookmarkGroup = {
-    title: string;
+export type BookmarkGroup = {
     order: number;
     collapsed: boolean;
     data: Bookmark[];
 };
 
-type BookmarkState = {
-    bookmarks: BookmarkGroup[];
-};
-
-export const useBookmarkStore = defineStore("bookmark", {
-    state: (): BookmarkState => ({
-        bookmarks: [
-            {
-                title: "Entertainment",
-                order: 1,
-                collapsed: false,
-                data: entertainmentBookmarks,
-            },
-            {
-                title: "Search",
-                order: 2,
-                collapsed: false,
-                data: searchEngineBookmarks,
-            },
-            {
-                title: "Docs",
-                order: 3,
-                collapsed: false,
-                data: documentationBookmarks,
-            },
-        ],
-    }),
-
-    actions: {
-        async create(bookmark: Bookmark, category: string) {
-            let bookmarkBox = this.bookmarks.find((b) => b.title === category);
-
-            if (!bookmarkBox) {
-                this.bookmarks.push({
-                    title: category,
-                    collapsed: false,
-                    order: 1,
-                    data: [bookmark],
-                });
-
-                return;
-            }
-
-            bookmarkBox.data.push(bookmark);
+export const useBookmarkStore = defineStore("bookmark", () => {
+    const bookmarks = ref<Record<string, BookmarkGroup>>({
+        Entertainment: {
+            order: 1,
+            collapsed: false,
+            data: entertainmentBookmarks,
         },
-        async update() { },
-        async delete() { },
-    },
-
-    getters: {
-        categories(state) {
-            return state.bookmarks.map((b) => b.title);
+        Search: {
+            order: 2,
+            collapsed: false,
+            data: searchEngineBookmarks,
         },
-    },
+        Documentation: {
+            order: 3,
+            collapsed: false,
+            data: documentationBookmarks,
+        },
+    });
+
+    const categories = computed(() => Object.keys(bookmarks.value));
+
+    const totalCategories = computed(() => categories.value.length);
+
+    async function createBookmark(bookmark: Bookmark, category: string) {
+        const bookmarkBox = bookmarks.value[category];
+
+        if (!bookmarkBox) {
+            bookmarks.value[category] = {
+                order: totalCategories.value,
+                collapsed: false,
+                data: [bookmark],
+            };
+            return;
+        }
+
+        bookmarkBox.data.push(bookmark);
+    }
+
+    return { bookmarks, categories, totalCategories, createBookmark };
 });

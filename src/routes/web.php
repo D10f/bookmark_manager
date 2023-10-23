@@ -18,6 +18,9 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('bookmarks/Index');
 });
+Route::get('/create', function () {
+    return Inertia::render('bookmarks/Create');
+});
 
 // Route::get('/login', [LoginController::class, 'create'])->name('login');
 // Route::post('/login', [LoginController::class, 'store']);
