@@ -12,11 +12,10 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./nginx/conf.d/:/etc/nginx/conf.d
-      - ./nginx/ssl/:/etc/nginx/ssl
+      # - ./nginx/ssl/:/etc/nginx/ssl
       - pma_data:/var/www/pma
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
       - 8081:8081
       - 5173:5173
     depends_on:
