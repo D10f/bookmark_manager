@@ -29,3 +29,10 @@ const favicon = computed(() => _bookmark.icon);
 const name = computed(() => _bookmark.name);
 const url = computed(() => _bookmark.url);
 </script>
+
+<style>
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+</style>

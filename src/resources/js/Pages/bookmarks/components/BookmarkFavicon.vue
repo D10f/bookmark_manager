@@ -3,7 +3,7 @@
         <IconWorld v-if="!icon" />
         <template v-else>
             <img v-if="icon.isBlob" :src="icon.buffer" class="object-contain" alt="" />
-            <div v-if="icon.isSVG" v-html="icon.buffer" />
+            <svg v-if="icon.isSVG" v-html="icon.buffer" />
         </template>
     </div>
 </template>

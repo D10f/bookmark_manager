@@ -10,15 +10,24 @@
 
                 <BaseInput label="URL" v-model="url" />
 
-                <BaseInput label="Category" list="categories" v-model="category" />
+                <BaseInput
+                    label="Category"
+                    list="categories"
+                    v-model="category"
+                />
 
                 <datalist id="categories">
-                    <option v-for="category in bookmarkStore.categories" :key="category" :value="category">
+                    <option
+                        v-for="category in bookmarkStore.categories"
+                        :key="category"
+                        :value="category"
+                    >
                         {{ category }}
                     </option>
                 </datalist>
 
-                <BaseButton :loading="loading" class="mt-2" type="submit">Submit
+                <BaseButton :loading="loading" class="mt-2" type="submit"
+                    >Submit
                 </BaseButton>
             </form>
         </Modal>
@@ -49,20 +58,23 @@ async function createNewBookmark() {
 
     try {
         const response = await fetch(`/api/favicon/${url.value}`);
-        const responseType = response.headers.get("content-type");
-        let favicon: string | ArrayBuffer;
+        const favicon = await response.arrayBuffer();
+        // const favicon = await response.text();
+        // console.log(favicon);
+        // return;
 
-        if (responseType?.includes("text/plain")) {
-            favicon = await response.text();
-        } else if (responseType?.includes("application/octet-stream")) {
-            favicon = await response.arrayBuffer();
-        } else {
-            throw new Error("Unable to determine response type.");
-        }
+        // if (responseType?.includes("text/plain")) {
+        //     favicon = await response.text();
+        // } else if (responseType?.includes("application/octet-stream")) {
+        //     favicon = await response.arrayBuffer();
+        // } else {
+        //     throw new Error("Unable to determine response type.");
+        // }
 
         const bookmark = new Bookmark(name.value, url.value, favicon);
         bookmarkStore.create(bookmark, category.value);
     } catch (e) {
+        console.log((e as Error).message);
     } finally {
         name.value = "";
         url.value = "";
