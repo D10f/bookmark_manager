@@ -1,13 +1,15 @@
 <template>
-    <Head>
-        <meta
-            name="description"
-            head-key="description"
-            content="A modern bookmark manager for the DIY enthusiasts."
-        />
-    </Head>
+    <!-- <Head> -->
+    <!--     <meta -->
+    <!--         name="description" -->
+    <!--         head-key="description" -->
+    <!--         content="A modern bookmark manager for the DIY enthusiasts." -->
+    <!--     /> -->
+    <!-- </Head> -->
     <div class="bg-slate-700 text-white min-h-screen p-1">
-        <main class="flex flex-col gap-2 relative z-10">
+        <TheNavbar />
+
+        <main class="flex flex-col gap-2">
             <slot />
         </main>
 
@@ -28,3 +30,8 @@
         />
     </div>
 </template>
+
+<script setup lang="ts">
+// import Head from "@inertiajs/vue3";
+import TheNavbar from "@/shared/components/TheNavbar.vue";
+</script>

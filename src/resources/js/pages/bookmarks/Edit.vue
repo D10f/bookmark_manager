@@ -1,7 +1,9 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
         <ButtonLink to="/">
-            <IconChevron class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2" />
+            <IconChevron
+                class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2"
+            />
             Back
         </ButtonLink>
     </aside>
@@ -14,12 +16,18 @@
             <BaseInput label="Category" list="categories" v-model="category" />
 
             <datalist id="categories">
-                <option v-for="category in bookmarkStore.categories" :key="category" :value="category">
+                <option
+                    v-for="category in bookmarkStore.categories"
+                    :key="category"
+                    :value="category"
+                >
                     {{ category }}
                 </option>
             </datalist>
 
-            <BaseButton :loading="loading" class="mt-2" type="submit">Submit</BaseButton>
+            <BaseButton :loading="loading" class="mt-2" type="submit"
+                >Submit</BaseButton
+            >
         </form>
     </CardContainer>
 </template>
@@ -60,7 +68,7 @@ let loading = ref(false);
 </script>
 
 <script lang="ts">
-import App from "@/shared/Layouts/App.vue";
+import App from "@/shared/layouts/App.vue";
 export default {
     Layout: App,
 };

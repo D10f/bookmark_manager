@@ -8,7 +8,7 @@
             </button>
         </template>
 
-        <ul class="flex flex-col gap-2 transition-all" ref="bookmarkList">
+        <ul class="flex flex-col gap-2 transition-all">
             <slot />
         </ul>
     </CardContainer>

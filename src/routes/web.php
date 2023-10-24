@@ -16,9 +16,18 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function() {
-    return Inertia::render('Welcome');
+    return Inertia::render('Welcome', [
+        'bookmarks_index' => route('bookmarks.index')
+    ]);
 });
-Route::get('/app', [BookmarkController::class, 'index']);
-Route::get('/app/create', [BookmarkController::class, 'create']);
-Route::get('/app/edit/{id}/edit', [BookmarkController::class, 'edit']);
+
+/*
+|--------------------------------------------------------------------------
+| Bookmark Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/app', [BookmarkController::class, 'index'])->name('bookmarks.index');
+Route::get('/app/bookmarks/create', [BookmarkController::class, 'create'])->name('bookmarks.create');
+Route::get('/app/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
+Route::post('/app/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
 

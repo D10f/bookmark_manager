@@ -1,5 +1,5 @@
 <template>
-    <Link :href="to" class="inline ml-auto hover:text-slate-900 focus:text-slate-900">
+    <Link :href="to" class="inline-block hover:text-slate-900 focus:text-slate-900">
     <BaseButton>
         <slot />
     </BaseButton>

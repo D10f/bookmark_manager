@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import IconPencil from "@/shared/components/icons/IconPencil.vue";
-import BookmarkFavicon from "@/Pages/bookmarks/components/BookmarkFavicon.vue";
+import BookmarkFavicon from "@/pages/bookmarks/components/BookmarkFavicon.vue";
 import { Bookmark } from "@/models/Bookmark";
 import { computed, inject } from "vue";
 

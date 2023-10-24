@@ -8,16 +8,15 @@
             v-bind="$attrs"
             @input="$emit('update:modelValue', $event.target.value)"
         />
+        <span v-if="error" class="text-yellow-400 text-sm inline-block">
+            <IconAlert class="inline fill-yellow-400 w-4 h-4" /> {{ error }}
+        </span>
     </div>
 </template>
 
 <script setup lang="ts">
-withDefaults(
-    defineProps<{ label?: string; modelValue: string; prefix?: string }>(),
-    {
-        modelValue: "",
-    },
-);
+import IconAlert from "@/shared/components/icons/IconAlert.vue";
+defineProps<{ label?: string; error?: string; modelValue: string }>();
 defineEmits<{
     "update:modelValue": [newValue: string];
 }>();
