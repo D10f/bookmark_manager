@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import {
-    documentationBookmarks,
-    entertainmentBookmarks,
-    searchEngineBookmarks,
-} from "./data";
+// import {
+//     documentationBookmarks,
+//     entertainmentBookmarks,
+//     searchEngineBookmarks,
+// } from "./data";
 import { Bookmark } from "@/models/Bookmark";
 import { computed, ref } from "vue";
 
@@ -18,17 +18,17 @@ export const useBookmarkStore = defineStore("bookmark", () => {
         Entertainment: {
             order: 1,
             collapsed: false,
-            data: entertainmentBookmarks,
+            data: [],
         },
         Search: {
             order: 2,
             collapsed: false,
-            data: searchEngineBookmarks,
+            data: [],
         },
         Documentation: {
             order: 3,
             collapsed: false,
-            data: documentationBookmarks,
+            data: [],
         },
     });
 

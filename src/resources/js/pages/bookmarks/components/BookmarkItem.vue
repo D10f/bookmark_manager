@@ -9,8 +9,8 @@
         <a
             class="inline-block text-lg w-full h-full hover:text-yellow-500"
             :tabIndex="isCollapsed ? -1 : 0"
-            :href="url ?? '#'"
-            >{{ name }}</a
+            :href="bookmark.url ?? '#'"
+            >{{ bookmark.name }}</a
         >
         <button
             class="group/edit md:invisible md:group-hover/item:visible rounded-full hover:bg-slate-600 h-8 w-9 p-2"
@@ -26,16 +26,13 @@
 import IconPencil from "@/shared/components/icons/IconPencil.vue";
 import BookmarkFavicon from "@/pages/bookmarks/components/BookmarkFavicon.vue";
 import { Bookmark } from "@/models/Bookmark";
-import { computed, inject } from "vue";
+import { inject } from "vue";
 
 defineEmits<{
     showEditModal: [bookmark: Bookmark];
 }>();
-const props = defineProps<{ bookmark: Bookmark }>();
+defineProps<{ bookmark: Bookmark }>();
 const isCollapsed = inject("isCollapsed");
-
-const name = computed(() => props.bookmark.name);
-const url = computed(() => props.bookmark.url);
 </script>
 
 <style>

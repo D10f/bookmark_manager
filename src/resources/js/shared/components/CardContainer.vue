@@ -10,15 +10,16 @@
                 class="md:opacity-25 md:group-hover:opacity-100 flex gap-3 text-xl"
             >
                 <slot name="actions" />
-                <button
-                    v-show="collapsable"
-                    class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full"
-                    @click="toggleCollapse"
-                >
-                    <IconChevron
-                        class="transition-transform duration-250"
-                        :class="{ 'rotate-180': !isCollapsed }"
-                    />
+                <button v-show="collapsable" @click="toggleCollapse">
+                    <Tooltip
+                        :tooltip="isCollapsed ? 'Expand' : 'Collapse'"
+                        :showTooltip="false"
+                    >
+                        <IconChevron
+                            class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250"
+                            :class="{ 'rotate-180': !isCollapsed }"
+                        />
+                    </Tooltip>
                 </button>
             </div>
         </header>
@@ -38,7 +39,8 @@
 
 <script setup lang="ts">
 import { ref, provide } from "vue";
-import IconChevron from "./icons/IconChevron.vue";
+import Tooltip from "@/shared/components/Tooltip.vue";
+import IconChevron from "@/shared/components/icons/IconChevron.vue";
 
 withDefaults(defineProps<{ title: string; collapsable?: boolean }>(), {
     collapsable: false,

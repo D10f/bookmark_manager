@@ -39,7 +39,7 @@ class FaviconController extends Controller
 
             if ($response->status() === 200)
             {
-                Storage::put('favicons/' . $domain . '/' . 'favicon.ico', $response->body());
+                Storage::put('app/public/favicons/' . $domain . '/' . 'favicon.ico', $response->body());
                 return $response->body();
             }
 
@@ -61,7 +61,7 @@ class FaviconController extends Controller
             $faviconRaw = $manager->make($faviconRaw)->resize(32,32)->encode('ico');
         }
 
-        Storage::put('favicons/' . $domain . '/' . 'favicon.ico', $faviconRaw);
+        Storage::put('app/public/favicons/' . $domain . '/' . 'favicon.ico', $faviconRaw);
 
         return response($faviconRaw);
     }

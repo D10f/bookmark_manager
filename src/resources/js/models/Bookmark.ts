@@ -1,29 +1,42 @@
+import { extractDomain } from "@/shared/helpers/urlExtractor";
+
 export class Bookmark {
     public key: number;
-    private _icon: ArrayBuffer | undefined;
-    public name: string;
-    public url: string;
+    public iconUrl: string;
 
-    constructor(name: string, url: string, icon?: ArrayBuffer) {
+    constructor(
+        public name: string,
+        public url: string,
+    ) {
         this.key = Math.random();
-        this.name = name;
-        this.url = url.includes("http") ? url : `https://${url}`;
-        this._icon = icon;
+        this.iconUrl = `/storage/favicons/${extractDomain(url)}/favicon.ico`;
     }
 
-    get icon() {
-        if (!this._icon) {
-            return undefined;
-        }
-        const blob = new Blob([this._icon]);
-        const iconUrl = URL.createObjectURL(blob);
-        setTimeout(() => {
-            URL.revokeObjectURL(iconUrl);
-        }, 0);
-        return iconUrl;
-    }
+    // get icon() {
+    //     if (this._icon) return this._icon;
+    //     if (this._icon === null) return null;
 
-    get hasIcon() {
-        return Boolean(this.icon);
-    }
+    //     const domain = ;
+    //     let iconUrl = "";
+
+    //     try {
+    //         return fetch(`/api/favicon/${domain}`)
+    //             .then((response) => response.arrayBuffer())
+    //             .then((buffer) => {
+    //                 const blob = new Blob([buffer]);
+    //                 iconUrl = URL.createObjectURL(blob);
+    //                 return iconUrl;
+    //             });
+    //     } catch (e) {
+    //         this._icon = null;
+    //     } finally {
+    //         setTimeout(() => {
+    //             URL.revokeObjectURL(iconUrl);
+    //         }, 0);
+    //     }
+    // }
+
+    // get hasIcon() {
+    //     return Boolean(this.icon);
+    // }
 }

@@ -10,16 +10,36 @@
     <CardContainer title="Register New Account">
         <template #actions>
             <Link :href="auth_login">
-            <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
+                <Tooltip tooltip="Already have an account?">
+                    <IconProfile
+                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full"
+                    />
+                </Tooltip>
             </Link>
         </template>
         <form class="px-4 py-2" @submit.prevent="submitForm">
-            <BaseInput label="Email" name="email" v-model="form.email" :error="form.errors.email" />
+            <BaseInput
+                label="Email"
+                name="email"
+                v-model="form.email"
+                :error="form.errors.email"
+            />
 
-            <BaseInput label="Password" type="text" name="password" v-model="form.password" :error="form.errors.password" />
+            <BaseInput
+                label="Password"
+                type="text"
+                name="password"
+                v-model="form.password"
+                :error="form.errors.password"
+            />
 
-            <BaseInput label="Confirm Password" type="text" name="confirmPassword" v-model="form.password_confirmation"
-                :error="form.errors.password_confirmation" />
+            <BaseInput
+                label="Confirm Password"
+                type="text"
+                name="confirmPassword"
+                v-model="form.password_confirmation"
+                :error="form.errors.password_confirmation"
+            />
 
             <BaseButton :loading="form.processing" class="mt-2" type="submit">
                 Sign Up
@@ -33,6 +53,7 @@
 import Site from "@/shared/layouts/Site.vue";
 import BaseInput from "@/shared/components/forms/BaseInput.vue";
 import BaseButton from "@/shared/components/BaseButton.vue";
+import Tooltip from "@/shared/components/Tooltip.vue";
 import CardContainer from "@/shared/components/CardContainer.vue";
 import IconProfile from "@/shared/components/icons/IconProfile.vue";
 import { useForm } from "@inertiajs/vue3";
