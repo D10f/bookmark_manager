@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
 use DiDom\Document;
+use Illuminate\Http\File;
 
 class FaviconController extends Controller
 {
@@ -15,6 +17,7 @@ class FaviconController extends Controller
         $html = Http::get(urlencode($url));
         $document = new Document($html->body());
         $faviconMeta = $document->first('link[rel=icon]');
+        $domain = preg_replace('/(?:https?:\/\/)?(\w+)/', '$1', $url);
 
         if ($faviconMeta === null)
         {
@@ -29,12 +32,14 @@ class FaviconController extends Controller
         if ($faviconMeta === null)
         {
             // one last attempt to route /favicon.ico
-            $response = Http::get(
-                str_starts_with($url, 'http') ? $url : 'http://' . $url . '/favicon.ico'
-            );
+            // $response = Http::get(
+            //     str_starts_with($url, 'http') ? $url : 'http://' . $url . '/favicon.ico'
+            // );
+            $response = Http::get(urlencode($url . '/favicon.ico'));
 
             if ($response->status() === 200)
             {
+                Storage::put('favicons/' . $domain . '/' . 'favicon.ico', $response->body());
                 return $response->body();
             }
 
@@ -51,12 +56,13 @@ class FaviconController extends Controller
 
         $faviconRaw = $response->body();
 
-        if (str_contains($faviconUrl, '.ico'))
+        if (!str_contains($faviconUrl, '.ico'))
         {
-            return response($faviconRaw);
-        } else
-        {
-            return $manager->make($faviconRaw)->resize(32,32)->encode('ico');
+            $faviconRaw = $manager->make($faviconRaw)->resize(32,32)->encode('ico');
         }
+
+        Storage::put('favicons/' . $domain . '/' . 'favicon.ico', $faviconRaw);
+
+        return response($faviconRaw);
     }
 }
