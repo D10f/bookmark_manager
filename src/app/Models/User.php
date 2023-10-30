@@ -43,8 +43,16 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function setPasswordAttribute($value)
+    /**
+     *
+     */
+    public function bookmarks()
     {
-        $this->attributes['password'] = bcrypt($value);
+        return $this->hasMany(Bookmark::class, 'user_id');
     }
+
+    // public function setPasswordAttribute($value)
+    // {
+    //     $this->attributes['password'] = bcrypt($value);
+    // }
 }

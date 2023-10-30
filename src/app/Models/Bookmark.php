@@ -17,16 +17,16 @@ class Bookmark extends Model
     protected $fillable = [
         'name',
         'url',
-        'category'
+        'category',
+        'favicon_url',
+        'user_id'
     ];
 
     /**
-     * The attributes that should be cast.
      *
-     * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

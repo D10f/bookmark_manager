@@ -2,67 +2,109 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Process;
 use DiDom\Document;
-use Illuminate\Http\File;
 
 class FaviconController extends Controller
 {
-
-    public function fetch(string $url)
+    /**
+     * Given a URL it extracts the domain name portion and returns it.
+     */
+    private function extractDomainName(string $url)
     {
-        $html = Http::get(urlencode($url));
-        $document = new Document($html->body());
-        $faviconMeta = $document->first('link[rel=icon]');
-        $domain = preg_replace('/(?:https?:\/\/)?(\w+)/', '$1', $url);
+        return preg_replace('/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n]+)/', '$1', $url);
+    }
 
-        if ($faviconMeta === null)
+    /**
+     * Given a valid URL it produces a canonical representation using the domain
+     * name only, and HTTPS for the protocol.
+     */
+    private function makeCanonicalUrl(string $url)
+    {
+        $domainName = $this->extractDomainName(urlencode($url));
+        return "https://$domainName";
+    }
+
+    /**
+     * Parses the HTML document for the main domain page and attempts to obtain
+     * the URL used to download the favicon. If not found, for example when the
+     * favicon is not available until JS has loaded, it defaults to /favicon.ico
+     */
+    private function extractFaviconUrl(string $url)
+    {
+        $canonicalUrl = $this->makeCanonicalUrl($url);
+        $html = Http::get($canonicalUrl)->body();
+        $doc = new Document($html);
+        $tag = null;
+
+        $targetAttributes = [
+            'link[rel=icon]',
+            'link[rel=shortcut icon]',
+            'link[rel=alternate icon]'
+        ];
+
+        foreach ($targetAttributes as $attribute)
         {
-            $faviconMeta = $document->first('link[rel=shortcut icon]');
-        }
+            $tag = $doc->first($attribute);
 
-        if ($faviconMeta === null)
-        {
-            $faviconMeta = $document->first('link[rel=alternate icon]');
-        }
-
-        if ($faviconMeta === null)
-        {
-            // one last attempt to route /favicon.ico
-            // $response = Http::get(
-            //     str_starts_with($url, 'http') ? $url : 'http://' . $url . '/favicon.ico'
-            // );
-            $response = Http::get(urlencode($url . '/favicon.ico'));
-
-            if ($response->status() === 200)
+            if ($tag)
             {
-                Storage::put('app/public/favicons/' . $domain . '/' . 'favicon.ico', $response->body());
-                return $response->body();
-            }
-
-            return response('Unable to locate favicon.', 404);
+                $url = $tag->getAttribute('href');
+                return str_starts_with($url, 'http') ? $url : "$canonicalUrl/$url";
+            };
         }
 
-        $faviconUrl = $faviconMeta->getAttribute('href');
+        return "$canonicalUrl/favicon.ico";
+    }
 
-        $response = Http::get(
-            str_starts_with($faviconUrl, 'http') ? $faviconUrl : 'http://' . $url . $faviconUrl
-        );
+    /**
+     * Determines whether the favicon has already been downloaded or not.
+     */
+    private function alreadyOnDisk(string $url)
+    {
+        return Storage::has("public/favicons/$url.png");
+    }
 
-        $manager = new ImageManager(['driver' => 'imagick']);
-
-        $faviconRaw = $response->body();
-
-        if (!str_contains($faviconUrl, '.ico'))
+    /**
+     * Spawns a separate process to convert the image through ImageMagick.
+     */
+    private function convertImage(string $input, array $options = [])
+    {
+        $cmd = "convert";
+        foreach ($options as $key => $value)
         {
-            $faviconRaw = $manager->make($faviconRaw)->resize(32,32)->encode('ico');
+            $cmd = "$cmd -$key $value ";
         }
+        $cmd = "$cmd $input " . preg_replace('/tmp$/', 'png', $input);
 
-        Storage::put('app/public/favicons/' . $domain . '/' . 'favicon.ico', $faviconRaw);
+        return Process::path(storage_path('app/public/favicons'))->start($cmd);
+    }
 
-        return response($faviconRaw);
+    /**
+     * Public controller function that downloads a favicon if it's not already
+     * present in the default Storage disk.
+     */
+    public function downloadFavicon(string $url)
+    {
+        $domainName = $this->extractDomainName($url);
+
+        if ($this->alreadyOnDisk($domainName))
+        {
+            return response('Already on disk.');
+        };
+
+        $faviconUrl = $this->extractFaviconUrl($url);
+
+        $response = Http::get($faviconUrl);
+        Storage::put("public/favicons/$domainName.png", $response->body());
+
+        // $faviconPath = "storage/app/public/favicons/$domainName.tmp";
+        $this->convertImage("$domainName.png", [
+            'background' => 'none',
+            'format' => 'png',
+            'resize' => '32x32'
+        ]);
     }
 }

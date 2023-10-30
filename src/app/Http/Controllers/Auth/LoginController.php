@@ -59,15 +59,16 @@ class LoginController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'name' => ['min:2', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'name' => ['min:2', 'max:255', 'nullable'],
+            'email' => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'min:6', 'max:255', 'confirmed'],
         ]);
 
         // TODO: create random string for username
-        User::create($attributes);
+        $attributes['name'] = 'Test User';
+        $user = User::create($attributes);
 
-        $request->session()->regenerate();
+        Auth::login($user);
 
         return redirect(route('bookmarks.index'));
     }

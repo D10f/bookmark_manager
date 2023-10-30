@@ -12,6 +12,7 @@ class BookmarkController extends Controller
     public function index()
     {
         return Inertia::render('bookmarks/Index', [
+            'bookmarks' => auth()->user()->bookmarks()->get(),
             'bookmarks_create' => route('bookmarks.create')
         ]);
     }
@@ -29,7 +30,7 @@ class BookmarkController extends Controller
     //     return Inertia::render('bookmarks/Edit', [
     //         'bookmark' => $bookmark,
     //         'bookmarks_index' => route('bookmarks.index'),
-    //         // 'bookmarks_update' => route('bookmarks.update'),
+    //         'bookmarks_update' => route('bookmarks.update'),
     //     ]);
     // }
 
@@ -42,8 +43,11 @@ class BookmarkController extends Controller
         $bookmark = $request->validate([
             'name' => [ 'required', 'max:255', 'min:1'],
             'url' => ['required', 'url:http,https'],
-            'category' => ['required', 'max:255', 'min:1']
+            'category' => ['required', 'max:255', 'min:1'],
+            'favicon_url' => ['required']
         ]);
+
+        $bookmark['user_id'] = auth()->id();
 
         Bookmark::create($bookmark);
 
