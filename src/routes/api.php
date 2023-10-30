@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', [UserController::class, 'loginApi']);
+// Route::post('/login', [UserController::class, 'loginApi']);
 
-Route::get('/favicon/{url}', [FaviconController::class, 'fetch']);
+Route::get('/favicon/{url}', [FaviconController::class, 'downloadFavicon']);

@@ -40,5 +40,20 @@ Route::middleware('auth')->group(function() {
     Route::get('/app/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
     Route::post('/app/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile routes
+    |--------------------------------------------------------------------------
+    */
+    // Route::get('/app/profile/{profile}', [UserController::class, 'show'])->name('user.show');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Settings routes
+    |--------------------------------------------------------------------------
+    */
+    // Route::get('/app/settings/{profile}', [SettingsController::class, 'show'])->name('settings.show');
 });
 
