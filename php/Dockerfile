@@ -13,6 +13,8 @@ RUN groupadd -g ${GID} ${PHP_USER} && \
     sed -i -E "s/^(user|group) = www-data/\1 = ${PHP_USER}/g" /usr/local/etc/php-fpm.d/www.conf
 
 RUN apt-get update && apt-get install -y \
+    inkscape \
+    imagemagick \
     libmagickwand-dev \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
