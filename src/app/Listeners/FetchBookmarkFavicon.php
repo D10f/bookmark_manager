@@ -120,7 +120,7 @@ class FetchBookmarkFavicon
         // $faviconPath = "storage/app/public/favicons/$domainName.tmp";
         $this->convertImage("$domainName.png", [
             'background' => 'none',
-            'format' => 'png',
+            'format' => 'webp',
             'resize' => '32x32'
         ]);
     }
