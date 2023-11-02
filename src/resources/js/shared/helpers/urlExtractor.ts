@@ -21,3 +21,7 @@ export function makeCanonical(url: string) {
     const protocol = extractProtocol(url);
     return protocol + domain;
 }
+
+export function buildUrl(url: string) {
+    return url.match(/^https?:\/\/.+$/) ? url : `https://${url}`;
+}

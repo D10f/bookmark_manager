@@ -14,19 +14,19 @@
         </main>
 
         <div
-            class="fixed blur-xl w-96 h-24 bg-cyan-500 top-1/4 left-1/3 rounded-full animate-[spin_200s_linear_infinite]"
+            class="fixed blur-xl w-96 h-24 bg-cyan-500 top-1/4 left-1/3 rounded-full"
         />
 
         <div
-            class="fixed blur-xl w-32 h-32 bg-purple-800 bottom-64 left-48 rounded-full animate-[pulse_30s_linear_infinite]"
+            class="fixed blur-xl w-32 h-32 bg-purple-800 bottom-64 left-48 rounded-full"
         />
 
         <div
-            class="fixed blur-xl w-32 h-32 bg-fuchsia-400 bottom-24 left-12 rounded-full animate-[pulse_30s_linear_infinite]"
+            class="fixed blur-xl w-32 h-32 bg-fuchsia-400 bottom-24 left-12 rounded-full"
         />
 
         <div
-            class="fixed blur-xl w-64 h-64 bg-pink-500 bottom-24 left-10 rounded-full animate-[pulse_40s_linear_infinite]"
+            class="fixed blur-xl w-64 h-64 bg-pink-500 bottom-24 left-10 rounded-full"
         />
     </div>
 </template>

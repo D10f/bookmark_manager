@@ -1,6 +1,6 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <ButtonLink to="/">
+        <ButtonLink :to="bookmarks_index">
             <IconChevron
                 class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2"
             />
@@ -8,12 +8,58 @@
         </ButtonLink>
     </aside>
     <CardContainer title="Edit Bookmark">
-        <form class="px-4 py-2" @submit.prevent="">
-            <BaseInput label="Name" v-model="name" />
+        <template #actions>
+            <button @click="showDeleteModal = true">
+                <Tooltip :tooltip="'Delete bookmark'">
+                    <IconTrash
+                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250"
+                    />
+                </Tooltip>
+            </button>
 
-            <BaseInput label="URL" v-model="url" />
+            <Teleport to="body">
+                <Modal
+                    :show="showDeleteModal"
+                    @close-modal="showDeleteModal = false"
+                >
+                    <template #header>
+                        <h3 class="font-md">Delete "{{ bookmark.name }}"?</h3>
+                    </template>
 
-            <BaseInput label="Category" list="categories" v-model="category" />
+                    <p>This action cannot be undone.</p>
+                    <template #footer>
+                        <div class="flex justify-end items-center gap-2">
+                            <BaseButton @click="deleteBookmark" type="submit">
+                                Delete
+                            </BaseButton>
+                            <BaseButton @click="showDeleteModal = false"
+                                >Cancel</BaseButton
+                            >
+                        </div>
+                    </template>
+                </Modal>
+            </Teleport>
+        </template>
+
+        <form class="px-4 py-2" @submit.prevent="updateBookmark">
+            <BaseInput
+                label="Name"
+                v-model="form.name"
+                :error="form.errors.name"
+            />
+
+            <BaseInput
+                label="URL"
+                v-model="form.url"
+                :error="form.errors.url"
+            />
+
+            <BaseInput
+                label="Category"
+                list="categories"
+                v-model="form.category"
+                :error="form.errors.category"
+            />
 
             <datalist id="categories">
                 <option
@@ -25,46 +71,57 @@
                 </option>
             </datalist>
 
-            <BaseButton :loading="loading" class="mt-2" type="submit"
-                >Submit</BaseButton
-            >
+            <BaseButton :loading="form.processing" class="mt-2" type="submit">
+                Submit
+
+                <template #loading> ... </template>
+            </BaseButton>
         </form>
     </CardContainer>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { router, useForm } from "@inertiajs/vue3";
 import { useBookmarkStore } from "@/stores/bookmarks";
+import { buildUrl } from "@/shared/helpers/urlExtractor";
 import { Bookmark } from "@/models/Bookmark";
+import Modal from "@/shared/components/TheModal.vue";
 import BaseButton from "@/shared/components/BaseButton.vue";
 import ButtonLink from "@/shared/components/ButtonLink.vue";
 import BaseInput from "@/shared/components/forms/BaseInput.vue";
+import Tooltip from "@/shared/components/Tooltip.vue";
 import CardContainer from "@/shared/components/CardContainer.vue";
 import IconChevron from "@/shared/components/icons/IconChevron.vue";
+import IconTrash from "@/shared/components/icons/IconTrash.vue";
+
+const props = defineProps<{
+    bookmark: Bookmark;
+    bookmarks_index: string;
+}>();
 
 const bookmarkStore = useBookmarkStore();
-const name = ref("");
-const url = ref("");
-const category = ref("");
-let loading = ref(false);
+const showDeleteModal = ref(false);
 
-// async function createNewBookmark() {
-//     loading.value = true;
+const updateEndpoint = `/app/bookmarks/${props.bookmark.id}/update`;
+const deleteEndpoint = `/app/bookmarks/${props.bookmark.id}/delete`;
 
-//     try {
-//         const response = await fetch(`/api/favicon/${url.value}`);
-//         const favicon = await response.arrayBuffer();
-//         const bookmark = new Bookmark(name.value, url.value, favicon);
-//         bookmarkStore.createBookmark(bookmark, category.value);
-//     } catch (e) {
-//         console.log((e as Error).message);
-//     } finally {
-//         name.value = "";
-//         url.value = "";
-//         category.value = "";
-//         loading.value = false;
-//     }
-// }
+let form = useForm({
+    name: props.bookmark.name,
+    url: props.bookmark.url,
+    category: props.bookmark.category,
+});
+
+async function updateBookmark() {
+    form.transform((data) => ({
+        ...data,
+        url: buildUrl(data.url),
+    })).post(updateEndpoint);
+}
+
+function deleteBookmark() {
+    router.delete(deleteEndpoint);
+}
 </script>
 
 <script lang="ts">

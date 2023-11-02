@@ -84,7 +84,7 @@ class FetchBookmarkFavicon
      */
     private function alreadyOnDisk(string $url): bool
     {
-        return Storage::has("public/favicons/$url.png");
+        return Storage::has("public/favicons/$url.webp");
     }
 
     /**
@@ -97,7 +97,7 @@ class FetchBookmarkFavicon
         {
             $cmd = "$cmd -$key $value ";
         }
-        $cmd = "$cmd $input " . preg_replace('/tmp$/', 'png', $input);
+        $cmd = "$cmd $input " . preg_replace('/tmp$/', 'webp', $input);
 
         Process::path(storage_path('app/public/favicons'))->start($cmd);
     }
@@ -115,10 +115,10 @@ class FetchBookmarkFavicon
         $faviconUrl = $this->extractFaviconUrl($url);
 
         $response = Http::get($faviconUrl);
-        Storage::put("public/favicons/$domainName.png", $response->body());
+        Storage::put("public/favicons/$domainName.webp", $response->body());
 
         // $faviconPath = "storage/app/public/favicons/$domainName.tmp";
-        $this->convertImage("$domainName.png", [
+        $this->convertImage("$domainName.webp", [
             'background' => 'none',
             'format' => 'webp',
             'resize' => '32x32'

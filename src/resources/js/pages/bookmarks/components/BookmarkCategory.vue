@@ -21,13 +21,9 @@ import { Bookmark } from "@/models/Bookmark";
 import Tooltip from "@/shared/components/Tooltip.vue";
 import IconCog from "@/shared/components/icons/IconCog.vue";
 import CardContainer from "@/shared/components/CardContainer.vue";
-import { provide, ref } from "vue";
 
 defineProps<{ category: string }>();
 defineEmits<{
     showEditModal: [bookmark: Bookmark];
 }>();
-let isCollapsed = ref(false);
-
-provide("isCollapsed", isCollapsed);
 </script>

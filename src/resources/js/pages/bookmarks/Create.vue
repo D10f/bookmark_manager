@@ -50,8 +50,9 @@
 <script setup lang="ts">
 import { useForm } from "@inertiajs/vue3";
 import { useBookmarkStore } from "@/stores/bookmarks";
-import { Bookmark } from "@/models/Bookmark";
-import { makeCanonical } from "@/shared/helpers/urlExtractor";
+import { buildUrl } from "@/shared/helpers/urlExtractor";
+// import { Bookmark } from "@/models/Bookmark";
+// import { extractDomain, makeCanonical } from "@/shared/helpers/urlExtractor";
 import BaseButton from "@/shared/components/BaseButton.vue";
 import ButtonLink from "@/shared/components/ButtonLink.vue";
 import BaseInput from "@/shared/components/forms/BaseInput.vue";
@@ -64,27 +65,19 @@ const props = defineProps<{
 }>();
 
 const bookmarkStore = useBookmarkStore();
+
 let form = useForm({
     name: "",
     url: "",
     category: "",
+    favicon_url: "",
 });
 
 async function createNewBookmark() {
-    try {
-        // const response = await fetch(`/api/favicon/${form.url}`);
-        // const favicon = await response.arrayBuffer();
-        // const bookmark = new Bookmark(form.name, form.url, favicon);
-        // const bookmark = new Bookmark(form.name, canonicalUrl);
-        // bookmarkStore.createBookmark(bookmark, form.category);
-
-        form.transform((data) => ({
-            ...data,
-            url: makeCanonical(data.url),
-        })).post(props.bookmarks_store);
-    } catch (e) {
-        console.log((e as Error).message);
-    }
+    form.transform((data) => ({
+        ...data,
+        url: buildUrl(data.url),
+    })).post(props.bookmarks_store);
 }
 </script>
 

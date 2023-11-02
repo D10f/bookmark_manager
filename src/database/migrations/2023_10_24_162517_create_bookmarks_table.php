@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('url', 2048);
             $table->string('category', 255);
-            $table->string('favicon_url', 255);
+            $table->string('favicon_url', 255)->nullable();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

@@ -25,14 +25,35 @@ class BookmarkController extends Controller
         ]);
     }
 
-    // public function edit(Bookmark $bookmark)
-    // {
-    //     return Inertia::render('bookmarks/Edit', [
-    //         'bookmark' => $bookmark,
-    //         'bookmarks_index' => route('bookmarks.index'),
-    //         'bookmarks_update' => route('bookmarks.update'),
-    //     ]);
-    // }
+    public function edit(Bookmark $bookmark)
+    {
+        return Inertia::render('bookmarks/Edit', [
+            'bookmark' => $bookmark,
+            'bookmarks_index' => route('bookmarks.index'),
+        ]);
+    }
+
+    // TODO: Add update favicon with custom image
+    public function update(Bookmark $bookmark, Request $request): RedirectResponse
+    {
+        $newData = $request->validate([
+            'name' => [ 'required', 'max:255', 'min:1'],
+            'url' => ['required', 'url:http,https'],
+            'category' => ['required', 'max:255', 'min:1'],
+        ]);
+
+        // $bookmark['user_id'] = auth()->id();
+
+        $bookmark->update($newData);
+
+        return redirect(route('bookmarks.index'));
+    }
+
+    public function delete(Bookmark $bookmark)
+    {
+        $bookmark->delete();
+        return redirect(route('bookmarks.index'));
+    }
 
     /**
      * See: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
@@ -44,7 +65,6 @@ class BookmarkController extends Controller
             'name' => [ 'required', 'max:255', 'min:1'],
             'url' => ['required', 'url:http,https'],
             'category' => ['required', 'max:255', 'min:1'],
-            'favicon_url' => ['required']
         ]);
 
         $bookmark['user_id'] = auth()->id();
