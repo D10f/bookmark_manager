@@ -52,7 +52,7 @@ class FaviconController extends Controller
             if ($tag)
             {
                 $url = $tag->getAttribute('href');
-                return str_starts_with($url, 'http') ? $url : "$canonicalUrl/$url";
+                return str_starts_with($url, 'http') ? $url : $canonicalUrl . $url;
             };
         }
 
@@ -64,7 +64,7 @@ class FaviconController extends Controller
      */
     private function alreadyOnDisk(string $url)
     {
-        return Storage::has("public/favicons/$url.png");
+        return Storage::has("public/favicons/$url.webp");
     }
 
     /**
@@ -77,7 +77,7 @@ class FaviconController extends Controller
         {
             $cmd = "$cmd -$key $value ";
         }
-        $cmd = "$cmd $input " . preg_replace('/tmp$/', 'png', $input);
+        $cmd = "$cmd $input " . preg_replace('/tmp$/', 'webp', $input);
 
         return Process::path(storage_path('app/public/favicons'))->start($cmd);
     }
@@ -98,12 +98,12 @@ class FaviconController extends Controller
         $faviconUrl = $this->extractFaviconUrl($url);
 
         $response = Http::get($faviconUrl);
-        Storage::put("public/favicons/$domainName.png", $response->body());
+        Storage::put("public/favicons/$domainName.webp", $response->body());
 
         // $faviconPath = "storage/app/public/favicons/$domainName.tmp";
-        $this->convertImage("$domainName.png", [
+        $this->convertImage("$domainName.webp", [
             'background' => 'none',
-            'format' => 'png',
+            'format' => 'webp',
             'resize' => '32x32'
         ]);
     }

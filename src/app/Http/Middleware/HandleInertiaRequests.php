@@ -43,6 +43,8 @@ class HandleInertiaRequests extends Middleware
                     'username' => Auth::user()->name,
                 ],
             ] : null,
+
+            'new_bookmark' => $request->session()->get('new_bookmark'),
         ]);
     }
 }

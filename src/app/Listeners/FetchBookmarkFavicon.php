@@ -72,7 +72,7 @@ class FetchBookmarkFavicon
             if ($tag)
             {
                 $url = $tag->getAttribute('href');
-                return str_starts_with($url, 'http') ? $url : "$canonicalUrl/$url";
+                return str_starts_with($url, 'http') ? $url : $canonicalUrl . $url;
             };
         }
 

@@ -68,7 +68,7 @@ class BookmarkController extends Controller
     /**
      * See: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
 
         $bookmark = $request->validate([
@@ -79,10 +79,10 @@ class BookmarkController extends Controller
 
         $bookmark['user_id'] = auth()->id();
 
-        Bookmark::create($bookmark);
+        $new_bookmark = Bookmark::create($bookmark);
 
-        return redirect(route('bookmarks.index'));
-        // return to_route('sdfsd');
-        // return back()->withErrors([]);
+        return redirect()->route('bookmarks.index')->with([
+            "new_bookmark" => $new_bookmark->id
+        ]);
     }
 }
