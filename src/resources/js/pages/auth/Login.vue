@@ -21,6 +21,7 @@
             <BaseInput
                 label="Email"
                 v-model="form.email"
+                autofocus
                 :error="form.errors.email"
             />
 

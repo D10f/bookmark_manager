@@ -1,7 +1,9 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
         <ButtonLink :to="index_url">
-            <IconChevron class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2" />
+            <IconChevron
+                class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2"
+            />
             Back
         </ButtonLink>
     </aside>
@@ -10,12 +12,16 @@
             <button @click="showDeleteModal = true">
                 <Tooltip :tooltip="'Delete bookmark'">
                     <IconTrash
-                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" />
+                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250"
+                    />
                 </Tooltip>
             </button>
 
             <Teleport to="body">
-                <Modal :show="showDeleteModal" @close-modal="showDeleteModal = false">
+                <Modal
+                    :show="showDeleteModal"
+                    @close-modal="showDeleteModal = false"
+                >
                     <template #header>
                         <h3 class="font-md">Delete "{{ bookmark.name }}"?</h3>
                     </template>
@@ -26,7 +32,9 @@
                             <BaseButton @click="deleteBookmark" type="submit">
                                 Delete
                             </BaseButton>
-                            <BaseButton @click="showDeleteModal = false">Cancel</BaseButton>
+                            <BaseButton @click="showDeleteModal = false"
+                                >Cancel</BaseButton
+                            >
                         </div>
                     </template>
                 </Modal>
@@ -34,14 +42,32 @@
         </template>
 
         <form class="px-4 py-2" @submit.prevent="updateBookmark">
-            <BaseInput label="Name" v-model="form.name" :error="form.errors.name" />
+            <BaseInput
+                label="Name"
+                v-model="form.name"
+                :error="form.errors.name"
+                autofocus
+            />
 
-            <BaseInput label="URL" v-model="form.url" :error="form.errors.url" />
+            <BaseInput
+                label="URL"
+                v-model="form.url"
+                :error="form.errors.url"
+            />
 
-            <BaseInput label="Category" list="categories" v-model="form.category" :error="form.errors.category" />
+            <BaseInput
+                label="Category"
+                list="categories"
+                v-model="form.category"
+                :error="form.errors.category"
+            />
 
             <datalist id="categories">
-                <option v-for="category in bookmarkStore.categories" :key="category" :value="category">
+                <option
+                    v-for="category in bookmarkStore.categories"
+                    :key="category"
+                    :value="category"
+                >
                     {{ category }}
                 </option>
             </datalist>

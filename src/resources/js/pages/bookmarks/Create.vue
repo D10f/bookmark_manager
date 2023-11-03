@@ -1,20 +1,40 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
         <ButtonLink :to="index_url">
-            <IconChevron class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2" />
+            <IconChevron
+                class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2"
+            />
             Back
         </ButtonLink>
     </aside>
     <CardContainer title="Create New Bookmark">
         <form class="px-4 py-2" @submit.prevent="createNewBookmark">
-            <BaseInput label="Name" v-model="form.name" :error="form.errors.name" />
+            <BaseInput
+                label="Name"
+                v-model="form.name"
+                :error="form.errors.name"
+                autofocus
+            />
 
-            <BaseInput label="URL" v-model="form.url" :error="form.errors.url" />
+            <BaseInput
+                label="URL"
+                v-model="form.url"
+                :error="form.errors.url"
+            />
 
-            <BaseInput label="Category" list="categories" v-model="form.category" :error="form.errors.category" />
+            <BaseInput
+                label="Category"
+                list="categories"
+                v-model="form.category"
+                :error="form.errors.category"
+            />
 
             <datalist id="categories">
-                <option v-for="category in bookmarkStore.categories" :key="category" :value="category">
+                <option
+                    v-for="category in bookmarkStore.categories"
+                    :key="category"
+                    :value="category"
+                >
                     {{ category }}
                 </option>
             </datalist>
