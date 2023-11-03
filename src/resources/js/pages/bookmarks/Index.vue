@@ -1,6 +1,6 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <ButtonLink :to="bookmarks_create">
+        <ButtonLink :to="create_url">
             <IconPlus class="group-hover:fill-slate-950 fill-white w-4 h-4 mr-2" />
             Add New Bookmark
         </ButtonLink>
@@ -22,8 +22,8 @@ import { Bookmark } from "@/models/Bookmark";
 import { BookmarkGroup } from "@/stores/bookmarks";
 
 const props = defineProps<{
-    bookmarks_create: string;
     bookmarks: Bookmark[];
+    create_url: string;
 }>();
 
 const bookmarkStore = useBookmarkStore();

@@ -1,20 +1,11 @@
 <template>
-    <li
-        class="group/item flex justify-between items-center gap-2 rounded-md py-1"
-    >
+    <li class="group/item flex justify-between items-center gap-2 rounded-md py-1">
         <BookmarkFavicon :bookmark="bookmark" />
 
-        <a
-            class="inline-block text-lg w-full h-full hover:text-yellow-500"
-            :tabIndex="isCollapsed ? -1 : 0"
-            :href="bookmark.url ?? '#'"
-            target="_blank"
-            >{{ bookmark.name }}</a
-        >
-        <Link :href="editUrl">
-            <IconPencil
-                class="flex justify-center items-center w-10 h-8 hover:bg-slate-600 p-2 rounded-full"
-            />
+        <a class="inline-block text-lg w-full h-full hover:text-yellow-500" :tabIndex="isCollapsed ? -1 : 0"
+            :href="bookmark.url ?? '#'" target="_blank">{{ bookmark.name }}</a>
+        <Link :href="bookmark.edit_url">
+        <IconPencil class="flex justify-center items-center w-10 h-8 hover:bg-slate-600 p-2 rounded-full" />
         </Link>
 
         <!-- <button -->
@@ -30,14 +21,11 @@
 <script setup lang="ts">
 import IconPencil from "@/shared/components/icons/IconPencil.vue";
 import BookmarkFavicon from "@/pages/bookmarks/components/BookmarkFavicon.vue";
-// import ButtonLink from "@/shared/components/ButtonLink.vue";
 import { Bookmark } from "@/models/Bookmark";
-import { inject, ref } from "vue";
+import { inject } from "vue";
 
-const props = defineProps<{ bookmark: Bookmark }>();
+defineProps<{ bookmark: Bookmark }>();
 const isCollapsed = inject("isCollapsed");
-
-const editUrl = ref(`/app/bookmarks/${props.bookmark.id}/edit`);
 </script>
 
 <style>

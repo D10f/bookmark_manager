@@ -6,6 +6,7 @@ export class Bookmark {
         public url: string,
         public id: string,
         public category: string,
+        public edit_url: string,
     ) {}
 
     get iconUrl() {

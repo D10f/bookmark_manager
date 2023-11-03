@@ -12,16 +12,24 @@ class BookmarkController extends Controller
     public function index()
     {
         return Inertia::render('bookmarks/Index', [
-            'bookmarks' => auth()->user()->bookmarks()->get(),
-            'bookmarks_create' => route('bookmarks.create')
+            'bookmarks' => auth()->user()->bookmarks()->get()->map(function($bookmark) {
+                return [
+                    'id' => $bookmark->id,
+                    'name' => $bookmark->name,
+                    'url' => $bookmark->url,
+                    'category' => $bookmark->category,
+                    'edit_url' => route('bookmarks.edit', $bookmark->id),
+                ];
+            }),
+            'create_url' => route('bookmarks.create')
         ]);
     }
 
     public function create()
     {
         return Inertia::render('bookmarks/Create', [
-            'bookmarks_index' => route('bookmarks.index'),
-            'bookmarks_store' => route('bookmarks.store')
+            'index_url' => route('bookmarks.index'),
+            'store_url' => route('bookmarks.store')
         ]);
     }
 
@@ -29,7 +37,9 @@ class BookmarkController extends Controller
     {
         return Inertia::render('bookmarks/Edit', [
             'bookmark' => $bookmark,
-            'bookmarks_index' => route('bookmarks.index'),
+            'index_url' => route('bookmarks.index'),
+            'edit_url' => route('bookmarks.update', ['bookmark' => $bookmark->id]),
+            'delete_url' => route('bookmarks.delete', ['bookmark' => $bookmark->id]),
         ]);
     }
 
