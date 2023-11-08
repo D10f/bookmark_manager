@@ -48,7 +48,7 @@ class BookmarkController extends Controller
     {
         $newData = $request->validate([
             'name' => [ 'required', 'max:255', 'min:1'],
-            'url' => ['required', 'url:http,https'],
+            'url' => ['required', 'max:' . env('APP_MAX_URL_LENGTH', 2048), 'min:1'],
             'category' => ['required', 'max:255', 'min:1'],
         ]);
 
@@ -73,7 +73,7 @@ class BookmarkController extends Controller
 
         $bookmark = $request->validate([
             'name' => [ 'required', 'max:255', 'min:1'],
-            'url' => ['required', 'url:http,https'],
+            'url' => ['required', 'max:' . env('APP_MAX_URL_LENGTH', 2048), 'min:1'],
             'category' => ['required', 'max:255', 'min:1'],
         ]);
 
