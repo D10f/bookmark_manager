@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DownloadFavicon;
 use App\Models\Bookmark;
+use App\Helpers\URL;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class BookmarkController extends Controller
@@ -70,7 +73,6 @@ class BookmarkController extends Controller
      */
     public function store(Request $request)
     {
-
         $bookmark = $request->validate([
             'name' => [ 'required', 'max:255', 'min:1'],
             'url' => ['required', 'max:' . env('APP_MAX_URL_LENGTH', 2048), 'min:1'],
@@ -80,6 +82,14 @@ class BookmarkController extends Controller
         $bookmark['user_id'] = auth()->id();
 
         $new_bookmark = Bookmark::create($bookmark);
+
+        try {
+            $url = new URL($new_bookmark['url']);
+            DownloadFavicon::dispatch($url);
+            Log::info('job dispatched');
+        } catch (\Exception) {
+            Log::info('Invalid URL, skipping job.');
+        }
 
         return redirect()->route('bookmarks.index')->with([
             "new_bookmark" => $new_bookmark->id
