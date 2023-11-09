@@ -28,4 +28,7 @@ export default defineConfig({
             "@": "/resources/js/",
         },
     },
+    test: {
+        environmentMatchGlobs: [["resources/js/tests/dom/**/*", "happy-dom"]],
+    },
 });
