@@ -18,7 +18,6 @@ class FaviconService
     {
         $this->url = new URL($url);
         $this->fileExists = $this->checkFaviconExists("public/favicons/");
-        $this->storageDisk = $storageDisk;
     }
 
     /**
@@ -74,7 +73,14 @@ class FaviconService
             if ($tag = $html->first($attribute))
             {
                 $hrefAttribute = $tag->getAttribute('href', '/favicon.ico');
-                $faviconUrlPath = parse_url($hrefAttribute)['path'];
+                $parsedHref = parse_url($hrefAttribute);
+
+                if (str_starts_with($hrefAttribute, 'http'))
+                {
+                    return $hrefAttribute;
+                }
+
+                $faviconUrlPath = $parsedHref['path'];
                 break;
             };
         }
@@ -103,6 +109,6 @@ class FaviconService
             'convert -background none - -resize 32x32 -format webp -'
         );
 
-        Storage::disk($this->storageDisk)->put("public/favicons/", $process->output());
+        Storage::disk($this->storageDisk)->put("public/favicons/" . $this->url->hostname . ".webp", $process->output());
     }
 }
