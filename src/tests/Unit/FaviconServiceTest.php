@@ -12,30 +12,34 @@ use Tests\TestCase;
 
 class FaviconServiceTest extends TestCase
 {
-    public function test_correctly_extracts_favicon()
+
+    /**
+     * @dataProvider Tests\DataProviders\FaviconUrlDataProvider::validUrlCases
+     */
+    public function test_correctly_extracts_favicon_url_when_available
+    (
+        string $targetDomain,
+        array $linkMetaTags,
+        string $expected
+    )
     {
-        Http::fakeSequence()
-            ->push('<html><head><link rel="icon" href="/logo.png" /></head><body></body></html>')
-            ->push('<html><head><link rel="icon" /></head><body></body></html>')
-            ->push('<html><head><link rel="icon" sizes="32x32" href="/logo-32.png" /></head><body></body></html>')
-            ->push('<html><head><link rel="icon" href="https://laravel.com/logo-32.svg" /></head><body></body></html>')
-            ->push('<html><head><link rel="icon" href="http://laravel.com/logo-32.svg" /></head><body></body></html>')
-            ->whenEmpty(Http::response('Not Found', 404));
+        Http::fake([
+            '*' => Http::response('<html><head>' . implode(' ', $linkMetaTags) . '</head><body></body></html>', 200)
+        ]);
 
-        $actual = (new FaviconService('https://laravel.com'))->extractFaviconUrl();
-        $this->assertSame('https://laravel.com/logo.png', $actual);
+        $service = new FaviconService($targetDomain);
+        $result = $service->extractFaviconUrl();
+        $this->assertSame($expected, $result);
+    }
 
-        $actual = (new FaviconService('https://laravel.com'))->extractFaviconUrl();
-        $this->assertSame('https://laravel.com/favicon.ico', $actual);
+    public function test_correctly_defaults_to_favicon_ico_when_no_link_tags()
+    {
+        Http::fake([
+            '*' => Http::response('<html><head></head><body></body></html>', 200)
+        ]);
 
-        $actual = (new FaviconService('https://laravel.com'))->extractFaviconUrl();
-        $this->assertSame('https://laravel.com/logo-32.png', $actual);
-
-        $actual = (new FaviconService('https://laravel.com'))->extractFaviconUrl();
-        $this->assertSame('https://laravel.com/logo-32.svg', $actual);
-
-        $actual = (new FaviconService('http://laravel.com'))->extractFaviconUrl();
-        $this->assertSame('http://laravel.com/logo-32.svg', $actual);
+        $result = (new FaviconService('https://laravel.com'))->extractFaviconUrl();
+        $this->assertSame('https://laravel.com/favicon.ico', $result);
     }
 
     public function test_fails_with_random_string()
