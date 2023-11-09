@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Helpers;
 
 use Exception;
 
-class URLService
+class URL
 {
     public $scheme;
     public $hostname;
