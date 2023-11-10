@@ -23,22 +23,24 @@ class FaviconServiceTest extends TestCase
         string $expected
     )
     {
+        Storage::fake('favicon');
         Http::fake([
             '*' => Http::response('<html><head>' . implode(' ', $linkMetaTags) . '</head><body></body></html>', 200)
         ]);
 
-        $service = new FaviconService($targetDomain);
+        $service = new FaviconService($targetDomain, 'favicon');
         $result = $service->extractFaviconUrl();
         $this->assertSame($expected, $result);
     }
 
     public function test_correctly_defaults_to_favicon_ico_when_no_link_tags()
     {
+        Storage::fake('favicon');
         Http::fake([
             '*' => Http::response('<html><head></head><body></body></html>', 200)
         ]);
 
-        $result = (new FaviconService('https://laravel.com'))->extractFaviconUrl();
+        $result = (new FaviconService('https://laravel.com', 'favicon'))->extractFaviconUrl();
         $this->assertSame('https://laravel.com/favicon.ico', $result);
     }
 
@@ -58,13 +60,14 @@ class FaviconServiceTest extends TestCase
 
     public function test_fails_with_non_200_responses()
     {
+        Storage::fake('favicon');
         Http::fake([
             '*' => Http::response('Not found', 404)
         ]);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Unable to reach domain.');
-        (new FaviconService('http://laravel.com'))->extractFaviconUrl();
+        (new FaviconService('http://laravel.com', 'favicon'))->extractFaviconUrl();
     }
 
     public function test_fails_when_favicon_already_exists()
