@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\DownloadFavicon;
 use App\Models\Bookmark;
 use App\Helpers\URL;
+use App\Services\FaviconService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -83,12 +84,10 @@ class BookmarkController extends Controller
 
         $new_bookmark = Bookmark::create($bookmark);
 
-        try {
-            $url = new URL($new_bookmark['url']);
-            DownloadFavicon::dispatch($url);
-            Log::info('job dispatched');
-        } catch (\Exception) {
-            Log::info('Invalid URL, skipping job.');
+        if (filter_var($new_bookmark['url'], FILTER_VALIDATE_URL))
+        {
+            DownloadFavicon::dispatch($new_bookmark);
+            Log::info('Job dispatched.' . PHP_EOL);
         }
 
         return redirect()->route('bookmarks.index')->with([

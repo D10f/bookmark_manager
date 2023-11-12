@@ -2,51 +2,35 @@
 
 namespace App\Jobs;
 
+use App\Helpers\URL;
+use App\Models\Bookmark;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use App\Helpers\URL;
 use App\Services\FaviconService;
 use Exception;
 
-class DownloadFavicon implements ShouldQueue, ShouldBeUnique
+class DownloadFavicon implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public string $domain;
+    public $bookmark;
 
-    /**
-     * Initializes the job
-     */
-    public function __construct(URL $url)
+    public function __construct(Bookmark $bookmark)
     {
-        $this->domain = $url->canonical;
+        $this->bookmark = $bookmark;
     }
 
-    /**
-     * Runs the job
-     */
     public function handle(): void
     {
-        $service = new FaviconService($this->domain);
-        $service->downloadFavicon();
+        $url = new URL($this->bookmark['url']);
+        $service = new FaviconService($url->canonical);
+        $service->download();
     }
 
-    /**
-     *
-     */
-    public function uniqueId()
-    {
-        return $this->domain;
-    }
-
-    /**
-     *
-     */
     public function failed(Exception $e)
     {
         Log::info($e->getMessage());

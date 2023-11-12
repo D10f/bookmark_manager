@@ -2,49 +2,92 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Intervention\Image\Facades\Image;
 use App\Helpers\URL;
 use DiDom\Document;
-use Exception;
 
 class FaviconService
 {
+    /**
+     * URL helper wrapper that provides access to the different components of the URL.
+     */
     protected URL $url;
-    protected bool $fileExists;
 
-    public function __construct(string $url, protected string $storageDisk = 'local')
+    /**
+     * Default location to store favicons.
+     */
+    protected Filesystem $disk;
+
+    /**
+     * Checks if a favicon already exists for the given domain.
+     */
+    protected ?bool $fileExists = null;
+
+    /**
+     * The favicon url for the given domain.
+     */
+    protected ?string $downloadUrl = null;
+
+    /**
+     * The image mime type based on the url provided.
+     */
+    protected ?string $mimeType = null;
+
+    /**
+     * Constructs the favicon service around the given domain name.
+     */
+    public function __construct(string $url, string $storageDisk = 'public')
     {
         $this->url = new URL($url);
-        $this->fileExists = $this->checkFaviconExists("public/favicons/");
+        $this->disk = Storage::disk($storageDisk);
     }
 
     /**
      *
      */
-    public function checkFaviconExists(string $path)
+    public function getFileExists()
     {
-        // TODO: environment variable for favicon location, size and format
-        return Storage::disk($this->storageDisk)->exists($path . $this->url->hostname . ".webp");
-    }
-
-    /**
-     *
-     */
-    public function extractFaviconUrl()
-    {
-        if ($this->fileExists)
-        {
-            throw new Exception('Favicon already exists');
-        };
-
-        $response = Http::get($this->url->canonical);
-
-        if (!$response->ok())
-        {
-            throw new Exception('Unable to reach domain.');
+        if (isset($this->fileExists)) {
+            return $this->fileExists;
         }
+
+        $this->fileExists = $this->disk->exists('favicons/' . $this->url->hostname . ".webp");
+        return $this->fileExists;
+    }
+
+    /**
+     *
+     */
+    public function getMimeType()
+    {
+        if (isset($this->mimeType))
+        {
+            return $this->mimeType;
+        }
+
+        $faviconPath = (new URL($this->getDownloadUrl()))->path;
+        preg_match('/.*\.([a-zA-Z]+)$/', $faviconPath, $matches);
+
+        $this->mimeType = $matches[1];
+        return $this->mimeType;
+    }
+
+    /**
+     *
+     */
+    public function getDownloadUrl()
+    {
+        if (isset($this->downloadUrl))
+        {
+            return $this->downloadUrl;
+        }
+
+        $response = Http::get($this->url->canonical)->throw();
 
         $html = new Document($response->body());
 
@@ -77,6 +120,7 @@ class FaviconService
 
                 if (str_starts_with($hrefAttribute, 'http'))
                 {
+                    $this->downloadUrl = $hrefAttribute;
                     return $hrefAttribute;
                 }
 
@@ -85,30 +129,83 @@ class FaviconService
             };
         }
 
-        return $this->url->canonical . $faviconUrlPath;
+        $this->downloadUrl = $this->url->canonical . $faviconUrlPath;
+        return $this->downloadUrl;
     }
 
     /**
      *
      */
-    public function downloadFavicon()
+    protected function _processImageAsStream(string $data)
     {
-        if ($this->fileExists)
-        {
-            throw new Exception('Favicon already exists');
-        };
+        $process = Process::input($data)->run(
+            "convert -background none -" . "[1]" . " -resize 32x32 -format webp -"
+        )->throw();
 
-        $response = Http::get($this->extractFaviconUrl());
+        $this->disk->put(
+            "favicons/" . $this->url->hostname . ".webp",
+            $process->output()
+        );
+    }
 
-        if (!$response->ok())
+    /**
+     *
+     */
+    protected function _processImageAsFile(string $data)
+    {
+        $this->disk->put('favicons/tmp.' . $this->getMimeType(), $data);
+        $temp = 'tmp.' . $this->getMimeType();
+        $output = $this->url->hostname . ".webp";
+
+        try
         {
-            throw new Exception('Unable to reach domain.');
+            // Some websites *cough* Discord, Stackoverflow *cough* have decided
+            // that using animated images for their favicons is a good idea. To
+            // work around that, extract only one frame from the image source.
+            // But, of course, not the first one at index zero because that's
+            // usually the one with the lowest quality...
+            Process::path($this->disk->path('favicons/'))
+                ->run("convert -background none $temp" . "[1]" . " -resize 32x32 -format webp $output")
+                ->throw();
+        }
+        catch (\Illuminate\Process\Exceptions\ProcessFailedException $e)
+        {
+            Log::warning($e->getMessage());
+        }
+        finally
+        {
+            $this->disk->delete('favicons/' . $temp);
+        }
+    }
+
+    /**
+     *
+     */
+    public function download()
+    {
+        if ($this->getFileExists())
+        {
+            Log::info('Favicon for ' . $this->url->canonical . ' already exists.');
+            return;
         }
 
-        $process = Process::input($response->body())->start(
-            'convert -background none - -resize 32x32 -format webp -'
-        );
+        try {
+            $response = Http::get($this->getDownloadUrl())->throw();
 
-        Storage::disk($this->storageDisk)->put("public/favicons/" . $this->url->hostname . ".webp", $process->output());
+            match ($this->getMimeType())
+            {
+                'png','jpg','jpeg','webp' => $this->_processImageAsStream($response->body()),
+                'svg','ico' => $this->_processImageAsFile($response->body()),
+                'default' => throw new \Exception('Unexpected file type.'),
+            };
+        }
+        catch (\Illuminate\Http\Client\RequestException)
+        {
+            Log::error('Unable to download favicon for ' . $this->url->canonical);
+        }
+        catch (\Exception $e)
+        {
+            Log::info($e->getMessage() . '(' . $e->getFile() . ' - ' . $e->getLine());
+        }
     }
 }
