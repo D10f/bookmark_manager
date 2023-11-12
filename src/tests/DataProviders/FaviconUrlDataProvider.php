@@ -4,6 +4,24 @@ namespace Tests\DataProviders;
 
 class FaviconUrlDataProvider
 {
+    static public function extensionsProcessedAsFiles()
+    {
+        return [
+            ['mimeType' => 'svg'],
+            ['mimeType' => 'ico']
+        ];
+    }
+
+    static public function extensionsProcessedAsStream()
+    {
+        return [
+            ['png'],
+            ['jpg'],
+            ['jpeg'],
+            ['webp']
+        ];
+    }
+
     static public function validUrlCases()
     {
         return [
