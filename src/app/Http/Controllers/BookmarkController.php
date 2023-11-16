@@ -56,9 +56,13 @@ class BookmarkController extends Controller
             'category' => ['required', 'max:255', 'min:1'],
         ]);
 
-        // $bookmark['user_id'] = auth()->id();
-
         $bookmark->update($newData);
+
+        if ($bookmark->wasChanged('url') && filter_var($newData['url'], FILTER_VALIDATE_URL))
+        {
+            DownloadFavicon::dispatch($bookmark);
+            Log::info('Job dispatched.' . PHP_EOL);
+        }
 
         return redirect(route('bookmarks.index'));
     }
