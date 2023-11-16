@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\DownloadFavicon;
 use App\Models\Bookmark;
 use App\Helpers\URL;
+use App\Http\Requests\StoreBookmarkRequest;
 use App\Services\FaviconService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,17 +49,13 @@ class BookmarkController extends Controller
     }
 
     // TODO: Add update favicon with custom image
-    public function update(Bookmark $bookmark, Request $request): RedirectResponse
+    public function update(StoreBookmarkRequest $request, Bookmark $bookmark): RedirectResponse
     {
-        $newData = $request->validate([
-            'name' => [ 'required', 'max:255', 'min:1'],
-            'url' => ['required', 'max:' . env('APP_MAX_URL_LENGTH', 2048), 'min:1'],
-            'category' => ['required', 'max:255', 'min:1'],
-        ]);
+        $validated = $request->validated();
 
-        $bookmark->update($newData);
+        $bookmark->update($validated);
 
-        if ($bookmark->wasChanged('url') && filter_var($newData['url'], FILTER_VALIDATE_URL))
+        if ($bookmark->wasChanged('url') && $bookmark->hasValidUrl())
         {
             DownloadFavicon::dispatch($bookmark);
             Log::info('Job dispatched.' . PHP_EOL);
@@ -73,29 +70,22 @@ class BookmarkController extends Controller
         return redirect(route('bookmarks.index'));
     }
 
-    /**
-     * See: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-     */
-    public function store(Request $request)
+    public function store(StoreBookmarkRequest $request)
     {
-        $bookmark = $request->validate([
-            'name' => [ 'required', 'max:255', 'min:1'],
-            'url' => ['required', 'max:' . env('APP_MAX_URL_LENGTH', 2048), 'min:1'],
-            'category' => ['required', 'max:255', 'min:1'],
-        ]);
+        $validated = $request->validated();
 
-        $bookmark['user_id'] = auth()->id();
+        $validated['user_id'] = auth()->id();
 
-        $new_bookmark = Bookmark::create($bookmark);
+        $new_bookmark = Bookmark::create($validated);
 
-        if (filter_var($new_bookmark['url'], FILTER_VALIDATE_URL))
+        if ($new_bookmark->hasValidUrl())
         {
             DownloadFavicon::dispatch($new_bookmark);
             Log::info('Job dispatched.' . PHP_EOL);
         }
 
-        return redirect()->route('bookmarks.index')->with([
-            "new_bookmark" => $new_bookmark->id
-        ]);
+        return redirect()
+            ->route('bookmarks.index')
+            ->with("new_bookmark", $new_bookmark->id);
     }
 }

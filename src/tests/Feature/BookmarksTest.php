@@ -113,29 +113,31 @@ class BookmarksTest extends TestCase
         Bookmark::query()->findOrFail($bookmark->id);
     }
 
-    /**
-     * @dataProvider bookmarkValuesForValidation
-     */
-    // public function test_can_validate_a_bookmark
-    // (
-    //     string $field,
-    //     string $value,
-    //     string $shouldSucceed,
-    //     string $errorMsg
-    // )
-    // {
-    //     $bookmark = Bookmark::factory()->make([ $field => $value ]);
-    //     $response = $this->post(route('bookmarks.store'), $bookmark->toArray());
 
-    //     if ($shouldSucceed)
-    //     {
-    //         $response->assertStatus(201);
-    //     }
-    //     else
-    //     {
-    //         $response->assertStatus(302);
-    //         $response->assertSessionHasErrors($field);
-    //         $response->assertEquals($errorMsg, session('errors')->get($field)[0]);
-    //     }
-    // }
+    /**
+     * @dataProvider Tests\DataProviders\BookmarkDataProvider::validationCases
+     */
+    public function test_can_validate_a_bookmark
+    (
+        string $field,
+        string $value,
+        bool $shouldSucceed,
+        string $errorMsg = ''
+    )
+    {
+        Queue::fake();
+
+        $bookmark = Bookmark::factory()->make([ $field => $value ]);
+        $response = $this->post(route('bookmarks.store'), $bookmark->toArray());
+
+        if ($shouldSucceed)
+        {
+            $response->assertSessionHasNoErrors();
+        }
+        else
+        {
+            $response->assertSessionHasErrors($field);
+            $this->assertEquals($errorMsg, session('errors')->get($field)[0]);
+        }
+    }
 }
