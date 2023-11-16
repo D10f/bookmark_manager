@@ -26,7 +26,7 @@ Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::get('/register', [LoginController::class, 'create'])->name('auth.register');
 Route::post('/login', [LoginController::class, 'login'])->name('auth.login');
 Route::post('/register', [LoginController::class, 'store'])->name('auth.store');
-Route::post('/logout', [LoginController::class, 'destroy'])->name('auth.destroy');
+Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('auth.destroy');
 
 Route::middleware('auth')->group(function() {
 
