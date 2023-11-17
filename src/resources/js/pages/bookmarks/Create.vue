@@ -52,8 +52,6 @@
 import { useForm } from "@inertiajs/vue3";
 import { useBookmarkStore } from "@/stores/bookmarks";
 import { buildUrl } from "@/helpers/urlExtractor";
-// import { Bookmark } from "@/models/Bookmark";
-// import { extractDomain, makeCanonical } from "@/helpers/urlExtractor";
 import BaseButton from "@/components/BaseButton.vue";
 import ButtonLink from "@/components/ButtonLink.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
@@ -68,9 +66,9 @@ const props = defineProps<{
 const bookmarkStore = useBookmarkStore();
 
 let form = useForm({
-    name: "Test",
-    url: "https://devontheroof.top",
-    category: "Test",
+    name: "",
+    url: "",
+    category: "",
     favicon_url: "",
 });
 

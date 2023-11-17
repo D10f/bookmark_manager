@@ -19,39 +19,23 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import { useSortable } from "@vueuse/integrations/useSortable";
+import { useBookmarkStore } from "@/stores/bookmarks";
+import { Bookmark } from "@/types/Bookmark";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import ButtonLink from "@/components/ButtonLink.vue";
 import BookmarkCategory from "@/pages/bookmarks/components/BookmarkCategory.vue";
 import App from "@/layouts/App.vue";
-import { Bookmark } from "@/types/Bookmark";
-import { useBookmarkStore, BookmarkGroup } from "@/stores/bookmarks";
-import { useSortable } from "@vueuse/integrations/useSortable";
-import { ref } from "vue";
 
 const props = defineProps<{
     bookmarks: Bookmark[];
     create_url: string;
-    new_bookmark?: string;
+    new_bookmark?: number;
 }>();
 
 const bookmarkStore = useBookmarkStore();
-
-bookmarkStore.bookmarks = props.bookmarks.reduce(
-    (acc, curr) => {
-        if (acc[curr.category]) {
-            acc[curr.category].data.push(curr);
-        } else {
-            acc[curr.category] = {
-                order: 1,
-                collapsed: false,
-                data: [curr],
-            };
-        }
-
-        return acc;
-    },
-    {} as Record<string, BookmarkGroup>,
-);
+bookmarkStore.loadBookmarks(props.bookmarks);
 
 const el = ref<HTMLElement | null>(null);
 useSortable(el, bookmarkStore.categories, {
