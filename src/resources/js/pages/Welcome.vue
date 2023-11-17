@@ -2,7 +2,9 @@
     <header class="mt-10 text-center">
         <h1 class="text-6xl font-extrabold">Bookmark Manager</h1>
         <p class="text-lg font-bold my-8">For the DIY enthusiasts</p>
-        <ButtonLink :to="bookmarks_index" class="mx-auto">Try It Out!</ButtonLink>
+        <ButtonLink :to="bookmarks_index" class="mx-auto"
+            >Try It Out!</ButtonLink
+        >
     </header>
 
     <div>
@@ -56,13 +58,13 @@
 </template>
 
 <script setup lang="ts">
-import ButtonLink from "@/shared/components/ButtonLink.vue";
-import CardContainer from "@/shared/components/CardContainer.vue";
+import ButtonLink from "@/components/ButtonLink.vue";
+import CardContainer from "@/components/CardContainer.vue";
 defineProps<{ bookmarks_index: string }>();
 </script>
 
 <script lang="ts">
-import Site from "@/shared/layouts/Site.vue";
+import Site from "@/layouts/Site.vue";
 
 export default {
     layout: Site,

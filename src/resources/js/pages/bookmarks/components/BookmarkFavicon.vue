@@ -13,34 +13,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-// import { useTimeoutPoll } from "@vueuse/core";
-import { Bookmark } from "@/models/Bookmark";
-import IconWorld from "@/shared/components/icons/IconWorld.vue";
-import { extractDomain } from "@/shared/helpers/urlExtractor";
-// import { usePage } from "@inertiajs/vue3";
+import { Bookmark } from "@/types/Bookmark";
+import IconWorld from "@/components/icons/IconWorld.vue";
+import { extractDomain } from "@/helpers/urlExtractor";
 
 const { bookmark } = defineProps<{ bookmark: Bookmark }>();
 const hasIcon = ref(true);
 const bookmarkUrl = `/storage/favicons/${extractDomain(bookmark.url)}.webp`;
-
-// function initPolling() {
-//     if (usePage().props.new_bookmark !== bookmark.id) {
-//         hasIcon.value = false;
-//         return;
-//     }
-
-//     console.log("should run once");
-
-//     const { pause } = useTimeoutPoll(fetchIcon, 2500, {
-//         immediate: true,
-//     });
-
-//     async function fetchIcon() {
-//         const res = await fetch(bookmarkUrl);
-//         if (res.ok) {
-//             hasIcon.value = true;
-//             pause();
-//         }
-//     }
-// }
 </script>

@@ -85,16 +85,16 @@
 import { ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import { useBookmarkStore } from "@/stores/bookmarks";
-import { buildUrl } from "@/shared/helpers/urlExtractor";
-import { Bookmark } from "@/models/Bookmark";
-import Modal from "@/shared/components/TheModal.vue";
-import BaseButton from "@/shared/components/BaseButton.vue";
-import ButtonLink from "@/shared/components/ButtonLink.vue";
-import BaseInput from "@/shared/components/forms/BaseInput.vue";
-import Tooltip from "@/shared/components/Tooltip.vue";
-import CardContainer from "@/shared/components/CardContainer.vue";
-import IconChevron from "@/shared/components/icons/IconChevron.vue";
-import IconTrash from "@/shared/components/icons/IconTrash.vue";
+import { buildUrl } from "@/helpers/urlExtractor";
+import { Bookmark } from "@/types/Bookmark";
+import Modal from "@/components/TheModal.vue";
+import BaseButton from "@/components/BaseButton.vue";
+import ButtonLink from "@/components/ButtonLink.vue";
+import BaseInput from "@/components/forms/BaseInput.vue";
+import Tooltip from "@/components/Tooltip.vue";
+import CardContainer from "@/components/CardContainer.vue";
+import IconChevron from "@/components/icons/IconChevron.vue";
+import IconTrash from "@/components/icons/IconTrash.vue";
 
 const props = defineProps<{
     bookmark: Bookmark;
@@ -125,7 +125,7 @@ function deleteBookmark() {
 </script>
 
 <script lang="ts">
-import App from "@/shared/layouts/App.vue";
+import App from "@/layouts/App.vue";
 export default {
     Layout: App,
 };

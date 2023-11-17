@@ -51,14 +51,14 @@
 <script setup lang="ts">
 import { useForm } from "@inertiajs/vue3";
 import { useBookmarkStore } from "@/stores/bookmarks";
-import { buildUrl } from "@/shared/helpers/urlExtractor";
+import { buildUrl } from "@/helpers/urlExtractor";
 // import { Bookmark } from "@/models/Bookmark";
-// import { extractDomain, makeCanonical } from "@/shared/helpers/urlExtractor";
-import BaseButton from "@/shared/components/BaseButton.vue";
-import ButtonLink from "@/shared/components/ButtonLink.vue";
-import BaseInput from "@/shared/components/forms/BaseInput.vue";
-import CardContainer from "@/shared/components/CardContainer.vue";
-import IconChevron from "@/shared/components/icons/IconChevron.vue";
+// import { extractDomain, makeCanonical } from "@/helpers/urlExtractor";
+import BaseButton from "@/components/BaseButton.vue";
+import ButtonLink from "@/components/ButtonLink.vue";
+import BaseInput from "@/components/forms/BaseInput.vue";
+import CardContainer from "@/components/CardContainer.vue";
+import IconChevron from "@/components/icons/IconChevron.vue";
 
 const props = defineProps<{
     index_url: string;
@@ -68,9 +68,9 @@ const props = defineProps<{
 const bookmarkStore = useBookmarkStore();
 
 let form = useForm({
-    name: "",
-    url: "",
-    category: "",
+    name: "Test",
+    url: "https://devontheroof.top",
+    category: "Test",
     favicon_url: "",
 });
 
@@ -83,7 +83,7 @@ async function createNewBookmark() {
 </script>
 
 <script lang="ts">
-import App from "@/shared/layouts/App.vue";
+import App from "@/layouts/App.vue";
 export default {
     Layout: App,
 };

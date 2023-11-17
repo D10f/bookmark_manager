@@ -2,7 +2,7 @@ import { createApp, h } from "vue";
 import { Head, Link, createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createPinia } from "pinia";
-import AppLayout from "@/shared/layouts/App.vue";
+import AppLayout from "@/layouts/App.vue";
 import "../css/app.css";
 
 const TITLE = "Bookmark Manager - ";

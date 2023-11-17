@@ -10,7 +10,10 @@
             </Link>
         </template>
 
-        <ul class="flex flex-col gap-2 transition-all" ref="el">
+        <ul
+            class="flex flex-col gap-2 transition-all"
+            ref="categoryItemContainer"
+        >
             <BookmarkItem
                 v-for="bookmark in bookmarks"
                 :bookmark="bookmark"
@@ -22,10 +25,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Bookmark } from "@/models/Bookmark";
-import Tooltip from "@/shared/components/Tooltip.vue";
-import IconCog from "@/shared/components/icons/IconCog.vue";
-import CardContainer from "@/shared/components/CardContainer.vue";
+import { Bookmark } from "@/types/Bookmark";
+import Tooltip from "@/components/Tooltip.vue";
+import IconCog from "@/components/icons/IconCog.vue";
+import CardContainer from "@/components/CardContainer.vue";
 import BookmarkItem from "@/pages/bookmarks/components/BookmarkItem.vue";
 import { useSortable } from "@vueuse/integrations/useSortable";
 
@@ -34,6 +37,9 @@ defineEmits<{
     showEditModal: [bookmark: Bookmark];
 }>();
 
-const el = ref<HTMLElement | null>(null);
-useSortable(el, props.bookmarks, { handle: ".drag-handle", animation: 200 });
+const categoryItemContainer = ref<HTMLElement | null>(null);
+useSortable(categoryItemContainer, props.bookmarks, {
+    handle: ".drag-handle",
+    animation: 200,
+});
 </script>

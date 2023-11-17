@@ -27,8 +27,8 @@
 
 <script setup lang="ts">
 import { ref, provide } from "vue";
-import Tooltip from "@/shared/components/Tooltip.vue";
-import IconChevron from "@/shared/components/icons/IconChevron.vue";
+import Tooltip from "@/components/Tooltip.vue";
+import IconChevron from "@/components/icons/IconChevron.vue";
 
 withDefaults(defineProps<{ title: string; collapsable?: boolean }>(), {
     collapsable: false,

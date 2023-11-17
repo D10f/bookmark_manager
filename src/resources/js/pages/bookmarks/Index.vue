@@ -15,26 +15,18 @@
             :key="category"
             :bookmarks="bookmarkStore.bookmarks[category].data"
         />
-        <!-- <BookmarkItem -->
-        <!--     v-for="bookmark in bookmarkStore.bookmarks[category].data" -->
-        <!--     :bookmark="bookmark" -->
-        <!--     :key="bookmark.id" -->
-        <!-- /> -->
-        <!-- </BookmarkCategory> -->
     </div>
 </template>
 
 <script setup lang="ts">
-import IconPlus from "@/shared/components/icons/IconPlus.vue";
-import ButtonLink from "@/shared/components/ButtonLink.vue";
-import { useBookmarkStore } from "@/stores/bookmarks";
+import IconPlus from "@/components/icons/IconPlus.vue";
+import ButtonLink from "@/components/ButtonLink.vue";
 import BookmarkCategory from "@/pages/bookmarks/components/BookmarkCategory.vue";
-import BookmarkItem from "@/pages/bookmarks/components/BookmarkItem.vue";
-import App from "@/shared/layouts/App.vue";
-import { Bookmark } from "@/models/Bookmark";
-import { BookmarkGroup } from "@/stores/bookmarks";
+import App from "@/layouts/App.vue";
+import { Bookmark } from "@/types/Bookmark";
+import { useBookmarkStore, BookmarkGroup } from "@/stores/bookmarks";
 import { useSortable } from "@vueuse/integrations/useSortable";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
 const props = defineProps<{
     bookmarks: Bookmark[];
@@ -64,6 +56,7 @@ bookmarkStore.bookmarks = props.bookmarks.reduce(
 const el = ref<HTMLElement | null>(null);
 useSortable(el, bookmarkStore.categories, {
     animation: 200,
+    handle: ".drag-handle-2",
 });
 </script>
 

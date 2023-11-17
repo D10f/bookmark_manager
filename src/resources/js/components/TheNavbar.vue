@@ -43,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import IconProfile from "@/shared/components/icons/IconProfile.vue";
-import IconSearch from "@/shared/components/icons/IconSearch.vue";
-import IconCog from "@/shared/components/icons/IconCog.vue";
-import Tooltip from "@/shared/components/Tooltip.vue";
+import IconProfile from "@/components/icons/IconProfile.vue";
+import IconSearch from "@/components/icons/IconSearch.vue";
+import IconCog from "@/components/icons/IconCog.vue";
+import Tooltip from "@/components/Tooltip.vue";
 </script>

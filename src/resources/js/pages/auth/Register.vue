@@ -51,12 +51,12 @@
 </template>
 
 <script setup lang="ts">
-import Site from "@/shared/layouts/Site.vue";
-import BaseInput from "@/shared/components/forms/BaseInput.vue";
-import BaseButton from "@/shared/components/BaseButton.vue";
-import Tooltip from "@/shared/components/Tooltip.vue";
-import CardContainer from "@/shared/components/CardContainer.vue";
-import IconProfile from "@/shared/components/icons/IconProfile.vue";
+import Site from "@/layouts/Site.vue";
+import BaseInput from "@/components/forms/BaseInput.vue";
+import BaseButton from "@/components/BaseButton.vue";
+import Tooltip from "@/components/Tooltip.vue";
+import CardContainer from "@/components/CardContainer.vue";
+import IconProfile from "@/components/icons/IconProfile.vue";
 import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps<{ auth_login: string; auth_store: string }>();
