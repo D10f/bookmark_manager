@@ -29,12 +29,4 @@ class Bookmark extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    /**
-     * Evaluates if the bookmark's URL is actually valid.
-     */
-    public function hasValidUrl(): bool
-    {
-        return filter_var($this->url, FILTER_VALIDATE_URL);
-    }
 }

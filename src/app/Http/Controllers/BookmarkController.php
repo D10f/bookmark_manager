@@ -4,12 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Jobs\DownloadFavicon;
 use App\Models\Bookmark;
-use App\Helpers\URL;
 use App\Http\Requests\StoreBookmarkRequest;
-use App\Services\FaviconService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class BookmarkController extends Controller
@@ -55,10 +51,9 @@ class BookmarkController extends Controller
 
         $bookmark->update($validated);
 
-        if ($bookmark->wasChanged('url') && $bookmark->hasValidUrl())
+        if ($bookmark->wasChanged('url'))
         {
             DownloadFavicon::dispatch($bookmark);
-            Log::info('Job dispatched.' . PHP_EOL);
         }
 
         return redirect(route('bookmarks.index'));
@@ -78,11 +73,7 @@ class BookmarkController extends Controller
 
         $new_bookmark = Bookmark::create($validated);
 
-        if ($new_bookmark->hasValidUrl())
-        {
-            DownloadFavicon::dispatch($new_bookmark);
-            Log::info('Job dispatched.' . PHP_EOL);
-        }
+        DownloadFavicon::dispatch($new_bookmark);
 
         return redirect()
             ->route('bookmarks.index')

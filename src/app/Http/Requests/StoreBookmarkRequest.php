@@ -26,7 +26,7 @@ class StoreBookmarkRequest extends FormRequest
 
         return [
             'name' => [ 'required', 'min:1', 'max:255'],
-            'url' => ['required', 'min:1', 'max:' . $maxUrlLength],
+            'url' => ['required', 'url:http,https', 'max:' . $maxUrlLength],
             'category' => ['required', 'min:1', 'max:255'],
         ];
     }
@@ -42,6 +42,7 @@ class StoreBookmarkRequest extends FormRequest
             'required' => 'The :attribute is required.',
             'name.max' => 'The name cannot exceed 255 characters.',
             'category.max' => 'The category cannot exceed 255 characters.',
+            'url.url' =>  'The url must be valid.',
             'url.max' =>  "The url cannot exceed $maxUrlLength characters."
         ];
     }

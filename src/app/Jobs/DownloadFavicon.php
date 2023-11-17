@@ -22,6 +22,7 @@ class DownloadFavicon implements ShouldQueue
     public function __construct(Bookmark $bookmark)
     {
         $this->bookmark = $bookmark;
+        Log::info('DownloadFavicon job dispatched.' . PHP_EOL);
     }
 
     public function handle(): void

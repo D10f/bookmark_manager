@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
@@ -38,24 +37,6 @@ class BookmarksTest extends TestCase
         $this->assertDatabaseHas('bookmarks', $bookmark->toArray());
 
         Queue::assertPushed(DownloadFavicon::class, 1);
-    }
-
-    public function test_can_create_a_bookmark_without_job()
-    {
-        Queue::fake();
-
-        $bookmark = Bookmark::factory()->make();
-        $bookmark['url'] = 'not_valid_url';
-
-        $response = $this->post(route('bookmarks.store'), $bookmark->toArray());
-        $response->assertStatus(302);
-        $response->assertRedirect(route('bookmarks.index'));
-        $response->assertSessionHas('new_bookmark', $bookmark['id']);
-
-        $this->assertDatabaseCount('bookmarks', 1);
-        $this->assertDatabaseHas('bookmarks', $bookmark->toArray());
-
-        Queue::assertPushed(DownloadFavicon::class, 0);
     }
 
     public function test_can_update_bookmark()
@@ -112,8 +93,6 @@ class BookmarksTest extends TestCase
         $this->expectException(ModelNotFoundException::class);
         Bookmark::query()->findOrFail($bookmark->id);
     }
-
-
     /**
      * @dataProvider Tests\DataProviders\BookmarkDataProvider::validationCases
      */
