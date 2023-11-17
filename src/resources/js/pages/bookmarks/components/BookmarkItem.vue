@@ -16,14 +16,6 @@
                 class="flex justify-center items-center w-10 h-8 hover:bg-slate-600 p-2 rounded-full"
             />
         </Link>
-
-        <!-- <button -->
-        <!--     class="group/edit md:invisible md:group-hover/item:visible rounded-full hover:bg-slate-600 h-8 w-9 p-2" -->
-        <!--     :tabIndex="isCollapsed ? -1 : 0" -->
-        <!--     @click="$emit('showEditModal', bookmark)" -->
-        <!-- > -->
-        <!--     <IconPencil class="group-hover/edit:fill-yellow-500" /> -->
-        <!-- </button> -->
     </li>
 </template>
 
@@ -36,10 +28,3 @@ import { inject } from "vue";
 defineProps<{ bookmark: Bookmark }>();
 const isCollapsed = inject("isCollapsed");
 </script>
-
-<style>
-svg {
-    max-width: 100%;
-    max-height: 100%;
-}
-</style>

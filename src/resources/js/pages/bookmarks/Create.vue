@@ -9,41 +9,52 @@
     </aside>
     <CardContainer title="Create New Bookmark">
         <form class="px-4 py-2" @submit.prevent="createNewBookmark">
-            <BaseInput
-                label="Name"
-                v-model="form.name"
-                :error="form.errors.name"
-                autofocus
-            />
+            <div class="py-2 flex flex-col gap-1">
+                <BaseInput
+                    label="Name"
+                    v-model="form.name"
+                    :error="form.errors.name"
+                    autofocus
+                />
+            </div>
 
-            <BaseInput
-                label="URL"
-                v-model="form.url"
-                :error="form.errors.url"
-            />
+            <div class="py-2 flex flex-col gap-1">
+                <BaseInput
+                    label="URL"
+                    v-model="form.url"
+                    :error="form.errors.url"
+                />
+            </div>
 
-            <BaseInput
-                label="Category"
-                list="categories"
-                v-model="form.category"
-                :error="form.errors.category"
-            />
+            <div class="py-2 flex flex-col gap-1">
+                <BaseInput
+                    label="Category"
+                    list="categories"
+                    v-model="form.category"
+                    :error="form.errors.category"
+                />
+                <datalist id="categories">
+                    <option
+                        v-for="category in bookmarkStore.categories"
+                        :key="category"
+                        :value="category"
+                    >
+                        {{ category }}
+                    </option>
+                </datalist>
+            </div>
 
-            <datalist id="categories">
-                <option
-                    v-for="category in bookmarkStore.categories"
-                    :key="category"
-                    :value="category"
+            <div class="py-2">
+                <BaseButton
+                    :loading="form.processing"
+                    class="mt-2"
+                    type="submit"
                 >
-                    {{ category }}
-                </option>
-            </datalist>
+                    Submit
 
-            <BaseButton :loading="form.processing" class="mt-2" type="submit">
-                Submit
-
-                <template #loading> ... </template>
-            </BaseButton>
+                    <template #loading> ... </template>
+                </BaseButton>
+            </div>
         </form>
     </CardContainer>
 </template>
@@ -54,7 +65,7 @@ import { useBookmarkStore } from "@/stores/bookmarks";
 import { buildUrl } from "@/helpers/urlExtractor";
 import BaseButton from "@/components/BaseButton.vue";
 import ButtonLink from "@/components/ButtonLink.vue";
-import BaseInput from "@/components/forms/BaseInput.vue";
+import BaseInput from "@/components/BaseInput.vue";
 import CardContainer from "@/components/CardContainer.vue";
 import IconChevron from "@/components/icons/IconChevron.vue";
 

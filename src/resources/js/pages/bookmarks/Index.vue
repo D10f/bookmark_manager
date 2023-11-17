@@ -22,7 +22,7 @@
 import { ref } from "vue";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { useBookmarkStore } from "@/stores/bookmarks";
-import { Bookmark } from "@/types/Bookmark";
+import { Bookmark } from "@/types/bookmarks";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import ButtonLink from "@/components/ButtonLink.vue";
 import BookmarkCategory from "@/pages/bookmarks/components/BookmarkCategory.vue";

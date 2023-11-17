@@ -1,19 +1,32 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
-import { Bookmark } from "@/types/Bookmark";
-
-export type BookmarkGroup = {
-    order: number;
-    collapsed: boolean;
-    data: Bookmark[];
-};
+import { Bookmark, BookmarkCategoryType } from "@/types/bookmarks";
 
 export const useBookmarkStore = defineStore("bookmark", () => {
-    const bookmarks = ref<Record<string, BookmarkGroup>>({});
+    const bookmarks = ref<Record<string, BookmarkCategoryType>>({});
 
     const categories = computed(() => Object.keys(bookmarks.value));
 
     const totalCategories = computed(() => categories.value.length);
+
+    function loadBookmarks(newBookmarks: Bookmark[]) {
+        bookmarks.value = newBookmarks.reduce(
+            (acc, curr) => {
+                if (acc[curr.category]) {
+                    acc[curr.category].data.push(curr);
+                } else {
+                    acc[curr.category] = {
+                        order: 1,
+                        collapsed: false,
+                        data: [curr],
+                    };
+                }
+
+                return acc;
+            },
+            {} as Record<string, BookmarkCategoryType>,
+        );
+    }
 
     async function createBookmark(bookmark: Bookmark, category: string) {
         const bookmarkBox = bookmarks.value[category];
@@ -30,5 +43,11 @@ export const useBookmarkStore = defineStore("bookmark", () => {
         bookmarkBox.data.push(bookmark);
     }
 
-    return { bookmarks, categories, totalCategories, createBookmark };
+    return {
+        bookmarks,
+        categories,
+        totalCategories,
+        loadBookmarks,
+        createBookmark,
+    };
 });

@@ -18,41 +18,53 @@
             </Link>
         </template>
         <form class="px-4 py-2" @submit.prevent="submitForm">
-            <BaseInput
-                label="Email"
-                name="email"
-                autofocus
-                v-model="form.email"
-                :error="form.errors.email"
-            />
+            <div class="py-2 flex flex-col gap-1">
+                <BaseInput
+                    label="Email"
+                    name="email"
+                    autofocus
+                    v-model="form.email"
+                    :error="form.errors.email"
+                />
+            </div>
 
-            <BaseInput
-                label="Password"
-                type="text"
-                name="password"
-                v-model="form.password"
-                :error="form.errors.password"
-            />
+            <div class="py-2 flex flex-col gap-1">
+                <BaseInput
+                    label="Password"
+                    type="text"
+                    name="password"
+                    v-model="form.password"
+                    :error="form.errors.password"
+                />
+            </div>
 
-            <BaseInput
-                label="Confirm Password"
-                type="text"
-                name="confirmPassword"
-                v-model="form.password_confirmation"
-                :error="form.errors.password_confirmation"
-            />
+            <div class="py-2 flex flex-col gap-1">
+                <BaseInput
+                    label="Confirm Password"
+                    type="text"
+                    name="confirmPassword"
+                    v-model="form.password_confirmation"
+                    :error="form.errors.password_confirmation"
+                />
+            </div>
 
-            <BaseButton :loading="form.processing" class="mt-2" type="submit">
-                Sign Up
-                <template #loading> ... </template>
-            </BaseButton>
+            <div class="py-2">
+                <BaseButton
+                    :loading="form.processing"
+                    class="mt-2"
+                    type="submit"
+                >
+                    Sign Up
+                    <template #loading> ... </template>
+                </BaseButton>
+            </div>
         </form>
     </CardContainer>
 </template>
 
 <script setup lang="ts">
 import Site from "@/layouts/Site.vue";
-import BaseInput from "@/components/forms/BaseInput.vue";
+import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import CardContainer from "@/components/CardContainer.vue";

@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Bookmark } from "@/types/Bookmark";
+import { Bookmark } from "@/types/bookmarks";
 import IconWorld from "@/components/icons/IconWorld.vue";
 import { extractDomain } from "@/helpers/urlExtractor";
 

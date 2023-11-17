@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Bookmark } from "@/types/Bookmark";
+import { Bookmark } from "@/types/bookmarks";
 import Tooltip from "@/components/Tooltip.vue";
 import IconCog from "@/components/icons/IconCog.vue";
 import CardContainer from "@/components/CardContainer.vue";
