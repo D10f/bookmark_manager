@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import IconPencil from "@/components/icons/IconPencil.vue";
 import BookmarkFavicon from "@/pages/bookmarks/components/BookmarkFavicon.vue";
-import { Bookmark } from "@/types/Bookmark";
+import { Bookmark } from "@/types/bookmarks";
 import { inject } from "vue";
 
 defineProps<{ bookmark: Bookmark }>();
