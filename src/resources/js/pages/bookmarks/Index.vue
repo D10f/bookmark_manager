@@ -1,11 +1,11 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <ButtonLink :to="create_url">
-            <IconPlus
-                class="group-hover:fill-slate-950 fill-white w-4 h-4 mr-2"
-            />
+        <BaseButton :as="Link" :href="create_url">
+            <template #leftIcon>
+                <IconPlus class="fill-current w-4 h-4" />
+            </template>
             Add New Bookmark
-        </ButtonLink>
+        </BaseButton>
     </aside>
 
     <div class="flex flex-col justify-start gap-2 z-50" ref="el">
@@ -22,9 +22,10 @@
 import { ref } from "vue";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { useBookmarkStore } from "@/stores/bookmarks";
+import { Link } from "@inertiajs/vue3";
 import { Bookmark } from "@/types/bookmarks";
 import IconPlus from "@/components/icons/IconPlus.vue";
-import ButtonLink from "@/components/ButtonLink.vue";
+import BaseButton from "@/components/BaseButton.vue";
 import BookmarkCategory from "@/pages/bookmarks/components/BookmarkCategory.vue";
 import App from "@/layouts/App.vue";
 

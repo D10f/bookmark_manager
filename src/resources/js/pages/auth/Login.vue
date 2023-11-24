@@ -39,11 +39,11 @@
             <div class="py-2">
                 <BaseButton
                     :loading="form.processing"
+                    :leftIcon="IconProfile"
                     class="mt-2"
                     type="submit"
                 >
                     Login
-                    <template #loading> ... </template>
                 </BaseButton>
             </div>
         </form>

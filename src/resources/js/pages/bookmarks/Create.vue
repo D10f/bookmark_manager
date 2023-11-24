@@ -1,11 +1,11 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <ButtonLink :to="index_url">
-            <IconChevron
-                class="rotate-90 group-hover:fill-slate-950 fill-white w-4 h-4 mr-2"
-            />
+        <BaseButton :as="Link" :href="index_url">
+            <template #leftIcon>
+                <IconChevron class="fill-current w-4 h-4 rotate-90" />
+            </template>
             Back
-        </ButtonLink>
+        </BaseButton>
     </aside>
     <CardContainer title="Create New Bookmark">
         <form class="px-4 py-2" @submit.prevent="createNewBookmark">
@@ -60,11 +60,10 @@
 </template>
 
 <script setup lang="ts">
-import { useForm } from "@inertiajs/vue3";
+import { useForm, Link } from "@inertiajs/vue3";
 import { useBookmarkStore } from "@/stores/bookmarks";
 import { buildUrl } from "@/helpers/urlExtractor";
 import BaseButton from "@/components/BaseButton.vue";
-import ButtonLink from "@/components/ButtonLink.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import CardContainer from "@/components/CardContainer.vue";
 import IconChevron from "@/components/icons/IconChevron.vue";

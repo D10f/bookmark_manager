@@ -2,9 +2,7 @@
     <header class="mt-10 text-center">
         <h1 class="text-6xl font-extrabold">Bookmark Manager</h1>
         <p class="text-lg font-bold my-8">For the DIY enthusiasts</p>
-        <ButtonLink :to="bookmarks_index" class="mx-auto"
-            >Try It Out!</ButtonLink
-        >
+        <BaseButton :as="Link" :href="bookmarks_index">Try it out!</BaseButton>
     </header>
 
     <div>
@@ -58,7 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import ButtonLink from "@/components/ButtonLink.vue";
+import { Link } from "@inertiajs/vue3";
+import BaseButton from "@/components/BaseButton.vue";
 import CardContainer from "@/components/CardContainer.vue";
 defineProps<{ bookmarks_index: string }>();
 </script>
