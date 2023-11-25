@@ -27,21 +27,26 @@
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Category"
-                    list="categories"
+                <Combobox
+                    :options="categories"
                     v-model="form.category"
-                    :error="form.errors.category"
+                    label="Category"
                 />
-                <datalist id="categories">
-                    <option
-                        v-for="category in bookmarkStore.categories"
-                        :key="category"
-                        :value="category"
-                    >
-                        {{ category }}
-                    </option>
-                </datalist>
+                <!-- <BaseInput -->
+                <!--     label="Category" -->
+                <!--     list="categories" -->
+                <!--     v-model="form.category" -->
+                <!--     :error="form.errors.category" -->
+                <!-- /> -->
+                <!-- <datalist id="categories"> -->
+                <!--     <option -->
+                <!--         v-for="category in bookmarkStore.categories" -->
+                <!--         :key="category" -->
+                <!--         :value="category" -->
+                <!--     > -->
+                <!--         {{ category }} -->
+                <!--     </option> -->
+                <!-- </datalist> -->
             </div>
 
             <div class="py-2">
@@ -60,9 +65,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { useForm, Link } from "@inertiajs/vue3";
 import { useBookmarkStore } from "@/stores/bookmarks";
 import { buildUrl } from "@/helpers/urlExtractor";
+import Combobox from "@/components/Combobox.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import CardContainer from "@/components/CardContainer.vue";
@@ -74,6 +81,15 @@ const props = defineProps<{
 }>();
 
 const bookmarkStore = useBookmarkStore();
+
+const categories = ref([
+    { value: "1", label: "Wade Cooper" },
+    { value: "2", label: "Arlene Mccoy" },
+    { value: "3", label: "Devon Webb" },
+    { value: "4", label: "Tom Cook" },
+    { value: "5", label: "Tanya Fox" },
+    { value: "6", label: "Hellen Schmidt" },
+]);
 
 let form = useForm({
     name: "",
