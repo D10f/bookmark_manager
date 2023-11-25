@@ -32,12 +32,12 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 
 const buttonClass = computed(() => {
     return cva(
-        "inline-flex justify-center items-center text-sm text-orange-900 font-semibold rounded min-h-[32px] px-3 py-3 border-b border-b-orange-900 shadow-y shadow-sm shadow-orange-900 active:translate-y-[1px]",
+        "inline-flex justify-center items-center text-sm text-slate-900 font-semibold rounded min-h-[32px] px-3 py-3 border-b border-b-orange-900 shadow-y shadow-sm shadow-orange-900 active:translate-y-[1px]",
         {
             variants: {
                 intent: {
                     primary:
-                        "rounded-md bg-orange-400 hover:bg-orange-500 active:bg-orange-600",
+                        "rounded-md text-orange-900 bg-orange-400 hover:bg-orange-500 active:bg-orange-600 focus:bg-orange-600",
                     secondary: "bg-black/5 hover:bg-black/10 text-gray-700",
                     danger: "bg-red-500 text-white hover:bg-red-400",
                     text: "",
