@@ -28,19 +28,19 @@ Route::post('/login', [LoginController::class, 'login'])->name('auth.login');
 Route::post('/register', [LoginController::class, 'store'])->name('auth.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('auth.destroy');
 
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->prefix('app')->group(function() {
 
     /*
     |--------------------------------------------------------------------------
     | Bookmark routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/app', [BookmarkController::class, 'index'])->name('bookmarks.index');
-    Route::get('/app/bookmarks/create', [BookmarkController::class, 'create'])->name('bookmarks.create');
-    Route::get('/app/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
-    Route::post('/app/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
-    Route::post('/app/bookmarks/{bookmark}/update', [BookmarkController::class, 'update'])->name('bookmarks.update');
-    Route::delete('/app/bookmarks/{bookmark}/delete', [BookmarkController::class, 'delete'])->name('bookmarks.delete');
+    Route::get('/', [BookmarkController::class, 'index'])->name('bookmarks.index');
+    Route::get('/bookmarks/create', [BookmarkController::class, 'create'])->name('bookmarks.create');
+    Route::get('/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
+    Route::post('/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
+    Route::post('/bookmarks/{bookmark}/update', [BookmarkController::class, 'update'])->name('bookmarks.update');
+    Route::delete('/bookmarks/{bookmark}/delete', [BookmarkController::class, 'delete'])->name('bookmarks.delete');
 
 
     /*
