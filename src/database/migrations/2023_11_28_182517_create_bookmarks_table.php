@@ -15,9 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('url', env('APP_MAX_URL_LENGTH', 2048));
-            $table->string('category', 255);
-            $table->string('favicon_url', 255)->nullable();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id');
+            $table->unsignedInteger('order')
+                ->default(0);
+
+            $table->foreignId('category_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Bookmark>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
  */
-class BookmarkFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +17,9 @@ class BookmarkFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->sentence(3),
-            'url' => fake()->url,
-            'category_id' => 1,
-            'user_id' => 1
+            'title' => fake()->sentence(2),
+            'parent_id' => null,
+            'user_id' => 1,
         ];
     }
 }
