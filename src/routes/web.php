@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookmarkController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use Inertia\Inertia;
 
@@ -32,6 +33,16 @@ Route::middleware('auth')->prefix('app')->group(function() {
 
     /*
     |--------------------------------------------------------------------------
+    | Category routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.store');
+    Route::post('/categories/{category}/update', [CategoryController::class, 'update'])->name('categories.update');
+
+    /*
+    |--------------------------------------------------------------------------
     | Bookmark routes
     |--------------------------------------------------------------------------
     */
@@ -41,7 +52,6 @@ Route::middleware('auth')->prefix('app')->group(function() {
     Route::post('/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
     Route::post('/bookmarks/{bookmark}/update', [BookmarkController::class, 'update'])->name('bookmarks.update');
     Route::delete('/bookmarks/{bookmark}/delete', [BookmarkController::class, 'delete'])->name('bookmarks.delete');
-
 
     /*
     |--------------------------------------------------------------------------
