@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function create()
     {
-        return Inertia::render('categories/Index', [
+        return Inertia::render('categories/Create', [
             'index_url' => route('bookmarks.index'),
             'store_url' => route('categories.store'),
             'create_bookmark_url' => route('bookmarks.create')
@@ -23,7 +23,6 @@ class CategoryController extends Controller
         return Inertia::render('categories/Edit', [
             'index_url' => route('bookmarks.index'),
             'update_url' => route('categories.update', ['category' => $category->id]),
-            'create_bookmark_url' => route('bookmarks.create')
         ]);
     }
 
@@ -36,7 +35,7 @@ class CategoryController extends Controller
 
         Category::create($validated);
 
-        return redirect(route('bookmark.index'));
+        return redirect(route('bookmarks.index'));
     }
 
     public function update(StoreCategoryRequest $request, Category $category)

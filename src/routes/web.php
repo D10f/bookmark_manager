@@ -40,6 +40,7 @@ Route::middleware('auth')->prefix('app')->group(function() {
     Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.store');
     Route::post('/categories/{category}/update', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}/delete', [CategoryController::class, 'delete'])->name('categories.delete');
 
     /*
     |--------------------------------------------------------------------------

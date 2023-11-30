@@ -17,6 +17,7 @@ class Bookmark extends Model
     protected $fillable = [
         'name',
         'url',
+        'order',
         'user_id',
         'category_id',
     ];

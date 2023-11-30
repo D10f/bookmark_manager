@@ -111,15 +111,15 @@ class BookmarksTest extends TestCase
         $bookmark = Bookmark::factory()->create();
 
         $this
-        ->get(route('bookmarks.edit', ['bookmark' => $bookmark->id]))
-        ->assertOk()
-        ->assertInertia(
-            fn (AssertableInertia $page) => $page
-            ->component('bookmarks/Edit')
-            ->where('index_url', route('bookmarks.index'))
-            ->where('edit_url', route('bookmarks.update', ['bookmark' => $bookmark->id]))
-            ->where('delete_url', route('bookmarks.delete', ['bookmark' => $bookmark->id]))
-        );
+            ->get(route('bookmarks.edit', ['bookmark' => $bookmark->id]))
+            ->assertOk()
+            ->assertInertia(
+                fn (AssertableInertia $page) => $page
+                ->component('bookmarks/Edit')
+                ->where('index_url', route('bookmarks.index'))
+                ->where('edit_url', route('bookmarks.update', ['bookmark' => $bookmark->id]))
+                ->where('delete_url', route('bookmarks.delete', ['bookmark' => $bookmark->id]))
+            );
     }
 
     /** @test */
