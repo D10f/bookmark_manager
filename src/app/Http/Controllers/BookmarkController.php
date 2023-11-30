@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\DownloadFavicon;
-use App\Models\Bookmark;
 use App\Http\Requests\StoreBookmarkRequest;
+use App\Models\Bookmark;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 
@@ -18,7 +18,8 @@ class BookmarkController extends Controller
                     'id' => $bookmark->id,
                     'name' => $bookmark->name,
                     'url' => $bookmark->url,
-                    'category' => $bookmark->category,
+                    'order' => $bookmark->order,
+                    'category_id' => $bookmark->category_id,
                     'edit_url' => route('bookmarks.edit', $bookmark->id),
                 ];
             }),
@@ -30,7 +31,8 @@ class BookmarkController extends Controller
     {
         return Inertia::render('bookmarks/Create', [
             'index_url' => route('bookmarks.index'),
-            'store_url' => route('bookmarks.store')
+            'store_url' => route('bookmarks.store'),
+            'create_category_url' => route('categories.create')
         ]);
     }
 

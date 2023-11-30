@@ -17,16 +17,15 @@ class Bookmark extends Model
     protected $fillable = [
         'name',
         'url',
-        'category',
-        'favicon_url',
-        'user_id'
+        'user_id',
+        'category_id',
     ];
 
     /**
-     *
+     * Returns the category it belongs to.
      */
-    public function user()
+    public function category()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

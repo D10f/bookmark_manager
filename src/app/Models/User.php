@@ -44,8 +44,13 @@ class User extends Authenticatable
     ];
 
     /**
-     *
+     * Retrieves all the categories that belong to this user.
      */
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'user_id');
+    }
+
     public function bookmarks()
     {
         return $this->hasMany(Bookmark::class, 'user_id');
