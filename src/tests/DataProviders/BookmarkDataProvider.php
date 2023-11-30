@@ -23,10 +23,7 @@ class BookmarkDataProvider
             ['url', 'http://domain.laravel.com', true],
             ['url', 'http://sub.domain.laravel.com', true],
             ['url', str_pad( 'http://laravel.com/', 2000, 'a'), true],
-            ['category', 'good category', true],
-            ['category', 'alien vs pokemon', true],
-            ['category', 'a', true],
-            ['category', str_pad('a', 255, '_'), true],
+            ['category_id', '1', true], // assumes category with id 1 exists
         ];
     }
 
@@ -41,8 +38,8 @@ class BookmarkDataProvider
             ['url', 'about:config', false, 'The url must be valid.'],
             ['url', 'another invalid url', false, 'The url must be valid.'],
             ['url', str_pad('http://laravel.com/' , $maxUrlLength + 1, 'a'), false,  'The url cannot exceed 2048 characters.'],
-            ['category', '', false, 'The category is required.'],
-            ['category', str_pad('a', 256, '_'), false, 'The category cannot exceed 255 characters.'],
+            ['category_id', '2', false, 'The category must already exist.'],
+            ['category_id', 'nonsense', false, 'The category must already exist.'],
         ];
     }
 }

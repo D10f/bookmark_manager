@@ -4,11 +4,13 @@ namespace Tests\Feature;
 
 use App\Jobs\DownloadFavicon;
 use App\Models\Bookmark;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Queue;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class BookmarksTest extends TestCase
@@ -22,10 +24,73 @@ class BookmarksTest extends TestCase
         $this->actingAs($user, 'web');
     }
 
-    public function test_can_create_a_bookmark()
+    /** @test */
+    public function should_return_index_page_with_props()
+    {
+        $this
+            ->get(route('bookmarks.index'))
+            ->assertOk()
+            ->assertInertia(
+                fn (AssertableInertia $page) => $page
+                    ->component('bookmarks/Index')
+                    ->where('bookmarks', [])
+                    ->where('errors', [])
+                    ->where('create_url', route('bookmarks.create'))
+        );
+    }
+
+    /** @test */
+    public function should_return_index_page_with_merged_inertia_props()
+    {
+        $this
+            ->get(route('bookmarks.index'))
+            ->assertOk()
+            ->assertInertia(
+                fn (AssertableInertia $page) => $page
+                    ->component('bookmarks/Index')
+                    ->has('auth.user')
+                    ->where('auth.categories', [])
+                    ->where('new_bookmark', null)
+        );
+    }
+
+    /** @test */
+    public function should_show_index_page_with_user_data()
+    {
+        Category::factory()->create();
+        Bookmark::factory()->create();
+
+        $this
+            ->get(route('bookmarks.index'))
+            ->assertOk()
+            ->assertInertia(
+                fn (AssertableInertia $page) => $page
+                    ->component('bookmarks/Index')
+                    ->count('auth.categories', 1)
+                    ->count('bookmarks', 1)
+            );
+    }
+
+    /** @test */
+    public function should_show_create_bookmark_page()
+    {
+        $this
+            ->get(route('bookmarks.create'))
+            ->assertOk()
+            ->assertInertia(
+                fn (AssertableInertia $page) => $page
+                    ->component('bookmarks/Create')
+                    ->where('index_url', route('bookmarks.index'))
+                    ->where('store_url', route('bookmarks.store'))
+            );
+    }
+
+    /** @test */
+    public function should_create_a_bookmark()
     {
         Queue::fake();
 
+        Category::factory()->create();
         $bookmark = Bookmark::factory()->make();
 
         $response = $this->post(route('bookmarks.store'), $bookmark->toArray());
@@ -39,10 +104,30 @@ class BookmarksTest extends TestCase
         Queue::assertPushed(DownloadFavicon::class, 1);
     }
 
-    public function test_can_update_bookmark()
+    /** @test */
+    public function should_show_edit_bookmark_page()
+    {
+        Category::factory()->create();
+        $bookmark = Bookmark::factory()->create();
+
+        $this
+        ->get(route('bookmarks.edit', ['bookmark' => $bookmark->id]))
+        ->assertOk()
+        ->assertInertia(
+            fn (AssertableInertia $page) => $page
+            ->component('bookmarks/Edit')
+            ->where('index_url', route('bookmarks.index'))
+            ->where('edit_url', route('bookmarks.update', ['bookmark' => $bookmark->id]))
+            ->where('delete_url', route('bookmarks.delete', ['bookmark' => $bookmark->id]))
+        );
+    }
+
+    /** @test */
+    public function show_update_an_existing_bookmark()
     {
         Queue::fake();
 
+        Category::factory()->create();
         $oldBookmark = Bookmark::factory()->create();
         $newBookmark = Bookmark::factory()->make();
 
@@ -59,10 +144,12 @@ class BookmarksTest extends TestCase
         Queue::assertPushed(DownloadFavicon::class, 1);
     }
 
-    public function test_can_update_bookmark_without_job()
+    /** @test */
+    public function should_update_bookmark_without_triggering_a_job()
     {
         Queue::fake();
 
+        Category::factory()->create();
         $oldBookmark = Bookmark::factory()->create();
         $newBookmark = Bookmark::factory()->make();
 
@@ -81,8 +168,10 @@ class BookmarksTest extends TestCase
         Queue::assertPushed(DownloadFavicon::class, 0);
     }
 
-    public function test_can_delete_bookmark()
+    /** @test */
+    public function should_delete_bookmark()
     {
+        Category::factory()->create();
         $bookmark = Bookmark::factory()->create();
 
         $response = $this->delete(route('bookmarks.delete', $bookmark->id));
@@ -93,6 +182,7 @@ class BookmarksTest extends TestCase
         $this->expectException(ModelNotFoundException::class);
         Bookmark::query()->findOrFail($bookmark->id);
     }
+
     /**
      * @dataProvider Tests\DataProviders\BookmarkDataProvider::validationCases
      */
@@ -106,6 +196,7 @@ class BookmarksTest extends TestCase
     {
         Queue::fake();
 
+        Category::factory()->create();
         $bookmark = Bookmark::factory()->make([ $field => $value ]);
         $response = $this->post(route('bookmarks.store'), $bookmark->toArray());
 
