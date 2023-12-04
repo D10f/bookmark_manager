@@ -32,9 +32,11 @@ const props = defineProps<{
 }>();
 
 const bookmarkStore = useBookmarkStore();
+
 bookmarkStore.loadBookmarks(props.bookmarks);
 
 const el = ref<HTMLElement | null>(null);
+
 useSortable(el, bookmarkStore.categories, {
     animation: 200,
     handle: ".drag-handle-2",

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Category extends Model
 {
@@ -35,5 +36,18 @@ class Category extends Model
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    /**
+     * Returns the lowest order value from all categories under the same parent
+     * @param $parentId The common category parent to filter by.
+     * @param $userId   The user owning the categories to filter by.
+     */
+    public static function lowestOrder(int | null $parentId, int $userId)
+    {
+        return DB::table('categories')
+            ->where('user_id', '=', $userId)
+            ->where('parent_id', '=', $parentId)
+            ->min('order');
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -63,6 +64,29 @@ class CategoryTest extends TestCase
 
         $this->assertDatabaseCount('categories', 1);
         $this->assertDatabaseHas('categories', $category->toArray());
+    }
+
+    /** @test */
+    public function should_create_a_new_category_with_lowest_order()
+    {
+        $first = Category::factory()->make();
+        $second = Category::factory()->make();
+
+        $this->post(route('categories.store'), $first->toArray());
+        $response = $this->post(route('categories.store'), $second->toArray());
+        $response->assertStatus(302);
+
+        $this->assertDatabaseCount('categories', 2);
+        $lowestOrder = Category::lowestOrder($second->id, auth()->user()->id);
+        $this->assertEquals(-20, $lowestOrder);
+    }
+
+    /** @test */
+    public function should_create_a_new_category_through_api_endpoint()
+    {
+        $category = Category::factory()->make();
+        $response = $this->post(route('categories.api.store'), $category->toArray());
+        $response->assertStatus(201);
     }
 
     /** @test */

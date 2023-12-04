@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\FaviconController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route::post('/login', [UserController::class, 'loginApi']);
 
-Route::get('/favicon/{url}', [FaviconController::class, 'downloadFavicon']);
+Route::middleware('auth:sanctum')
+    ->post('/categories/create', [CategoryController::class, 'store'])
+    ->name('categories.api.store');

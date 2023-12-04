@@ -30,10 +30,21 @@ class CategoryController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['order'] = (DB::table('categories')->min('order') - 10) || 0;
-        $validated['user_id'] = auth()->user()->id;
+        $userId = auth()->user()->id;
 
-        Category::create($validated);
+        $validated['order'] = Category::lowestOrder(
+            $validated['parent_id'],
+            $userId
+        ) - 10;
+
+        $validated['user_id'] = $userId;
+
+        $category = Category::create($validated);
+
+        if (str_starts_with($request->getRequestUri(), '/api'))
+        {
+            return response($category->toJson(), 201);
+        }
 
         return redirect(route('bookmarks.index'));
     }

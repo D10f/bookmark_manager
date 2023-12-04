@@ -10,39 +10,22 @@
     <CardContainer title="Login">
         <template #actions>
             <Link :href="auth_register">
-                <Tooltip tooltip="Don't have an account?">
-                    <IconProfile
-                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full"
-                    />
-                </Tooltip>
+            <Tooltip tooltip="Don't have an account?">
+                <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
+            </Tooltip>
             </Link>
         </template>
         <form class="px-4 py-2" @submit.prevent="submitForm">
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Email"
-                    v-model="form.email"
-                    autofocus
-                    :error="form.errors.email"
-                />
+                <BaseInput label="Email" v-model="form.email" autofocus :error="form.errors.email" />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Password"
-                    type="password"
-                    v-model="form.password"
-                    :error="form.errors.password"
-                />
+                <BaseInput label="Password" type="password" v-model="form.password" :error="form.errors.password" />
             </div>
 
             <div class="py-2">
-                <BaseButton
-                    :loading="form.processing"
-                    :leftIcon="IconProfile"
-                    class="mt-2"
-                    type="submit"
-                >
+                <BaseButton :loading="form.processing" :leftIcon="IconProfile" class="mt-2" type="submit">
                     Login
                 </BaseButton>
             </div>
@@ -67,7 +50,9 @@ const form = useForm({
 });
 
 function submitForm() {
-    form.post(props.auth_login);
+    fetch("/sanctum/csrf-cookie").then(() => {
+        form.post(props.auth_login);
+    });
 }
 </script>
 

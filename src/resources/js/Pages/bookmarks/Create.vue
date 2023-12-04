@@ -10,28 +10,15 @@
     <CardContainer title="Create New Bookmark">
         <form class="px-4 py-2" @submit.prevent="createNewBookmark">
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Name"
-                    v-model="form.name"
-                    :error="form.errors.name"
-                    autofocus
-                />
+                <BaseInput label="Name" v-model="form.name" :error="form.errors.name" autofocus />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="URL"
-                    v-model="form.url"
-                    :error="form.errors.url"
-                />
+                <BaseInput label="URL" v-model="form.url" :error="form.errors.url" />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <Combobox
-                    :options="categories"
-                    v-model="form.category"
-                    label="Category"
-                />
+                <Combobox :options="categories" :createOption="createCategory" v-model="form.category" label="Category" />
                 <!-- <BaseInput -->
                 <!--     label="Category" -->
                 <!--     list="categories" -->
@@ -50,11 +37,7 @@
             </div>
 
             <div class="py-2">
-                <BaseButton
-                    :loading="form.processing"
-                    class="mt-2"
-                    type="submit"
-                >
+                <BaseButton :loading="isLoading || form.processing" class="mt-2" type="submit">
                     Submit
 
                     <template #loading> ... </template>
@@ -83,12 +66,12 @@ const props = defineProps<{
 const bookmarkStore = useBookmarkStore();
 
 const categories = ref([
-    { value: "1", label: "Wade Cooper" },
-    { value: "2", label: "Arlene Mccoy" },
-    { value: "3", label: "Devon Webb" },
-    { value: "4", label: "Tom Cook" },
-    { value: "5", label: "Tanya Fox" },
-    { value: "6", label: "Hellen Schmidt" },
+    { value: "11", label: "Wade Cooper" },
+    { value: "22", label: "Arlene Mccoy" },
+    { value: "33", label: "Devon Webb" },
+    { value: "44", label: "Tom Cook" },
+    { value: "55", label: "Tanya Fox" },
+    { value: "66", label: "Hellen Schmidt" },
 ]);
 
 let form = useForm({
@@ -98,11 +81,44 @@ let form = useForm({
     favicon_url: "",
 });
 
+let isLoading = ref(false);
+
 async function createNewBookmark() {
     form.transform((data) => ({
         ...data,
         url: buildUrl(data.url),
     })).post(props.store_url);
+}
+
+function getCookie(key: string) {
+    const re = new RegExp(`${key}=([^;]+)`);
+    const cookie = document.cookie.match(re);
+    return cookie ? decodeURIComponent(cookie[1]) : "";
+}
+
+async function createCategory(payload: {
+    title: string;
+    parent_id: string | number | null;
+}) {
+    try {
+        isLoading.value = true;
+
+        const res = await fetch("/api/categories/create", {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+            },
+        });
+
+        const data = await res.json();
+        categories.value.push({ value: data.id, label: data.title });
+    } catch (e) {
+    } finally {
+        isLoading.value = false;
+    }
 }
 </script>
 
