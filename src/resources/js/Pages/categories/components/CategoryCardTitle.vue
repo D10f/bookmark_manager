@@ -1,12 +1,10 @@
 <template>
-    <button
-        v-for="breadcrumb in breadcrumbs"
-        :key="breadcrumb.id"
-        @click="$emit('activateCategory', breadcrumb)"
-    >
-        {{ breadcrumb.title }}
-    </button>
-    <span class="mx-1">/</span>
+    <template v-for="breadcrumb in breadcrumbs" :key="breadcrumb.id">
+        <button @click="$emit('activateCategory', breadcrumb)">
+            {{ breadcrumb.title }}
+        </button>
+        <span class="mx-1">/</span>
+    </template>
 </template>
 
 <script setup lang="ts">
