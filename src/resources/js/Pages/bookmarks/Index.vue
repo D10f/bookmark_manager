@@ -9,17 +9,21 @@
     </aside>
 
     <div class="flex flex-col justify-start gap-2 z-50" ref="el">
-        <BookmarkCategory v-for="category in bookmarkStore.categories" :category="category" :key="category"
-            :bookmarks="bookmarkStore.bookmarks[category].data" />
+        <BookmarkCategory
+            v-for="category in categoryStore.topLevelCategories"
+            :category="category"
+            :key="category.id"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { useCategoryStore } from "@/stores/category";
 import { useSortable } from "@vueuse/integrations/useSortable";
-import { useBookmarkStore } from "@/stores/bookmarks";
 import { Link } from "@inertiajs/vue3";
 import { Bookmark } from "@/types/bookmarks";
+import { Category } from "@/types/category";
 import IconPlus from "@/components/icons/IconPlus.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BookmarkCategory from "@/Pages/bookmarks/components/BookmarkCategory.vue";
@@ -29,18 +33,18 @@ const props = defineProps<{
     bookmarks: Bookmark[];
     create_url: string;
     new_bookmark?: number;
+    categories: Category[];
 }>();
 
-const bookmarkStore = useBookmarkStore();
+const categoryStore = useCategoryStore();
+categoryStore.loadCategories(props.categories);
 
-bookmarkStore.loadBookmarks(props.bookmarks);
+// const el = ref<HTMLElement | null>(null);
 
-const el = ref<HTMLElement | null>(null);
-
-useSortable(el, bookmarkStore.categories, {
-    animation: 200,
-    handle: ".drag-handle-2",
-});
+// useSortable(el, props.categories, {
+//     animation: 200,
+//     handle: ".drag-handle-2",
+// });
 </script>
 
 <script lang="ts">
