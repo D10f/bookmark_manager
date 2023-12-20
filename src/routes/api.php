@@ -20,8 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::post('/login', [UserController::class, 'loginApi']);
+Route::middleware('auth:sanctum')->group(function() {
 
-Route::middleware('auth:sanctum')
-    ->post('/categories/create', [CategoryController::class, 'store'])
-    ->name('categories.api.store');
+    Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.api.store');
+
+    Route::get('/categories/bookmark/{category}', [CategoryController::class, 'getBookmarks'])->name('categories.api.getBookmarks');
+
+});
+

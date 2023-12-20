@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Inertia\Inertia;
 
 /*
@@ -14,7 +15,7 @@ use Inertia\Inertia;
 
 Route::get('/', function() {
     return Inertia::render('Welcome', [
-        'bookmarks_index' => route('bookmarks.index')
+        'home_url' => route('home')
     ]);
 });
 
@@ -33,6 +34,46 @@ Route::middleware('auth')->prefix('app')->group(function() {
 
     /*
     |--------------------------------------------------------------------------
+    | Home route
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/', function() {
+        // TODO: Get only top-level categories
+        // ->where('parent_id', '=', null)
+        $categories = auth()
+            ->user()
+            ->categories()
+            ->select('id','title','order','parent_id')
+            ->orderBy('order')
+            ->with(['bookmarks' => function ($query) {
+                $query->select('id', 'name', 'url', 'order', 'category_id');
+                $query->orderByDesc('order');
+            }])
+            ->get()
+            ->map(fn ($category) => [
+                'id' => $category->id,
+                'title' => $category->title,
+                'order' => $category->order,
+                'parent_id' => $category->parent_id,
+                'bookmarks' => $category->bookmarks->map(fn ($bookmark) => [
+                    'id' => $bookmark->id,
+                    'name' => $bookmark->name,
+                    'url' => $bookmark->url,
+                    'order'=> $bookmark->order,
+                    'category_id'=> $bookmark->category_id,
+                    'edit_url' => route('bookmarks.edit', $bookmark->id)
+                ]),
+                'edit_url' => route('categories.edit', $category->id)
+            ]);
+
+        return Inertia::render('Home', [
+            'categories' => $categories,
+            'create_bookmark_url' => route('bookmarks.create')
+        ]);
+    })->name('home');
+
+    /*
+    |--------------------------------------------------------------------------
     | Category routes
     |--------------------------------------------------------------------------
     */
@@ -47,7 +88,6 @@ Route::middleware('auth')->prefix('app')->group(function() {
     | Bookmark routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/', [BookmarkController::class, 'index'])->name('bookmarks.index');
     Route::get('/bookmarks/create', [BookmarkController::class, 'create'])->name('bookmarks.create');
     Route::get('/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
     Route::post('/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
