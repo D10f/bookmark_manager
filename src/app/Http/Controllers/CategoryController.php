@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -12,7 +11,7 @@ class CategoryController extends Controller
     public function create()
     {
         return Inertia::render('categories/Create', [
-            'index_url' => route('bookmarks.index'),
+            'home' => route('home'),
             'store_url' => route('categories.store'),
             'create_bookmark_url' => route('bookmarks.create')
         ]);
@@ -21,8 +20,10 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         return Inertia::render('categories/Edit', [
-            'index_url' => route('bookmarks.index'),
+            'category' => $category,
+            'home_url' => route('home'),
             'update_url' => route('categories.update', ['category' => $category->id]),
+            'delete_url' => route('categories.delete', ['category' => $category->id]),
         ]);
     }
 
@@ -46,7 +47,7 @@ class CategoryController extends Controller
             return response($category->toJson(), 201);
         }
 
-        return redirect(route('bookmarks.index'));
+        return redirect(route('home'));
     }
 
     public function update(StoreCategoryRequest $request, Category $category)
@@ -55,12 +56,30 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect(route('bookmarks.index'));
+        return redirect(route('home'));
     }
 
     public function delete(Category $category)
     {
         $category->delete();
-        return redirect(route('bookmarks.index'));
+        return redirect(route('home'));
+    }
+
+    public function getBookmarks(Category $category)
+    {
+        $bookmarks = $category
+            ->bookmarks()
+            ->select('id', 'url', 'name', 'order')
+            ->get()
+            ->map(fn ($bookmark) => [
+                'id' => $bookmark->id,
+                'name' => $bookmark->name,
+                'url' => $bookmark->url,
+                'order' => $bookmark->order,
+                'category_id' => $category->id,
+                'edit_url' => route('bookmarks.edit', $bookmark->id),
+            ]);
+
+        return response($bookmarks->toJson());
     }
 }

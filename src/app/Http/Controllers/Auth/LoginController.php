@@ -70,7 +70,7 @@ class LoginController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('bookmarks.index'));
+        return redirect(route('home'));
     }
 
     /**

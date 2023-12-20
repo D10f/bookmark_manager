@@ -39,6 +39,14 @@ class Category extends Model
     }
 
     /**
+     * Returns all the bookmarks under this category.
+     */
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class, 'category_id');
+    }
+
+    /**
      * Returns the lowest order value from all categories under the same parent
      * @param $parentId The common category parent to filter by.
      * @param $userId   The user owning the categories to filter by.

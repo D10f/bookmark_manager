@@ -45,9 +45,9 @@ class HandleInertiaRequests extends Middleware
                 ? $request->user()->only('id', 'name')
                 : null,
 
-            'categories' => fn () => $user
-                ? $request->user()->categories()->select('id','title','order','parent_id')->get()
-                : null,
+            // 'categories' => fn () => $user
+            //     ? $request->user()->categories()->select('id','title','order','parent_id')->get()
+            //     : null,
 
             'new_bookmark' => $request->session()->get('new_bookmark'),
         ]);
