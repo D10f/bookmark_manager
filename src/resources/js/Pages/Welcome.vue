@@ -2,7 +2,7 @@
     <header class="mt-10 text-center">
         <h1 class="text-6xl font-extrabold">Bookmark Manager</h1>
         <p class="text-lg font-bold my-8">For the DIY enthusiasts</p>
-        <BaseButton :as="Link" :href="bookmarks_index">Try it out!</BaseButton>
+        <BaseButton :as="Link" :href="home_url">Try it out!</BaseButton>
     </header>
 
     <div>
@@ -59,7 +59,7 @@
 import { Link } from "@inertiajs/vue3";
 import BaseButton from "@/components/BaseButton.vue";
 import CardContainer from "@/components/CardContainer.vue";
-defineProps<{ bookmarks_index: string }>();
+defineProps<{ home_url: string }>();
 </script>
 
 <script lang="ts">

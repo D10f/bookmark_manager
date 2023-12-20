@@ -9,11 +9,7 @@
     </aside>
 
     <div class="flex flex-col justify-start gap-2 z-50" ref="el">
-        <BookmarkCategory
-            v-for="category in categoryStore.topLevelCategories"
-            :category="category"
-            :key="category.id"
-        />
+        <BookmarkCategory v-for="category in categoryStore.topLevelCategories" :category="category" :key="category.id" />
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <BaseButton :as="Link" :href="index_url">
+        <BaseButton :as="Link" :href="home_url">
             <template #leftIcon>
                 <IconChevron class="fill-current w-4 h-4 rotate-90" />
             </template>
@@ -10,34 +10,37 @@
     <CardContainer title="Create New Bookmark">
         <form class="px-4 py-2" @submit.prevent="createNewBookmark">
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput label="Name" v-model="form.name" :error="form.errors.name" autofocus />
+                <BaseInput
+                    label="Name"
+                    v-model="form.name"
+                    :error="form.errors.name"
+                    autofocus
+                />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput label="URL" v-model="form.url" :error="form.errors.url" />
+                <BaseInput
+                    label="URL"
+                    v-model="form.url"
+                    :error="form.errors.url"
+                />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <Combobox :options="categories" :createOption="createCategory" v-model="form.category" label="Category" />
-                <!-- <BaseInput -->
-                <!--     label="Category" -->
-                <!--     list="categories" -->
-                <!--     v-model="form.category" -->
-                <!--     :error="form.errors.category" -->
-                <!-- /> -->
-                <!-- <datalist id="categories"> -->
-                <!--     <option -->
-                <!--         v-for="category in bookmarkStore.categories" -->
-                <!--         :key="category" -->
-                <!--         :value="category" -->
-                <!--     > -->
-                <!--         {{ category }} -->
-                <!--     </option> -->
-                <!-- </datalist> -->
+                <Combobox
+                    :options="categoryStore.categoryNames"
+                    :createOption="createCategory"
+                    v-model="form.category"
+                    label="Category"
+                />
             </div>
 
             <div class="py-2">
-                <BaseButton :loading="isLoading || form.processing" class="mt-2" type="submit">
+                <BaseButton
+                    :loading="isLoading || form.processing"
+                    class="mt-2"
+                    type="submit"
+                >
                     Submit
 
                     <template #loading> ... </template>
@@ -50,7 +53,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useForm, Link } from "@inertiajs/vue3";
-import { useBookmarkStore } from "@/stores/bookmarks";
+import { useCategoryStore } from "@/stores/category";
 import { buildUrl } from "@/helpers/urlExtractor";
 import Combobox from "@/components/Combobox.vue";
 import BaseButton from "@/components/BaseButton.vue";
@@ -59,26 +62,17 @@ import CardContainer from "@/components/CardContainer.vue";
 import IconChevron from "@/components/icons/IconChevron.vue";
 
 const props = defineProps<{
-    index_url: string;
+    categories: App.Models.Category[];
+    home_url: string;
     store_url: string;
 }>();
 
-const bookmarkStore = useBookmarkStore();
+const categoryStore = useCategoryStore();
 
-const categories = ref([
-    { value: "11", label: "Wade Cooper" },
-    { value: "22", label: "Arlene Mccoy" },
-    { value: "33", label: "Devon Webb" },
-    { value: "44", label: "Tom Cook" },
-    { value: "55", label: "Tanya Fox" },
-    { value: "66", label: "Hellen Schmidt" },
-]);
-
-let form = useForm({
+const form = useForm({
     name: "",
     url: "",
     category: "",
-    favicon_url: "",
 });
 
 let isLoading = ref(false);
@@ -86,35 +80,18 @@ let isLoading = ref(false);
 async function createNewBookmark() {
     form.transform((data) => ({
         ...data,
+        category_id: categoryStore.categoryNames.find(
+            (c) => c.label === data.category,
+        )?.value,
         url: buildUrl(data.url),
     })).post(props.store_url);
 }
 
-function getCookie(key: string) {
-    const re = new RegExp(`${key}=([^;]+)`);
-    const cookie = document.cookie.match(re);
-    return cookie ? decodeURIComponent(cookie[1]) : "";
-}
-
-async function createCategory(payload: {
-    title: string;
-    parent_id: string | number | null;
-}) {
+async function createCategory(categoryName: string) {
     try {
         isLoading.value = true;
-
-        const res = await fetch("/api/categories/create", {
-            method: "POST",
-            body: JSON.stringify(payload),
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-            },
-        });
-
-        const data = await res.json();
-        categories.value.push({ value: data.id, label: data.title });
+        const category = await categoryStore.createCategory(categoryName);
+        form.category = categoryStore.categoryFQDN(category).join("/");
     } catch (e) {
     } finally {
         isLoading.value = false;
