@@ -61,6 +61,18 @@ services:
       mariadb:
         condition: service_healthy
 
+  laravel-worker:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+      target: artisan
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./src:/var/www/html
+    command: "queue:work"
+
   mariadb:
     image: mariadb:10.7
     volumes:
