@@ -29,6 +29,10 @@ export default defineConfig({
         },
     },
     test: {
-        environmentMatchGlobs: [["resources/js/tests/dom/**/*", "happy-dom"]],
+        exclude: ["node_modules"],
+        include: ["./resources/js/**/__tests__/*.spec.{js,ts}"],
+        environmentMatchGlobs: [
+            ["./resources/js/**/__tests__/*.spec.{js,ts}", "jsdom"],
+        ],
     },
 });
