@@ -74,39 +74,35 @@
         </form>
     </CardContainer>
 
-    <CardContainer title="Delete Profile" v-show="showDeleteConfirmation">
-        <!-- <template #actions> -->
-        <!--     <button @click="showDeleteModal = true"> -->
-        <!--         <Tooltip :tooltip="'Delete Profile'"> -->
-        <!--             <IconTrash -->
-        <!--                 class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" /> -->
-        <!--         </Tooltip> -->
-        <!--     </button> -->
-        <!-- </template> -->
-
-        <div class="m-4 px-4 py-2 border-l-2 border-red-400 bg-gray-100/20 rounded-tr-md rounded-br-md text-red-200">
-            <h3 class="text-2xl font-bold">Caution!</h3>
-            <p class="text-lg">This action cannot be undone.</p>
-        </div>
-
-        <form class="px-4 py-2" @submit.prevent="deleteProfile">
-            <div class="py-2 flex flex-col gap-1">
-                <BaseInput label="Enter the following text below to proceed:" disabled v-model="deleteForm.validationPhrase"
-                    class="font-bold uppercase bg-transparent !text-cyan-400 text-2xl px-2 pt-2" />
+    <Transition enter-from-class="opacity-0 translate-y-4" enter-to-class="opacity-1 translate-y-0"
+        enter-active-class="transition duration-300" leave-active-class="transition duration-200"
+        leave-from-class="opacity-1 translate-y-0" leave-to-class="opacity-0 translate-y-4">
+        <CardContainer title="Delete Profile" v-show="showDeleteConfirmation">
+            <div class="m-4 px-4 py-2 border-l-2 border-red-400 bg-gray-100/20 rounded-tr-md rounded-br-md text-red-200">
+                <h3 class="text-2xl font-bold">Caution!</h3>
+                <p class="text-lg">This action cannot be undone.</p>
             </div>
 
-            <div class="py-2 flex flex-col gap-1">
-                <BaseInput label="Confirm" v-model="deleteForm.confirmValidation" class="uppercase" />
-            </div>
+            <form class="px-4 py-2" @submit.prevent="deleteProfile">
+                <div class="py-2 flex flex-col gap-1">
+                    <BaseInput label="Enter the following text below to proceed:" disabled
+                        v-model="deleteForm.validationPhrase"
+                        class="font-bold uppercase bg-transparent !text-cyan-400 text-2xl px-2 pt-2" />
+                </div>
 
-            <div class="py-2">
-                <BaseButton :loading="form.processing" :disabled="!isDeleteBtnActive" class="mt-2" type="submit">
-                    Delete Profile
-                    <template #loading> ... </template>
-                </BaseButton>
-            </div>
-        </form>
-    </CardContainer>
+                <div class="py-2 flex flex-col gap-1">
+                    <BaseInput label="Confirm" v-model="deleteForm.confirmValidation" class="uppercase" />
+                </div>
+
+                <div class="py-2">
+                    <BaseButton :loading="form.processing" :disabled="!isDeleteBtnActive" class="mt-2" type="submit">
+                        Delete Profile
+                        <template #loading> ... </template>
+                    </BaseButton>
+                </div>
+            </form>
+        </CardContainer>
+    </Transition>
 </template>
 
 <script setup lang="ts">
