@@ -1,9 +1,13 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <ButtonLink :to="home_url">
-            <IconChevron class="rotate-90 group-hover:fill-slate-950 fill-current w-4 h-4 mr-2" />
+        <BaseButton as="Link" :href="home_url">
+            <IconChevron class="rotate-90 fill-current w-4 h-4" />
             Back
-        </ButtonLink>
+        </BaseButton>
+        <!-- <ButtonLink :to="home_url"> -->
+        <!--     <IconChevron class="rotate-90 group-hover:fill-slate-950 fill-current w-4 h-4 mr-2" /> -->
+        <!--     Back -->
+        <!-- </ButtonLink> -->
     </aside>
     <CardContainer title="Edit Category">
         <template #actions>

@@ -1,7 +1,7 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <BaseButton as="a" :href="home_url">
-            <IconChevron class="rotate-90 group-hover:fill-slate-950 fill-current w-4 h-4 mr-2" />
+        <BaseButton as="Link" :href="home_url">
+            <IconChevron class="rotate-90 fill-current w-4 h-4" />
             Back
         </BaseButton>
     </aside>
@@ -71,18 +71,15 @@
         <!--     </button> -->
         <!-- </template> -->
 
-        <div class="m-4 px-4 py-2 border-l-2 border-red-400 bg-gray-100/10 rounded-tr-md rounded-br-md text-red-200">
+        <div class="m-4 px-4 py-2 border-l-2 border-red-400 bg-gray-100/20 rounded-tr-md rounded-br-md text-red-200">
             <h3 class="text-2xl font-bold">Caution!</h3>
             <p class="text-lg">This action cannot be undone.</p>
-            <p class="text-lg">
-                Please enter the following text below to proceed.
-            </p>
         </div>
 
         <form class="px-4 py-2" @submit.prevent="deleteProfile">
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput disabled v-model="deleteForm.validationPhrase"
-                    class="font-bold uppercase bg-transparent text-cyan-400 text-2xl text-center" />
+                <BaseInput label="Enter the following text below to proceed:" disabled v-model="deleteForm.validationPhrase"
+                    class="font-bold uppercase bg-transparent !text-cyan-400 text-2xl px-2 pt-2" />
             </div>
 
             <div class="py-2 flex flex-col gap-1">

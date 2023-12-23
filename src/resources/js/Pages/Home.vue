@@ -33,7 +33,7 @@ categoryStore.categories = props.categories;
 const sortableCardContainer = ref<HTMLElement | null>(null);
 let sortable = useSortable(sortableCardContainer, [], {
     animation: 200,
-    handle: ".cardContainerHandle",
+    handle: "[data-drag-handle=cardContainerHandle]",
 });
 </script>
 

@@ -4,11 +4,17 @@
         <h3>Welcome back, {{ username }}</h3>
 
         <div class="flex gap-2 text-xl">
-            <Link href="#">
-            <Tooltip tooltip="Search bookmarks" position="bottom">
-                <IconSearch class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
-            </Tooltip>
-            </Link>
+            <BaseButton as="Link" href="#" intent="rounded">
+                <Tooltip tooltip="Search bookmarks" position="bottom">
+                    <IconSearch class="w-8 h-8 p-2" />
+                </Tooltip>
+            </BaseButton>
+
+            <!-- <Link href="#"> -->
+            <!-- <Tooltip tooltip="Search bookmarks" position="bottom"> -->
+            <!--     <IconSearch class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" /> -->
+            <!-- </Tooltip> -->
+            <!-- </Link> -->
 
             <!-- <Link href="#"> -->
             <!--     <Tooltip tooltip="Settings" position="bottom"> -->
@@ -18,17 +24,23 @@
             <!--     </Tooltip> -->
             <!-- </Link> -->
 
-            <BaseButton as="a" :href="profileUrl">
-                <Tooltip tooltip="Account" position="bottom">
-                    <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
-                </Tooltip>
-            </BaseButton>
-
-            <!-- <Link :href="profileUrl"> -->
+            <!-- <BaseButton as="a" :href="profileUrl"> -->
             <!--     <Tooltip tooltip="Account" position="bottom"> -->
             <!--         <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" /> -->
             <!--     </Tooltip> -->
+            <!-- </BaseButton> -->
+
+            <!-- <Link :href="profileUrl"> -->
+            <!-- <Tooltip tooltip="Account" position="bottom"> -->
+            <!--     <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" /> -->
+            <!-- </Tooltip> -->
             <!-- </Link> -->
+
+            <BaseButton as="Link" :href="profileUrl" intent="rounded">
+                <Tooltip tooltip="Account" position="bottom">
+                    <IconProfile class="w-8 h-8 p-2" />
+                </Tooltip>
+            </BaseButton>
 
             <!-- <button class="flex justify-center items-center hover:bg-slate-599 w-8 h-8 p-2 rounded-full"> -->
             <!--     <IconSearch /> -->

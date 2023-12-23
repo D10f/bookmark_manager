@@ -5,11 +5,16 @@
         </template>
 
         <template #actions>
-            <Link :href="activeCategory.edit_url!">
-            <Tooltip tooltip="Settings" :showTooltip="false">
-                <IconCog class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
-            </Tooltip>
-            </Link>
+            <BaseButton intent="rounded">
+                <Tooltip tooltip="Settings" :showTooltip="false">
+                    <IconCog class="w-8 h-8 p-2" />
+                </Tooltip>
+            </BaseButton>
+            <!-- <Link :href="activeCategory.edit_url!"> -->
+            <!-- <Tooltip tooltip="Settings" :showTooltip="false"> -->
+            <!--     <IconCog class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" /> -->
+            <!-- </Tooltip> -->
+            <!-- </Link> -->
         </template>
 
         <ul class="flex flex-col gap-2 transition-all" :key="categoryStore.categoryFQDN(activeCategory).join('')">
@@ -31,6 +36,7 @@ import CardContainer from "@/components/CardContainer.vue";
 import CategoryCardTitle from "@/components/CategoryCardTitle.vue";
 import CategoryItem from "@/components/CategoryItem.vue";
 import BookmarkItem from "@/components/BookmarkItem.vue";
+import BaseButton from "@/components/BaseButton.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import IconCog from "@/components/icons/IconCog.vue";
 
@@ -51,7 +57,7 @@ const subCategories = computed(() =>
 const sortableContainer = ref<HTMLElement | null>(null);
 const sortees = computed(() => activeCategory.value.bookmarks);
 let sortable = useSortable(sortableContainer, sortees, {
-    handle: ".drag-handle",
+    handle: "[data-drag-handle=bookmarkItemHandle]",
     animation: 200,
 });
 

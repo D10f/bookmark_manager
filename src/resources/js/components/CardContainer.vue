@@ -10,18 +10,30 @@
             <div class="md:opacity-25 md:group-hover:opacity-100 flex gap-3 text-xl">
                 <slot name="actions" />
 
-                <button v-show="sortable" class="cardContainerHandle">
-                    <IconVertical
-                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" />
-                </button>
+                <!-- <button v-show="sortable" class="cardContainerHandle"> -->
+                <!--     <IconVertical -->
+                <!--         class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" /> -->
+                <!-- </button> -->
+                <BaseButton v-show="sortable" intent="rounded" data-drag-handle="cardContainerHandle">
+                    <Tooltip tooltip="Drag to switch order" :showTooltip="false">
+                        <IconVertical class="w-8 h-8 p-2" />
+                    </Tooltip>
+                </BaseButton>
 
-                <button v-show="collapsable" @click="toggleCollapse">
+                <!-- <button v-show="collapsable" @click="toggleCollapse"> -->
+                <!--     <Tooltip :tooltip="isCollapsed ? 'Expand' : 'Collapse'" :showTooltip="false"> -->
+                <!--         <IconChevron -->
+                <!--             class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" -->
+                <!--             :class="{ 'rotate-180': !isCollapsed }" /> -->
+                <!--     </Tooltip> -->
+                <!-- </button> -->
+
+                <BaseButton v-show="collapsable" intent="rounded" @click="toggleCollapse">
                     <Tooltip :tooltip="isCollapsed ? 'Expand' : 'Collapse'" :showTooltip="false">
-                        <IconChevron
-                            class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250"
+                        <IconChevron class="w-8 h-8 p-2 transition-transform duration-250"
                             :class="{ 'rotate-180': !isCollapsed }" />
                     </Tooltip>
-                </button>
+                </BaseButton>
             </div>
         </header>
 
@@ -38,6 +50,7 @@
 <script setup lang="ts">
 import { ref, provide } from "vue";
 import Tooltip from "@/components/Tooltip.vue";
+import BaseButton from "@/components/BaseButton.vue";
 import IconChevron from "@/components/icons/IconChevron.vue";
 import IconVertical from "@/components/icons/IconVertical.vue";
 

@@ -1,46 +1,33 @@
 <template>
     <aside class="flex justify-end items-center mt-2 z-10">
-        <BaseButton :as="Link" :href="home_url">
-            <template #leftIcon>
-                <IconChevron class="fill-current w-4 h-4 rotate-90" />
-            </template>
+        <BaseButton as="Link" :href="home_url">
+            <IconChevron class="rotate-90 fill-current w-4 h-4" />
             Back
         </BaseButton>
+        <!-- <BaseButton :as="Link" :href="home_url"> -->
+        <!--     <template #leftIcon> -->
+        <!--         <IconChevron class="fill-current w-4 h-4 rotate-90" /> -->
+        <!--     </template> -->
+        <!--     Back -->
+        <!-- </BaseButton> -->
     </aside>
     <CardContainer title="Create New Bookmark">
         <form class="px-4 py-2" @submit.prevent="createNewBookmark">
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Name"
-                    v-model="form.name"
-                    :error="form.errors.name"
-                    autofocus
-                />
+                <BaseInput label="Name" v-model="form.name" :error="form.errors.name" autofocus />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="URL"
-                    v-model="form.url"
-                    :error="form.errors.url"
-                />
+                <BaseInput label="URL" v-model="form.url" :error="form.errors.url" />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <Combobox
-                    :options="categoryStore.categoryNames"
-                    :createOption="createCategory"
-                    v-model="form.category"
-                    label="Category"
-                />
+                <Combobox :options="categoryStore.categoryNames" :createOption="createCategory" v-model="form.category"
+                    label="Category" />
             </div>
 
             <div class="py-2">
-                <BaseButton
-                    :loading="isLoading || form.processing"
-                    class="mt-2"
-                    type="submit"
-                >
+                <BaseButton :loading="isLoading || form.processing" class="mt-2" type="submit">
                     Submit
 
                     <template #loading> ... </template>
