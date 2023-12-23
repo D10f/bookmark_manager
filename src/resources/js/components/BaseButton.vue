@@ -2,7 +2,10 @@
     <component :is="as" :class="buttonClass" :disabled="disabled">
         <IconCircleSpinner v-if="loading" />
 
-        <span class="inline-flex justify-center items-center gap-2" :class="loading && 'invisible'">
+        <span
+            class="inline-flex justify-center items-center gap-2"
+            :class="loading && 'invisible'"
+        >
             <slot name="leftIcon" />
             <slot />
             <slot name="rightIcon" />
@@ -40,7 +43,7 @@ const buttonClass = computed(() => {
                     text: "border-none shadow-none text-gray-300 hover:bg-gray-200/10 focus:bg-gray-200/10",
                 },
                 disabled: {
-                    true: "!bg-gray-400 text-gray-500 opacity-75 cursor-not-allowed",
+                    true: "!bg-gray-400 text-gray-500 border-b-gray-900 shadow-gray-900 opacity-75 cursor-not-allowed",
                 },
             },
         },

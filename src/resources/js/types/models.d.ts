@@ -18,9 +18,15 @@ declare namespace App.Models {
         edit_url?: string;
     }
 
-    export interface User {
+    export type User = {
         id: number;
         name: string | null;
         email: string;
+    };
+
+    export interface Profile {
+        user: App.Models.User;
+        categories: App.Models.Category[];
+        bookamrks: App.Models.Bookmark[];
     }
 }

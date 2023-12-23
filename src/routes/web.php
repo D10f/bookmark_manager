@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Inertia\Inertia;
 
@@ -99,8 +100,9 @@ Route::middleware('auth')->prefix('app')->group(function() {
     | Profile routes
     |--------------------------------------------------------------------------
     */
-    // Route::get('/app/profile/{profile}', [UserController::class, 'show'])->name('user.show');
-
+    Route::get('/profile', [UserController::class, 'index'])->name('profile.me');
+    Route::post('/profile/update', [UserController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/delete', [UserController::class, 'delete'])->name('profile.delete');
 
     /*
     |--------------------------------------------------------------------------

@@ -14,4 +14,9 @@ declare namespace App.Requests {
 
     export type UpdateCategory = Pick<App.Models.Category, "id"> &
         Partial<CreateCategory & "order">;
+
+    export type UserProfile = Pick<App.Models.User, "name", "email"> & {
+        password: string;
+        confirm: string;
+    };
 }

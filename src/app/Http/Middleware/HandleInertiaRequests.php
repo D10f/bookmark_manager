@@ -40,15 +40,14 @@ class HandleInertiaRequests extends Middleware
     {
         $user = Auth::user();
 
+        // 'categories' => fn () => $user
+        //     ? $request->user()->categories()->select('id','title','order','parent_id')->get()
+        //     : null,
         return array_merge(parent::share($request), [
             'auth.user' => fn () => $user
                 ? $request->user()->only('id', 'name')
                 : null,
-
-            // 'categories' => fn () => $user
-            //     ? $request->user()->categories()->select('id','title','order','parent_id')->get()
-            //     : null,
-
+            'profile_url' => route('profile.me'),
             'new_bookmark' => $request->session()->get('new_bookmark'),
         ]);
     }

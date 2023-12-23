@@ -12,25 +12,41 @@ class UserController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Users/Index', [
-            'users' => User::query()
-            ->when(Request::input('search'), function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%');
-            })
-            ->paginate()
-            ->withQueryString()
-            ->through(fn($user) => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'can' => [
-                    'edit' => Auth::user()->can('edit', $user)
-                ]
-            ]),
-            'filters' => Request::only(['search']),
-            'can' => [
-                'createUser' => Auth::user()->can('create', User::class)
-            ]
+        return Inertia::render('Profile', [
+            'user' => Auth::user()->setVisible(['id', 'name', 'email']),
+            'home_url' => route('home'),
+            'update_url' => route('profile.update'),
+            'delete_url' => route('profile.delete'),
+            'logout_url' => route('auth.destroy'),
+                // ->with(['categories' => function ($query) {
+                //     $query->select('id','title','order','parent_id');
+                //     $query->orderByDesc('order');
+                // }])
+                // ->with(['bookmarks' => function ($query) {
+                //     $query->select('id', 'name', 'url', 'order', 'category_id');
+                //     $query->orderByDesc('order');
+                // }])
+                // ->get()
         ]);
+        // return Inertia::render('Users/Index', [
+        //     'users' => User::query()
+        //     ->when(Request::input('search'), function ($query, $search) {
+        //         $query->where('name', 'like', '%' . $search . '%');
+        //     })
+        //     ->paginate()
+        //     ->withQueryString()
+        //     ->through(fn($user) => [
+        //         'id' => $user->id,
+        //         'name' => $user->name,
+        //         'can' => [
+        //             'edit' => Auth::user()->can('edit', $user)
+        //         ]
+        //     ]),
+        //     'filters' => Request::only(['search']),
+        //     'can' => [
+        //         'createUser' => Auth::user()->can('create', User::class)
+        //     ]
+        // ]);
     }
 
     public function edit(User $user)
@@ -40,17 +56,33 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(User $user)
+    public function update()
     {
         $attributes = Request::validate([
-            'name' => 'required',
-            'email' => ['required', 'email'],
-            'password' => 'confirmed',
+            'name' => ['required', 'min:1', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['nullable', 'confirmed', 'min:8', 'max:255'],
         ]);
 
-        $user->update($attributes);
+        $user = Auth::user();
 
-        return redirect('/users');
+        // Update only fields that aren't null
+        foreach ($attributes as $key => $value)
+            if (isset($value) && $value !== '')
+                $user[$key] = $value;
+
+        $user->save();
+
+        return redirect(route('home'));
+    }
+
+    /**
+     * Deletes the current profile.
+     */
+    public function delete()
+    {
+        User::where('id', Auth::user()->id)->delete();
+        return redirect(route('home'));
     }
 
     public function store()
@@ -70,6 +102,7 @@ class UserController extends Controller
     {
         return Inertia::render('Users/Create');
     }
+
 
     public function loginApi(Request $request)
     {
