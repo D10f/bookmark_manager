@@ -71,20 +71,22 @@
         <!--     </button> -->
         <!-- </template> -->
 
-        <div class="px-4 py-2">
-            <h3>Caution!</h3>
-            <p>This action cannot be undone.</p>
-            <p>Please enter the following text below to proceed.</p>
+        <div class="m-4 px-4 py-2 border-l-2 border-red-400 bg-gray-100/10 rounded-tr-md rounded-br-md text-red-200">
+            <h3 class="text-2xl font-bold">Caution!</h3>
+            <p class="text-lg">This action cannot be undone.</p>
+            <p class="text-lg">
+                Please enter the following text below to proceed.
+            </p>
         </div>
 
         <form class="px-4 py-2" @submit.prevent="deleteProfile">
             <div class="py-2 flex flex-col gap-1">
                 <BaseInput disabled v-model="deleteForm.validationPhrase"
-                    class="bg-transparent text-cyan-400 text-2xl text-center" />
+                    class="font-bold uppercase bg-transparent text-cyan-400 text-2xl text-center" />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput label="Confirm" v-model="deleteForm.confirmValidation" />
+                <BaseInput label="Confirm" v-model="deleteForm.confirmValidation" class="uppercase" />
             </div>
 
             <div class="py-2">
@@ -110,6 +112,7 @@ import IconLogout from "@/components/icons/IconLogout.vue";
 
 const props = defineProps<{
     user: App.Models.User;
+    delete_confirmation: string;
     home_url: string;
     update_url: string;
     delete_url: string;
@@ -132,11 +135,13 @@ function updateProfile() {
 /** ------------------------ Delete --------------------------------- */
 
 const isDeleteBtnActive = computed(
-    () => deleteForm.validationPhrase === deleteForm.confirmValidation,
+    () =>
+        deleteForm.validationPhrase.toLowerCase() ===
+        deleteForm.confirmValidation.toLowerCase(),
 );
 
 const deleteForm = useForm({
-    validationPhrase: "hello world",
+    validationPhrase: props.delete_confirmation,
     confirmValidation: "",
 });
 
