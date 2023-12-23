@@ -35,8 +35,7 @@ const buttonClass = computed(() => {
         {
             variants: {
                 intent: {
-                    primary:
-                        "text-slate-900 bg-orange-400 border-b-2 border-b-orange-900 px-3 py-3",
+                    primary: "text-slate-900 border-b-2 px-3 py-3",
                     text: "text-gray-100 px-3 py-3",
                     rounded: "hover:bg-slate-600 rounded-full",
                 },
@@ -48,7 +47,7 @@ const buttonClass = computed(() => {
                 {
                     intent: "primary",
                     disabled: false,
-                    class: "hover:bg-orange-300 focus:bg-orange-300 active:bg-orange-500 active:translate-y-[1px]",
+                    class: "bg-orange-400 border-b-orange-900 hover:bg-orange-300 focus:bg-orange-300 active:bg-orange-500 active:translate-y-[1px]",
                 },
                 {
                     intent: "primary",

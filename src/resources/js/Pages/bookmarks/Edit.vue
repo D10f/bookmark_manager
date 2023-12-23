@@ -11,12 +11,17 @@
     </aside>
     <CardContainer title="Edit Bookmark">
         <template #actions>
-            <button @click="showDeleteModal = true">
-                <Tooltip :tooltip="'Delete bookmark'">
-                    <IconTrash
-                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" />
+            <!-- <button @click="showDeleteModal = true"> -->
+            <!--     <Tooltip :tooltip="'Delete bookmark'"> -->
+            <!--         <IconTrash -->
+            <!--             class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" /> -->
+            <!--     </Tooltip> -->
+            <!-- </button> -->
+            <BaseButton intent="rounded" @click="showDeleteModal = true">
+                <Tooltip tooltip="Delete bookmark">
+                    <IconTrash class="w-8 h-8 p-2" />
                 </Tooltip>
-            </button>
+            </BaseButton>
 
             <Teleport to="body">
                 <Modal :show="showDeleteModal" @close-modal="showDeleteModal = false">

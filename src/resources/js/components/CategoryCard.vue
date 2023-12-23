@@ -5,7 +5,7 @@
         </template>
 
         <template #actions>
-            <BaseButton intent="rounded">
+            <BaseButton as="Link" :href="activeCategory.edit_url" intent="rounded">
                 <Tooltip tooltip="Settings" :showTooltip="false">
                     <IconCog class="w-8 h-8 p-2" />
                 </Tooltip>

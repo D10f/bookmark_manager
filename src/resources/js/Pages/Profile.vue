@@ -8,12 +8,25 @@
 
     <CardContainer title="Edit Profile">
         <template #actions>
-            <button @click="logoutProfile" aria-label="Logout">
-                <Tooltip tooltip="Logout" aria-hidden="true">
-                    <IconLogout aria-hidden="true"
-                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" />
+            <!-- <button @click="logoutProfile" aria-label="Logout"> -->
+            <!--     <Tooltip tooltip="Logout" aria-hidden="true"> -->
+            <!--         <IconLogout aria-hidden="true" -->
+            <!--             class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" /> -->
+            <!--     </Tooltip> -->
+            <!-- </button> -->
+
+            <BaseButton intent="rounded" @click="logoutProfile" aria-label="logout">
+                <Tooltip tooltip="Log out">
+                    <IconLogout class="w-8 h-8 p-2" />
                 </Tooltip>
-            </button>
+            </BaseButton>
+
+            <BaseButton intent="rounded" @click="toggleDeletePrompt" aria-label="delete account">
+                <Tooltip tooltip="Delete account">
+                    <IconTrash v-if="!showDeleteConfirmation" class="w-8 h-8 p-2" />
+                    <div v-else class="w-8 h-8 text-2xl">&times;</div>
+                </Tooltip>
+            </BaseButton>
 
             <!-- <Teleport to="body"> -->
             <!--     <Modal :show="showDeleteModal" @close-modal="showDeleteModal = false"> -->
@@ -61,7 +74,7 @@
         </form>
     </CardContainer>
 
-    <CardContainer title="Delete Profile">
+    <CardContainer title="Delete Profile" v-show="showDeleteConfirmation">
         <!-- <template #actions> -->
         <!--     <button @click="showDeleteModal = true"> -->
         <!--         <Tooltip :tooltip="'Delete Profile'"> -->
@@ -131,6 +144,12 @@ function updateProfile() {
 
 /** ------------------------ Delete --------------------------------- */
 
+const showDeleteConfirmation = ref(false);
+
+function toggleDeletePrompt() {
+    showDeleteConfirmation.value = !showDeleteConfirmation.value;
+}
+
 const isDeleteBtnActive = computed(
     () =>
         deleteForm.validationPhrase.toLowerCase() ===
@@ -155,6 +174,7 @@ function logoutProfile() {
 
 <script lang="ts">
 import App from "@/layouts/App.vue";
+import IconTrash from "@/components/icons/IconTrash.vue";
 export default {
     layout: App,
 };
