@@ -14,6 +14,7 @@ class UserController extends Controller
     {
         return Inertia::render('Profile', [
             'user' => Auth::user()->setVisible(['id', 'name', 'email']),
+            'delete_confirmation' => fake()->bothify('????####'),
             'home_url' => route('home'),
             'update_url' => route('profile.update'),
             'delete_url' => route('profile.delete'),
@@ -47,13 +48,6 @@ class UserController extends Controller
         //         'createUser' => Auth::user()->can('create', User::class)
         //     ]
         // ]);
-    }
-
-    public function edit(User $user)
-    {
-        return Inertia::render('Users/Edit', [
-            'user' => $user
-        ]);
     }
 
     public function update()

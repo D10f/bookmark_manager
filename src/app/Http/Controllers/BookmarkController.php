@@ -42,7 +42,7 @@ class BookmarkController extends Controller
         return Inertia::render('bookmarks/Edit', [
             'bookmark' => $bookmark,
             'home_url' => route('home'),
-            'edit_url' => route('bookmarks.update', ['bookmark' => $bookmark->id]),
+            'update_url' => route('bookmarks.update', ['bookmark' => $bookmark->id]),
             'delete_url' => route('bookmarks.delete', ['bookmark' => $bookmark->id]),
         ]);
     }

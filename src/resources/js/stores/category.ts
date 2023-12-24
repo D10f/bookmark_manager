@@ -52,6 +52,7 @@ export const useCategoryStore = defineStore("category", () => {
         });
 
         const category = await res.json();
+        category.bookmarks = [];
         categories.value.push(category);
         return category;
     }

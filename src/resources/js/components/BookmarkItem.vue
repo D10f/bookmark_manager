@@ -20,6 +20,7 @@
 import IconPencil from "@/components/icons/IconPencil.vue";
 import BookmarkFavicon from "@/components/BookmarkFavicon.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import Tooltip from "@/components/Tooltip.vue";
 import { inject } from "vue";
 
 defineProps<{ bookmark: App.Models.Bookmark }>();

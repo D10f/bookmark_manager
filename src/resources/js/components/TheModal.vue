@@ -1,7 +1,11 @@
 <script setup lang="ts">
-defineProps<{
-    show: boolean;
-}>();
+withDefaults(
+    defineProps<{
+        show: boolean;
+        headless?: boolean;
+    }>(),
+    { headless: false },
+);
 defineEmits<{
     closeModal: [];
 }>();
@@ -13,7 +17,7 @@ defineEmits<{
         leave-from-class="opacity-1" leave-to-class="opacity-0">
         <aside v-show="show" class="flex justify-center items-center fixed inset-0 bg-slate-800/80 backdrop-blur-sm z-50">
             <div class="bg-slate-700 text-white p-4 border border-white rounded-md w-[90%] max-w-[500px]">
-                <header class="flex justify-between items-center text-2xl mb-2">
+                <header v-show="!headless" class="flex justify-between items-center text-2xl mb-2">
                     <slot name="header" />
                     <button class="scale-125 hover:text-amber-400 focus:text-amber-400" @click="$emit('closeModal')">
                         &times;

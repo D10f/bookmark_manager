@@ -53,22 +53,27 @@
             <!-- </button> -->
 
             <Teleport to="body">
-                <Modal :show="showSearchModal" @close-modal="showSearchModal = false">
+                <Modal headless :show="showSearchModal" @close-modal="showSearchModal = false">
                     <template #header>
                         <h3 class="font-md">Search bookmarks</h3>
                     </template>
 
                     <div class="py-2 flex flex-col gap-1">
-                        <BaseInput v-model="searchQuery" autofocus ref="searchInput" />
+                        <BaseInput v-model="searchQuery" ref="searchInput"
+                            class="text-xl p-2 focus:outline focus:outline-2 focus:outline-orange-400" />
                     </div>
 
                     <section>
-                        <ul>
-                            <li v-for="result in results">
-                                <span class="text-gray-100">{{ result.item.path }}/</span>
-                                <span class="underline semi-bold">{{
-                                    result.item.name
-                                }}</span>
+                        <ul v-if="results.length > 0">
+                            <li v-for="result in results" :key="result.item.id">
+                                <a :href="result.item.url"
+                                    class="block w-full rounded p-1 hover:bg-gray-600 focus:bg-gray-600">
+                                    <span class="text-slate-400">{{ result.item.path }} /
+                                    </span>
+                                    <span class="text-gray-100 font-bold">
+                                        {{ result.item.name }}
+                                    </span>
+                                </a>
                             </li>
                         </ul>
                     </section>
@@ -115,11 +120,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { useFuse } from "@vueuse/integrations/useFuse";
-import { useFocus } from "@vueuse/core";
-import { useBookmarkStore } from "@/stores/bookmarks";
+import { onKeyStroke } from "@vueuse/core";
+import { useCategoryStore } from "@/stores/category";
 import IconProfile from "@/components/icons/IconProfile.vue";
 import IconSearch from "@/components/icons/IconSearch.vue";
 import IconCog from "@/components/icons/IconCog.vue";
@@ -128,8 +133,12 @@ import BaseButton from "@/components/BaseButton.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import Modal from "@/components/TheModal.vue";
 
+type BookmarkSearchResult = Pick<App.Models.Bookmark, "id" | "name" | "url"> & {
+    path: string;
+};
+
 const page = usePage<App.Inertia.Middleware>();
-const bookmarkStore = useBookmarkStore();
+const categoryStore = useCategoryStore();
 
 const profileUrl = page.props.profile_url;
 const username = page.props.auth?.user.name;
@@ -140,15 +149,31 @@ const showSearchModal = ref(false);
 const searchQuery = ref("");
 const searchInput = ref<HTMLInputElement | null>(null);
 
-const { results } = useFuse(searchQuery, bookmarkStore.bookmarks, {
+onKeyStroke("Escape", () => (showSearchModal.value = false));
+// onKeyStroke("ArrowDown", () => { });
+// onKeyStroke("ArrowUp", () => { });
+
+const bookmarks = computed(() => {
+    const results: BookmarkSearchResult[] = [];
+
+    for (const category of categoryStore.categories) {
+        const path = categoryStore.categoryFQDN(category).join(" / ");
+        for (const { id, name, url } of category.bookmarks) {
+            results.push({ id, path, name, url });
+        }
+    }
+
+    return results;
+});
+
+const { results } = useFuse(searchQuery, bookmarks, {
     fuseOptions: {
         keys: ["name", "path", "url"],
         minMatchCharLength: 2,
         threshold: 0.5,
     },
+    resultLimit: 10,
 });
-
-// const { focused } = useFocus(searchInput);
 
 watch(showSearchModal, () => {
     if (searchInput.value) {

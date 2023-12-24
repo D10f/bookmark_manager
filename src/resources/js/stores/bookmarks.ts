@@ -1,26 +1,42 @@
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useCategoryStore } from "./category";
 
-export type BookmarkSearchResult = Pick<App.Models.Bookmark, "name" | "url"> & {
+export type BookmarkSearchResult = Pick<
+    App.Models.Bookmark,
+    "id" | "name" | "url"
+> & {
     path: string;
 };
 
 export const useBookmarkStore = defineStore("bookmark", () => {
     const categoryStore = useCategoryStore();
+    const bookmarks = ref<any[]>([]);
 
-    const bookmarks = computed(() => {
+    function loadBookmarks() {
         const results: BookmarkSearchResult[] = [];
 
         for (const category of categoryStore.categories) {
-            const path = categoryStore.categoryFQDN(category).join("/");
-            for (const { name, url } of category.bookmarks) {
-                results.push({ path, name, url });
+            const path = categoryStore.categoryFQDN(category).join(" / ");
+            for (const { id, name, url } of category.bookmarks) {
+                results.push({ id, path, name, url });
             }
         }
 
-        return results;
-    });
+        bookmarks.value = results;
+    }
+    // const bookmarks = computed(() => {
+    //     const results: BookmarkSearchResult[] = [];
 
-    return { bookmarks };
+    //     for (const category of categoryStore.categories) {
+    //         const path = categoryStore.categoryFQDN(category).join(" / ");
+    //         for (const { id, name, url } of category.bookmarks) {
+    //             results.push({ id, path, name, url });
+    //         }
+    //     }
+
+    //     return results;
+    // });
+
+    return { bookmarks, loadBookmarks };
 });
