@@ -19,7 +19,7 @@
             <section class="min-h-[15vh]">
                 <ul v-if="results.length > 0">
                     <SearchBoxResult v-for="(result, idx) in results" :key="result.item.id" :isSelected="idx === cursorIdx"
-                        :result="result.item" />
+                        :result="result.item" @mouseenter="cursorIdx = idx" @focus="cursorIdx = idx" />
                 </ul>
             </section>
 
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useFuse } from "@vueuse/integrations/useFuse";
-import { onKeyStroke, onKeyUp, onKeyDown } from "@vueuse/core";
+import { onKeyStroke, useKeyModifier } from "@vueuse/core";
 import { useCategoryStore } from "@/stores/category";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
@@ -52,13 +52,10 @@ const showSearchModal = ref(false);
 const searchQuery = ref("");
 const searchInput = ref<HTMLInputElement | null>(null);
 const cursorIdx = ref(0);
+const ctrl = useKeyModifier("Control");
 
-let isCtrl = false;
-
-onKeyDown("Control", () => (isCtrl = true));
-onKeyUp("Control", () => (isCtrl = false));
 onKeyStroke(["k", "K"], (e: KeyboardEvent) => {
-    if (!isCtrl) return;
+    if (!ctrl.value) return;
     e.preventDefault();
     showSearchModal.value = true;
 });
@@ -75,14 +72,6 @@ onKeyStroke("ArrowUp", () => {
         cursorIdx.value = results.value.length - 1;
     } else {
         cursorIdx.value = cursorIdx.value - (1 % results.value.length);
-    }
-});
-onKeyStroke("Enter", () => {
-    if (results.value.length) {
-        window.open(
-            results.value[cursorIdx.value].item.url,
-            "_blank,noreferrer",
-        );
     }
 });
 
