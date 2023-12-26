@@ -53,9 +53,10 @@ const searchQuery = ref("");
 const searchInput = ref<HTMLInputElement | null>(null);
 const cursorIdx = ref(0);
 const ctrl = useKeyModifier("Control");
+const shift = useKeyModifier("Shift");
 
 onKeyStroke(["k", "K"], (e: KeyboardEvent) => {
-    if (!ctrl.value) return;
+    if (!ctrl.value || shift.value) return;
     e.preventDefault();
     showSearchModal.value = true;
 });
