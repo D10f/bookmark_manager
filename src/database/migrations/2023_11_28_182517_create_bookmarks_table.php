@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('url', env('APP_MAX_URL_LENGTH', 2048));
+            $table->string('order');
             $table->foreignId('user_id');
-            $table->unsignedInteger('order')
-                ->default(0);
 
             $table->foreignId('category_id')
                 ->constrained()

@@ -22,43 +22,62 @@ class CategoriesAndBookmarks extends Seeder
 
         $blogs = Category::factory()->createOne([
             'title' => 'Blogs',
+            'order' => 'n'
         ]);
 
         $docs = Category::factory()->createOne([
             'title' => 'Documentation',
-            'order' => Category::lowestOrder(null, 1)
+            'order' => 'n'
         ]);
 
         $php = Category::factory()->createOne([
             'title' => 'PHP',
             'parent_id' => $docs->id,
+            'order' => 'n'
         ]);
 
         $js = Category::factory()->createOne([
             'title' => 'JavaScript',
             'parent_id' => $docs->id,
-            'order' => category::lowestorder($docs->id, 1)
+            'order' => 'u'
         ]);
 
-        $sec = Category::factory()->createOne(['title' => 'Security', 'parent_id' => $blogs->id]);
-        $dev = Category::factory()->createOne(['title' => 'Development', 'parent_id' => $blogs->id, 'order' => Category::lowestOrder($blogs->id, 1)]);
+        $sec = Category::factory()->createOne([
+            'title' => 'Security',
+            'parent_id' => $blogs->id,
+            'order' => 'n'
+        ]);
 
-        $hack = Category::factory()->createOne(['title' => 'Hacking', 'parent_id' => $sec->id]);
-        Bookmark::factory()->createOne(['category_id' => $hack->id]);
+        $dev = Category::factory()->createOne([
+            'title' => 'Development',
+            'parent_id' => $blogs->id,
+            'order' => 'u'
+        ]);
 
-        Bookmark::factory()->createOne(['category_id' => $sec->id]);
-        Bookmark::factory()->createOne(['category_id' => $sec->id]);
-        Bookmark::factory()->createOne(['category_id' => $sec->id]);
-        Bookmark::factory()->createOne(['category_id' => $dev->id]);
-        Bookmark::factory()->createOne(['category_id' => $dev->id]);
+        $hack = Category::factory()->createOne([
+            'title' => 'Hacking',
+            'parent_id' => $sec->id,
+            'order' => 'n'
+        ]);
 
-        Bookmark::factory()->createOne(['category_id' => $blogs->id]);
-        Bookmark::factory()->createOne(['category_id' => $blogs->id]);
+        Bookmark::factory()->createOne([
+            'category_id' => $hack->id,
+            'order' => 'n'
+        ]);
 
-        Bookmark::factory()->createOne(['category_id' => $php->id, 'name' => 'Laracasts', 'url' => 'https://laracasts.com']);
-        Bookmark::factory()->createOne(['category_id' => $php->id, 'name' => 'Laravel', 'url' => 'https://laravel.com']);
-        Bookmark::factory()->createOne(['category_id' => $js->id, 'name' => 'Vue', 'url' => 'https://vuejs.org']);
-        Bookmark::factory()->createOne(['category_id' => $js->id, 'name' => 'Vite', 'url' => 'https://vitejs.dev']);
-        Bookmark::factory()->createOne(['category_id' => $js->id, 'name' => 'Pinia', 'url' => 'https://pinia.vuejs.org']);
+        Bookmark::factory()->createOne(['category_id' => $sec->id, 'order' => 'u']);
+        Bookmark::factory()->createOne(['category_id' => $sec->id, 'order' => 'x']);
+        Bookmark::factory()->createOne(['category_id' => $sec->id, 'order' => 'z']);
+        Bookmark::factory()->createOne(['category_id' => $dev->id, 'order' => 'n']);
+        Bookmark::factory()->createOne(['category_id' => $dev->id, 'order' => 'u']);
+
+        Bookmark::factory()->createOne(['category_id' => $blogs->id , 'order' => 'x']);
+        Bookmark::factory()->createOne(['category_id' => $blogs->id , 'order' => 'z']);
+
+        Bookmark::factory()->createOne(['category_id' => $php->id, 'name' => 'Laracasts', 'url' => 'https://laracasts.com', 'order' => 'n']);
+        Bookmark::factory()->createOne(['category_id' => $php->id, 'name' => 'Laravel', 'url' => 'https://laravel.com', 'order' => 'u']);
+        Bookmark::factory()->createOne(['category_id' => $js->id, 'name' => 'Vue', 'url' => 'https://vuejs.org', 'order' => 'x']);
+        Bookmark::factory()->createOne(['category_id' => $js->id, 'name' => 'Vite', 'url' => 'https://vitejs.dev', 'order' => 'z']);
+        Bookmark::factory()->createOne(['category_id' => $js->id, 'name' => 'Pinia', 'url' => 'https://pinia.vuejs.org', 'order' => 'zn']);
     }
 }
