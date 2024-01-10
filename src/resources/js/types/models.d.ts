@@ -3,7 +3,7 @@ declare namespace App.Models {
         id: number;
         name: string;
         url: string;
-        order: number;
+        order: string;
         category_id: number;
         edit_url?: string;
         is_new?: boolean;
@@ -12,7 +12,7 @@ declare namespace App.Models {
     export interface Category {
         id: number;
         title: string;
-        order: number;
+        order: string;
         parent_id: number | null;
         bookmarks: App.Models.Bookmark[];
         edit_url?: string;
