@@ -1,6 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { getCookie } from "@/helpers/api";
+import { midString } from "@/helpers/lexicographic";
 
 export const useCategoryStore = defineStore("category", () => {
     const categories = ref<App.Models.Category[]>([]);
@@ -17,6 +18,26 @@ export const useCategoryStore = defineStore("category", () => {
             }))
             .sort((a, b) => a.label.localeCompare(b.label)),
     );
+
+    function getCategoryChildren(category: App.Models.Category | number): {
+        subcategories: App.Models.Category[];
+        bookmarks: App.Models.Bookmark[];
+    } {
+        const cat =
+            typeof category === "number"
+                ? categories.value.find((c) => c.id === category)
+                : category;
+
+        const subcategories = categories.value.filter(
+            (c) => c.parent_id === cat?.id,
+        );
+
+        // return [...subcategories, ...(cat as App.Models.Category).bookmarks];
+        return {
+            subcategories,
+            bookmarks: (cat as App.Models.Category).bookmarks,
+        };
+    }
 
     async function createCategory(
         categoryName: string,
@@ -48,6 +69,7 @@ export const useCategoryStore = defineStore("category", () => {
             body: JSON.stringify({
                 title: categoryName.split("/").slice(-1)[0],
                 parent_id,
+                order: midString("", ""),
             }),
         });
 
@@ -85,6 +107,7 @@ export const useCategoryStore = defineStore("category", () => {
         topLevelCategories,
         categoryNames,
         createCategory,
+        getCategoryChildren,
         getCategoryTree,
         categoryFQDN,
     };
