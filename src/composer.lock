@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "862535b93e4cdc3fe99a32bf9728d794",
+    "content-hash": "0c74d6daadaee2ab1a169bb179814c50",
     "packages": [
+        {
+            "name": "alexcrawford/lexorank-php",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alexcrawford/lexorank-php.git",
+                "reference": "2762049547592809148f3277d405def81003c79d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alexcrawford/lexorank-php/zipball/2762049547592809148f3277d405def81003c79d",
+                "reference": "2762049547592809148f3277d405def81003c79d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.0 || ~8.1 || ~8.2",
+                "webmozart/assert": "^1.11"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^10.0",
+                "phpunit/phpunit": "^9.5",
+                "psalm/plugin-phpunit": "^0.17.0",
+                "roave/infection-static-analysis-plugin": "^1.23",
+                "vimeo/psalm": "^4.27"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "AlexCrawford\\LexoRank\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Crawford",
+                    "email": "alex@kick.digital"
+                }
+            ],
+            "description": "PHP Implementation of JIRA's LexoRank algorithm.",
+            "support": {
+                "issues": "https://github.com/alexcrawford/lexorank-php/issues",
+                "source": "https://github.com/alexcrawford/lexorank-php/tree/2.0.0"
+            },
+            "time": "2022-10-07T14:26:06+00:00"
+        },
         {
             "name": "based/laravel-typescript",
             "version": "v0.0.4",

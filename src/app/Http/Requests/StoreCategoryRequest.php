@@ -24,7 +24,7 @@ class StoreCategoryRequest extends FormRequest
         return [
             'title' => ['required', 'min:1', 'max:255'],
             'parent_id' => ['nullable', 'exists:categories,id'],
-            'order' => ['nullable', 'integer']
+            'order' => ['nullable', 'min:1', 'max:255']
         ];
     }
 }

@@ -12,16 +12,12 @@
             </BaseButton>
         </template>
 
-        <!-- <ul class="flex flex-col gap-2 transition-all" :key="categoryStore.categoryFQDN(root.active).join('')" -->
-        <!--     <CategoryItem v-for="category in root.categories" :category="category" :key="category.id" -->
-        <!--         @activateCategory="updateCategory" @dropItem="handleDrop" @dragStart="" /> -->
-        <!--     <BookmarkItem v-for="bookmark in root.bookmarks" :bookmark="bookmark" :key="bookmark.id" -->
-        <!--         @dragStart="dragged = $event" /> -->
-        <!-- </ul> -->
         <ul class="flex flex-col gap-2 transition-all" ref="sortableContainer">
-            <CategoryItem v-for="category in subcategories" :category="category" :key="category.id"
-                @activateCategory="updateCategory" @dropItem="" @dragStart="" />
-            <BookmarkItem v-for="bookmark in bookmarks" :bookmark="bookmark" :key="bookmark.id" @dragStart="" />
+            <template v-for="item in sortedItems" :key="item.id">
+                <CategoryItem v-if="item.hasOwnProperty('parent_id')" :category="item as App.Models.Category"
+                    @activateCategory="updateCategory" @dropItem="" />
+                <BookmarkItem v-if="item.hasOwnProperty('category_id')" :bookmark="item as App.Models.Bookmark" />
+            </template>
         </ul>
     </CardContainer>
 </template>
@@ -30,8 +26,7 @@
 import { ref } from "vue";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { SortableEvent } from "sortablejs";
-import { midString, seqString } from "@/helpers/lexicographic";
-import { useCategoryStore } from "@/stores/category";
+import { useDragStore } from "@/stores/drag";
 import CardContainer from "@/components/CardContainer.vue";
 import CategoryCardTitle from "@/components/CategoryCardTitle.vue";
 import CategoryItem from "@/components/CategoryItem.vue";
@@ -39,8 +34,12 @@ import BookmarkItem from "@/components/BookmarkItem.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import IconCog from "@/components/icons/IconCog.vue";
+import { useCategoryStore } from "@/stores/category";
 
-const props = defineProps<{ category: App.Models.Category }>();
+const props = defineProps<{
+    category: App.Models.Category;
+}>();
+
 const emits = defineEmits<{
     update: [
         newCategory: App.Models.Category,
@@ -48,39 +47,157 @@ const emits = defineEmits<{
     ];
 }>();
 
+const categoryStore = useCategoryStore();
+const dragStore = useDragStore();
+
 const updateCategory = (newCategory: App.Models.Category) => {
     emits("update", newCategory, props.category);
 };
 
-const categoryStore = useCategoryStore();
+const sortableContainer = ref<HTMLElement | null>(null);
 const { subcategories, bookmarks } = categoryStore.getCategoryChildren(
     props.category,
 );
 
-const sortableContainer = ref<HTMLElement | null>(null);
-const sortedItems = ref(
-    [...subcategories, ...bookmarks].sort((a, b) =>
-        a.order < b.order ? 1 : -1,
-    ),
+const sortedItems = [...subcategories, ...bookmarks].sort((a, b) =>
+    a.order < b.order ? -1 : 1,
 );
 
 useSortable(sortableContainer, sortedItems, {
     handle: "[data-drag-handle=bookmarkItemHandle]",
     group: "category-items",
     animation: 200,
-    swapThreshold: 0.1,
-    onStart() {
-        sortedItems.value.forEach((i) => console.log(i.order));
+    swapThreshold: 0.5,
+    onChange({ newIndex }: SortableEvent) {
+        if (newIndex === undefined) return;
+        dragStore.categoryCardId = props.category.id;
+        dragStore.categoryItems = sortedItems;
+        dragStore.categoryIndex = newIndex;
     },
-    onEnd({ oldIndex, newIndex }: SortableEvent) {
-        if (newIndex === undefined || oldIndex === undefined) return;
+    onAdd({ newIndex }: SortableEvent) {
+        if (newIndex === undefined) return;
 
-        // TODO: check if moved onto another category
+        const order = dragStore.getIndex(sortedItems, newIndex);
 
-        const prev = sortedItems.value[newIndex - 1]?.order.toString() || "";
-        const next = sortedItems.value[newIndex + 1]?.order.toString() || "";
-        console.log(midString(prev, next));
-        sortedItems.value.forEach((i) => console.log(i.order));
+        if (dragStore.item!.hasOwnProperty("category_id")) {
+            props.category.bookmarks.push({
+                ...(dragStore.item as App.Models.Bookmark),
+                order,
+            });
+        } else {
+            const category = categoryStore.categories.find(
+                (c) => c.id === (dragStore.item as App.Models.Category).id,
+            )!;
+            category.parent_id = props.category.id;
+            category.order = order;
+        }
+    },
+    onRemove() {
+        if (dragStore.item!.hasOwnProperty("category_id")) {
+            const category = categoryStore.categories.find(
+                (c) => c.id === props.category.id,
+            )!;
+            category.bookmarks = category.bookmarks.filter(
+                (b) => b.id !== dragStore.item!.id,
+            );
+        }
+    },
+    onEnd() {
+        dragStore.commit();
+        dragStore.reset();
     },
 });
+
+// const props = defineProps<{ category: App.Models.Category }>();
+// const emits = defineEmits<{
+//     update: [
+//         newCategory: App.Models.Category,
+//         oldCategory: App.Models.Category,
+//     ];
+// }>();
+
+// const updateCategory = (newCategory: App.Models.Category) => {
+//     emits("update", newCategory, props.category);
+// };
+
+// const dragStore = useDragStore();
+
+// const categoryStore = useCategoryStore();
+// const { subcategories, bookmarks } = categoryStore.getCategoryChildren(
+//     props.category,
+// );
+
+// const sortableContainer = ref<HTMLElement | null>(null);
+// const sortedItems = ref(
+//     [...subcategories, ...bookmarks].sort((a, b) =>
+//         a.order < b.order ? -1 : 1,
+//     ),
+// );
+
+// useSortable(sortableContainer, sortedItems, {
+//     handle: "[data-drag-handle=bookmarkItemHandle]",
+//     group: "category-items",
+//     animation: 200,
+//     swapThreshold: 0.5,
+//     onChange({ newIndex }: SortableEvent) {
+//         if (newIndex === undefined || !dragStore.item) return;
+
+//         const prev = sortedItems.value[newIndex - 1]
+//             ? sortedItems.value[newIndex - 1].order.toString()
+//             : "";
+
+//         const next = sortedItems.value[newIndex + 1]
+//             ? sortedItems.value[newIndex + 1].order.toString()
+//             : "";
+
+//         const order = midString(prev, next);
+//         dragStore.item.order = order;
+
+//         let url: string;
+
+//         if (dragStore.item.hasOwnProperty("category_id")) {
+//             // is bookmark
+//             url = `/api/bookmarks/update/${dragStore.item.id}`;
+//             (dragStore.item as App.Models.Bookmark).category_id =
+//                 props.category.id;
+//         } else {
+//             // is category
+//             url = `/api/categories/update/${dragStore.item.id}`;
+//             (dragStore.item as App.Models.Category).parent_id =
+//                 props.category.id;
+//         }
+
+//         fetch(url, {
+//             method: "PUT",
+//             headers: {
+//                 Accept: "application/json",
+//                 "Content-Type": "application/json",
+//                 "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+//             },
+//             body: JSON.stringify({
+//                 parent_id: props.category.id,
+//                 order,
+//             }),
+//         });
+//     },
+//     onAdd(e: SortableEvent) {
+//         if (!dragStore.item) return;
+
+//         sortedItems.value = [...sortedItems.value, dragStore.item].sort(
+//             (a, b) => (a.order < b.order ? -1 : 1),
+//         );
+
+//         (e.item as HTMLElement).remove();
+//     },
+//     onRemove() {
+//         if (!dragStore.item) return;
+
+//         sortedItems.value = sortedItems.value.filter(
+//             (i) => i.id !== dragStore!.item!.id,
+//         );
+//     },
+//     onEnd() {
+//         dragStore.reset();
+//     },
+// });
 </script>

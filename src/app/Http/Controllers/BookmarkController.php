@@ -6,6 +6,7 @@ use App\Jobs\DownloadFavicon;
 use App\Http\Requests\StoreBookmarkRequest;
 use App\Models\Bookmark;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class BookmarkController extends Controller
@@ -62,6 +63,21 @@ class BookmarkController extends Controller
         return redirect(route('home'));
     }
 
+    public function updateApi(Bookmark $bookmark)
+    {
+        $validated = Request::validate([
+            'parent_id' => ['required', 'exists:categories,id'],
+            'order' => ['required', 'min:1', 'max:255']
+        ]);
+
+        $bookmark->update([
+            'category_id' => $validated['parent_id'],
+            'order' => $validated['order']
+        ]);
+
+        return response($bookmark->toJson(), 201);
+    }
+
     public function delete(Bookmark $bookmark)
     {
         $bookmark->delete();
@@ -73,7 +89,6 @@ class BookmarkController extends Controller
         $validated = $request->validated();
 
         $validated['user_id'] = auth()->id();
-        $validated['order'] = 0;
 
         $new_bookmark = Bookmark::create($validated);
 

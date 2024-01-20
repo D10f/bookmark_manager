@@ -14,10 +14,12 @@
                 <!--     <IconVertical -->
                 <!--         class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full transition-transform duration-250" /> -->
                 <!-- </button> -->
-                <BaseButton v-show="sortable" intent="rounded" data-drag-handle="cardContainerHandle">
-                    <Tooltip tooltip="Drag to switch order" :showTooltip="false">
-                        <IconVertical class="w-8 h-8 p-2" />
-                    </Tooltip>
+                <BaseButton v-show="sortable" intent="rounded" data-drag-handle="cardContainerHandle"
+                    class="w-[32px] cursor-grab">
+                    <!-- <Tooltip tooltip="Drag to switch order" :showTooltip="false"> -->
+                    <!--     <IconVertical class="w-8 h-8 p-2" /> -->
+                    <!-- </Tooltip> -->
+                    &vellip;
                 </BaseButton>
 
                 <!-- <button v-show="collapsable" @click="toggleCollapse"> -->

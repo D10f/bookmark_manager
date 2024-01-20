@@ -65,13 +65,31 @@ const form = useForm({
 let isLoading = ref(false);
 
 async function createNewBookmark() {
-    form.transform((data) => ({
-        ...data,
-        category_id: categoryStore.categoryNames.find(
+    form.transform((data) => {
+        const category_id = categoryStore.categoryNames.find(
             (c) => c.label === data.category,
-        )?.value,
-        url: buildUrl(data.url),
-    })).post(props.store_url);
+        )?.value;
+
+        const { subcategories, bookmarks } = categoryStore.getCategoryChildren(
+            category_id as number,
+        );
+        const categoryChildren = [...subcategories, ...bookmarks].sort(
+            (a, b) => (a.order < b.order ? -1 : 1),
+        );
+
+        return {
+            ...data,
+            category_id,
+            order:
+                categoryChildren.length > 0
+                    ? midString(
+                        categoryChildren[categoryChildren.length - 1].order,
+                        "",
+                    )
+                    : midString("", ""),
+            url: buildUrl(data.url),
+        };
+    }).post(props.store_url);
 }
 
 async function createCategory(categoryName: string) {
@@ -88,6 +106,7 @@ async function createCategory(categoryName: string) {
 
 <script lang="ts">
 import App from "@/layouts/App.vue";
+import { midString } from "@/helpers/lexicographic";
 export default {
     Layout: App,
 };

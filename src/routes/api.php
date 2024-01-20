@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -23,6 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function() {
 
     Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.api.store');
+
+    Route::put('/categories/update/{category}', [CategoryController::class, 'updateApi'])->name('categories.api.update');
+
+    Route::put('/bookmarks/update/{bookmark}', [BookmarkController::class, 'updateApi'])->name('bookmarks.api.update');
 
     Route::get('/categories/bookmark/{category}', [CategoryController::class, 'getBookmarks'])->name('categories.api.getBookmarks');
 

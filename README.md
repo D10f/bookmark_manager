@@ -5,8 +5,12 @@ An intuitive and customizable way to handle bookmarks.
 ## Features
 
 - [x] Organize bookmarks hierarchically.
-- [x] Sort categories and bookmarks via drag-and-drop.
+- [ ] Sort categories and bookmarks:
+    - [x] drag and drop (lexicographical).
+    - [ ] alphabetical.
+    - [ ] frequently used.
 - [x] Fuzzy find bookmarks.
+- [x] Keyboard navigation.
 - [ ] Import/export bookmark data.
 - [ ] Multi-factor authentication.
 - [ ] Theme picker.

@@ -43,6 +43,8 @@ export const useCategoryStore = defineStore("category", () => {
         categoryName: string,
     ): Promise<App.Models.Category> {
         let parent_id: number | null = null;
+        let categoryChildren: (App.Models.Bookmark | App.Models.Category)[] =
+            topLevelCategories.value;
 
         if (isFQDN(categoryName)) {
             const tree = categoryName.split("/").slice(0, -1);
@@ -56,8 +58,19 @@ export const useCategoryStore = defineStore("category", () => {
 
             if (parent) {
                 parent_id = parent?.value;
+
+                const { subcategories, bookmarks } =
+                    getCategoryChildren(parent_id);
+                categoryChildren = [...subcategories, ...bookmarks].sort(
+                    (a, b) => (a.order < b.order ? -1 : 1),
+                );
             }
         }
+
+        const order =
+            categoryChildren.length > 0
+                ? midString("", categoryChildren[0].order)
+                : midString("", "");
 
         const res = await fetch("/api/categories/create", {
             method: "POST",
@@ -69,7 +82,7 @@ export const useCategoryStore = defineStore("category", () => {
             body: JSON.stringify({
                 title: categoryName.split("/").slice(-1)[0],
                 parent_id,
-                order: midString("", ""),
+                order,
             }),
         });
 

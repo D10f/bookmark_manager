@@ -28,6 +28,7 @@ class StoreBookmarkRequest extends FormRequest
             'name' => [ 'required', 'min:1', 'max:255'],
             'url' => ['required', 'url:http,https', 'max:' . $maxUrlLength],
             'category_id' => ['required', 'exists:categories,id'],
+            'order' => ['required', 'min:1', 'max:255']
         ];
     }
 

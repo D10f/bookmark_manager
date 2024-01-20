@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -33,10 +34,10 @@ class CategoryController extends Controller
 
         $userId = auth()->user()->id;
 
-        $validated['order'] = Category::lowestOrder(
-            $validated['parent_id'],
-            $userId
-        ) - 10;
+        // $validated['order'] = Category::lowestOrder(
+        //     $validated['parent_id'],
+        //     $userId
+        // ) - 10;
 
         $validated['user_id'] = $userId;
 
@@ -57,6 +58,18 @@ class CategoryController extends Controller
         $category->update($validated);
 
         return redirect(route('home'));
+    }
+
+    public function updateApi(Category $category)
+    {
+        $validated = Request::validate([
+            'parent_id' => ['nullable', 'exists:categories,id'],
+            'order' => ['nullable', 'min:1', 'max:255']
+        ]);
+
+        $category->update($validated);
+
+        return response($category->toJson(), 201);
     }
 
     public function delete(Category $category)
