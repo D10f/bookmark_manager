@@ -1,7 +1,7 @@
 <template>
     <CardContainer collapsable sortable :title="category.title">
         <template #title>
-            <CategoryCardTitle :category="category" @activateCategory="updateCategory" />
+            <CategoryCardTitle :category="category" @activateCategory="upCategoryLevel" />
         </template>
 
         <template #actions>
@@ -15,7 +15,7 @@
         <ul class="flex flex-col gap-2 transition-all" ref="sortableContainer">
             <template v-for="item in sortedItems" :key="item.id">
                 <CategoryItem v-if="item.hasOwnProperty('parent_id')" :category="item as App.Models.Category"
-                    @activateCategory="updateCategory" @dropItem="" />
+                    @activateCategory="downCategoryLevel" @dropItem="" />
                 <BookmarkItem v-if="item.hasOwnProperty('category_id')" :bookmark="item as App.Models.Bookmark" />
             </template>
         </ul>
@@ -41,18 +41,18 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-    update: [
-        newCategory: App.Models.Category,
-        oldCategory: App.Models.Category,
-    ];
+    update: [newCategory: App.Models.Category, oldCategoryId: number];
 }>();
 
 const categoryStore = useCategoryStore();
 const dragStore = useDragStore();
 
-const updateCategory = (newCategory: App.Models.Category) => {
-    emits("update", newCategory, props.category);
-};
+function upCategoryLevel(newCategory: App.Models.Category) {
+    emits("update", newCategory, props.category.id);
+}
+function downCategoryLevel(newCategory: App.Models.Category) {
+    emits("update", newCategory, newCategory.parent_id!);
+}
 
 const sortableContainer = ref<HTMLElement | null>(null);
 const { subcategories, bookmarks } = categoryStore.getCategoryChildren(
