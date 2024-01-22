@@ -34,15 +34,6 @@ categoryStore.categories = props.categories;
 
 const test = ref(categoryStore.topLevelCategories);
 
-// function updateCard(
-//     newCategory: App.Models.Category,
-//     oldCategory: App.Models.Category,
-// ) {
-//     test.value = test.value.map((c) =>
-//         c.id === oldCategory.id ? newCategory : c,
-//     );
-// }
-
 function updateCard(newCategory: App.Models.Category, oldCategoryId: number) {
     const oldCategory = props.categories.find((c) => c.id === oldCategoryId)!;
     test.value = test.value.map((c) =>

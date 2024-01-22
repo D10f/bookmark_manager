@@ -28,11 +28,11 @@ class BookmarksTest extends TestCase
     public function should_return_index_page_with_props()
     {
         $this
-            ->get(route('bookmarks.index'))
+            ->get(route('home'))
             ->assertOk()
             ->assertInertia(
                 fn (AssertableInertia $page) => $page
-                    ->component('bookmarks/Index')
+                    ->component('Home')
                     ->where('bookmarks', [])
                     ->where('errors', [])
                     ->where('create_url', route('bookmarks.create'))
@@ -43,11 +43,11 @@ class BookmarksTest extends TestCase
     public function should_return_index_page_with_merged_inertia_props()
     {
         $this
-            ->get(route('bookmarks.index'))
+            ->get(route('home'))
             ->assertOk()
             ->assertInertia(
                 fn (AssertableInertia $page) => $page
-                    ->component('bookmarks/Index')
+                    ->component('Home')
                     ->has('auth.user')
                     ->where('auth.categories', [])
                     ->where('new_bookmark', null)
@@ -61,11 +61,11 @@ class BookmarksTest extends TestCase
         Bookmark::factory()->create();
 
         $this
-            ->get(route('bookmarks.index'))
+            ->get(route('home'))
             ->assertOk()
             ->assertInertia(
                 fn (AssertableInertia $page) => $page
-                    ->component('bookmarks/Index')
+                    ->component('Home')
                     ->count('auth.categories', 1)
                     ->count('bookmarks', 1)
             );
@@ -80,7 +80,7 @@ class BookmarksTest extends TestCase
             ->assertInertia(
                 fn (AssertableInertia $page) => $page
                     ->component('bookmarks/Create')
-                    ->where('index_url', route('bookmarks.index'))
+                    ->where('home_url', route('home'))
                     ->where('store_url', route('bookmarks.store'))
             );
     }
@@ -95,7 +95,7 @@ class BookmarksTest extends TestCase
 
         $response = $this->post(route('bookmarks.store'), $bookmark->toArray());
         $response->assertStatus(302);
-        $response->assertRedirect(route('bookmarks.index'));
+        $response->assertRedirect(route('home'));
         $response->assertSessionHas('new_bookmark', $bookmark['id']);
 
         $this->assertDatabaseCount('bookmarks', 1);
@@ -116,7 +116,7 @@ class BookmarksTest extends TestCase
             ->assertInertia(
                 fn (AssertableInertia $page) => $page
                 ->component('bookmarks/Edit')
-                ->where('index_url', route('bookmarks.index'))
+                ->where('home_url', route('home'))
                 ->where('edit_url', route('bookmarks.update', ['bookmark' => $bookmark->id]))
                 ->where('delete_url', route('bookmarks.delete', ['bookmark' => $bookmark->id]))
             );
@@ -136,7 +136,7 @@ class BookmarksTest extends TestCase
             $newBookmark->toArray()
         );
 
-        $response->assertRedirect(route('bookmarks.index'));
+        $response->assertRedirect(route('home'));
 
         $this->assertDatabaseCount('bookmarks', 1);
         $this->assertDatabaseHas('bookmarks', $newBookmark->toArray());
@@ -160,7 +160,7 @@ class BookmarksTest extends TestCase
             $newBookmark->toArray()
         );
 
-        $response->assertRedirect(route('bookmarks.index'));
+        $response->assertRedirect(route('home'));
 
         $this->assertDatabaseCount('bookmarks', 1);
         $this->assertDatabaseHas('bookmarks', $newBookmark->toArray());
@@ -175,7 +175,7 @@ class BookmarksTest extends TestCase
         $bookmark = Bookmark::factory()->create();
 
         $response = $this->delete(route('bookmarks.delete', $bookmark->id));
-        $response->assertRedirect(route('bookmarks.index'));
+        $response->assertRedirect(route('home'));
 
         $this->assertDatabaseCount('bookmarks', 0);
 
