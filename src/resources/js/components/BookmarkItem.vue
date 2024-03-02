@@ -3,8 +3,8 @@
         @dragstart="dragStore.item = bookmark">
         <BookmarkFavicon :bookmark="bookmark" />
 
-        <a class="inline-block text-lg w-full h-full hover:text-yellow-500" :tabindex="isCollapsed ? -1 : 0"
-            :href="bookmark.url ?? '#'" target="_blank">{{ bookmark.name }}</a>
+        <a class="inline-block text-lg overflow-hidden whitespace-nowrap w-full h-full hover:text-yellow-500"
+            :tabindex="isCollapsed ? -1 : 0" :href="bookmark.url ?? '#'" target="_blank">{{ bookmark.name }}</a>
 
         <BaseButton as="Link" :href="bookmark.edit_url" intent="rounded" :tabindex="isCollapsed ? -1 : 0">
             <Tooltip tooltip=" Edit bookmark" :showTooltip="false">
