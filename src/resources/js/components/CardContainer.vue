@@ -7,7 +7,7 @@
                 <span v-show="title">{{ title }}</span>
             </h3>
 
-            <div class="md:opacity-25 md:group-hover:opacity-100 flex gap-3 text-xl">
+            <div class="opacity-100 sm:opacity-25 hover:opacity-100 focus-within:opacity-100 flex gap-3 text-xl">
                 <slot name="actions" />
 
                 <!-- <button v-show="sortable" class="cardContainerHandle"> -->
