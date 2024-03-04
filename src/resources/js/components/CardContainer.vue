@@ -7,7 +7,7 @@
                 <span v-show="title">{{ title }}</span>
             </h3>
 
-            <div class="opacity-100 sm:opacity-25 hover:opacity-100 focus-within:opacity-100 flex gap-3 text-xl">
+            <div class="flex gap-3 text-xl">
                 <slot name="actions" />
 
                 <!-- <button v-show="sortable" class="cardContainerHandle"> -->
@@ -50,11 +50,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide, watchEffect } from "vue";
+import { ref, provide, watchEffect, computed } from "vue";
 import Tooltip from "@/components/Tooltip.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import IconChevron from "@/components/icons/IconChevron.vue";
 import IconVertical from "@/components/icons/IconVertical.vue";
+import { usePointer } from "@vueuse/core";
 
 const props = withDefaults(
     defineProps<{
@@ -84,6 +85,10 @@ watchEffect(() => {
         isCollapsed.value = false;
     }
 });
+
+const isTouchDevice = computed(
+    () => usePointer().pointerType.value === "touch",
+);
 
 provide("isCollapsed", isCollapsed);
 </script>

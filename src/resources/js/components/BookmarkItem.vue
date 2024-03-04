@@ -7,8 +7,11 @@
             :tabindex="isCollapsed ? -1 : 0" :href="bookmark.url ?? '#'" target="_blank" :title="bookmark.name">{{
                 bookmark.name }}</a>
 
-        <BaseButton as="Link" :href="bookmark.edit_url" intent="rounded" :tabindex="isCollapsed ? -1 : 0"
-            class="opacity-100 sm:opacity-25 group-hover/item:opacity-100 group-focus-within/item:opacity-100">
+        <BaseButton as="Link" :href="bookmark.edit_url" intent="rounded" :tabindex="isCollapsed ? -1 : 0" class="visible"
+            :class="!isTouchDevice &&
+                'invisible group-hover/item:visible group-focus-within/item:visible'
+                ">
+            <!-- class="opacity-100 sm:opacity-25 group-hover/item:opacity-100 group-focus-within/item:opacity-100"> -->
             <Tooltip tooltip=" Edit bookmark" :showTooltip="false">
                 <IconPencil class="w-8 h-8 p-2" />
             </Tooltip>
@@ -20,8 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
+import { computed, inject } from "vue";
 import { useDragStore } from "@/stores/drag";
+import { usePointer } from "@vueuse/core";
 import IconPencil from "@/components/icons/IconPencil.vue";
 import BookmarkFavicon from "@/components/BookmarkFavicon.vue";
 import BaseButton from "@/components/BaseButton.vue";
@@ -31,4 +35,10 @@ defineProps<{ bookmark: App.Models.Bookmark }>();
 // defineEmits<{ dragStart: [bookmark: App.Models.Bookmark] }>();
 const isCollapsed = inject("isCollapsed");
 const dragStore = useDragStore();
+
+const isTouchDevice = computed(
+    () => usePointer().pointerType.value === "touch",
+);
+
+console.log(isTouchDevice.value);
 </script>
