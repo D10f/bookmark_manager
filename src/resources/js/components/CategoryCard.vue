@@ -15,7 +15,7 @@
         <ul class="flex flex-col gap-2 transition-all" ref="sortableContainer">
             <template v-for="item in sortedItems" :key="item.id">
                 <CategoryItem v-if="item.hasOwnProperty('parent_id')" :category="item as App.Models.Category"
-                    @activateCategory="downCategoryLevel" @dropItem="" />
+                    @activateCategory="downCategoryLevel" @dropItem="handleDrop" />
                 <BookmarkItem v-if="item.hasOwnProperty('category_id')" :bookmark="item as App.Models.Bookmark" />
             </template>
         </ul>
@@ -75,7 +75,7 @@ useSortable(sortableContainer, sortedItems, {
         dragStore.categoryIndex = newIndex;
     },
     onAdd({ newIndex }: SortableEvent) {
-        if (newIndex === undefined) return;
+        if (newIndex === undefined || dragStore.droppedCategory) return;
 
         const order = dragStore.getIndex(sortedItems, newIndex);
 
@@ -93,6 +93,8 @@ useSortable(sortableContainer, sortedItems, {
         }
     },
     onRemove() {
+        if (dragStore.droppedCategory) return;
+
         if (dragStore.item!.hasOwnProperty("category_id")) {
             const category = categoryStore.categories.find(
                 (c) => c.id === props.category.id,
@@ -102,11 +104,48 @@ useSortable(sortableContainer, sortedItems, {
             );
         }
     },
-    onEnd() {
+    onEnd({ item }: SortableEvent) {
+        if (dragStore.droppedCategory) {
+            (item as HTMLElement).remove();
+        }
         dragStore.commit();
         dragStore.reset();
     },
 });
+
+function handleDrop(category: App.Models.Category) {
+    dragStore.droppedCategory = category;
+    dragStore.categoryCardId = category.id;
+
+    const { subcategories, bookmarks } =
+        categoryStore.getCategoryChildren(category);
+
+    const sortedItems = [...subcategories, ...bookmarks].sort((a, b) =>
+        a.order < b.order ? -1 : 1,
+    );
+
+    dragStore.categoryItems = sortedItems;
+    dragStore.categoryIndex = sortedItems.length - 1;
+
+    if (dragStore.item!.hasOwnProperty("category_id")) {
+        props.category.bookmarks.push({
+            ...(dragStore.item as App.Models.Bookmark),
+            order: "zzzz",
+        });
+        const category = categoryStore.categories.find(
+            (c) => c.id === props.category.id,
+        )!;
+        category.bookmarks = category.bookmarks.filter(
+            (b) => b.id !== dragStore.item!.id,
+        );
+    } else {
+        const category = categoryStore.categories.find(
+            (c) => c.id === (dragStore.item as App.Models.Category).id,
+        )!;
+        category.parent_id = props.category.id;
+        category.order = "zzzz";
+    }
+}
 
 // const props = defineProps<{ category: App.Models.Category }>();
 // const emits = defineEmits<{

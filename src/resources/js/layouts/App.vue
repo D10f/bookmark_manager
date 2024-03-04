@@ -6,10 +6,10 @@
     <!--         content="A modern bookmark manager for the DIY enthusiasts." -->
     <!--     /> -->
     <!-- </Head> -->
-    <div class="bg-slate-700 text-white min-h-screen p-1">
+    <div class="bg-slate-700 text-white min-h-screen p-2 lg:px-4">
         <TheNavbar />
 
-        <main class="flex flex-col gap-2 z-50">
+        <main class="flex flex-col gap-2 z-50 max-w-[1200px] 2xl:max-w-[1600px] lg:mx-auto">
             <slot />
         </main>
 
