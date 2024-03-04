@@ -50,13 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from "vue";
+import { ref, provide, watchEffect } from "vue";
 import Tooltip from "@/components/Tooltip.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import IconChevron from "@/components/icons/IconChevron.vue";
 import IconVertical from "@/components/icons/IconVertical.vue";
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         title?: string;
         collapsable?: boolean;
@@ -78,6 +78,12 @@ function toggleCollapse() {
 
     setTimeout(() => (isCollapsing.value = false), 250);
 }
+
+watchEffect(() => {
+    if (!props.collapsable) {
+        isCollapsed.value = false;
+    }
+});
 
 provide("isCollapsed", isCollapsed);
 </script>

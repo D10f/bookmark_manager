@@ -1,5 +1,6 @@
 <template>
-    <CardContainer collapsable sortable :title="category.title">
+    <!-- 768: Tailwind's md screen breakpoint -->
+    <CardContainer :collapsable="width < 768" sortable :title="category.title">
         <template #title>
             <CategoryCardTitle :category="category" @activateCategory="upCategoryLevel" />
         </template>
@@ -24,6 +25,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useWindowSize } from "@vueuse/core";
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { SortableEvent } from "sortablejs";
 import { useDragStore } from "@/stores/drag";
@@ -43,6 +45,8 @@ const props = defineProps<{
 const emits = defineEmits<{
     update: [newCategory: App.Models.Category, oldCategoryId: number];
 }>();
+
+const { width } = useWindowSize();
 
 const categoryStore = useCategoryStore();
 const dragStore = useDragStore();
