@@ -4,7 +4,8 @@
         <BookmarkFavicon :bookmark="bookmark" />
 
         <a class="inline-block text-lg overflow-hidden whitespace-nowrap w-full h-full hover:text-yellow-500"
-            :tabindex="isCollapsed ? -1 : 0" :href="bookmark.url ?? '#'" target="_blank">{{ bookmark.name }}</a>
+            :tabindex="isCollapsed ? -1 : 0" :href="bookmark.url ?? '#'" target="_blank" :title="bookmark.name">{{
+                bookmark.name }}</a>
 
         <BaseButton as="Link" :href="bookmark.edit_url" intent="rounded" :tabindex="isCollapsed ? -1 : 0"
             class="opacity-100 sm:opacity-25 group-hover/item:opacity-100 group-focus-within/item:opacity-100">

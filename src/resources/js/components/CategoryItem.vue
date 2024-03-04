@@ -9,7 +9,7 @@
 
         <button class="text-lg text-left overflow-hidden whitespace-nowrap w-full h-full hover:text-yellow-500"
             :class="{ 'pointer-events-none': draggingOver }" :tabindex="isCollapsed ? -1 : 0"
-            @click="$emit('activateCategory', category)">
+            @click="$emit('activateCategory', category)" :title="category.title">
             {{ category.title }}
         </button>
 
