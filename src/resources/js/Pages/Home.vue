@@ -8,7 +8,8 @@
         </BaseButton>
     </aside>
 
-    <div class="flex flex-col justify-start gap-2 z-50" ref="sortableCardContainer">
+    <div class="flex flex-col justify-start gap-2 z-50 lg:grid lg:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
+        ref="sortableCardContainer">
         <CategoryCard v-for="category in test" :category="category" :key="category.id" @update="updateCard" />
     </div>
 </template>
