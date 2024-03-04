@@ -7,10 +7,10 @@
     <!--         Don't have an account? -->
     <!--     </ButtonLink> -->
     <!-- </aside> -->
-    <CardContainer title="Login">
+    <CardContainer title="Login" class="mt-2">
         <template #actions>
             <Link :href="auth_register">
-            <Tooltip tooltip="Don't have an account?">
+            <Tooltip tooltip="Don't have an account?" position="bottom">
                 <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
             </Tooltip>
             </Link>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import Site from "@/layouts/Site.vue";
+import App from "@/layouts/App.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import Tooltip from "@/components/Tooltip.vue";
@@ -58,6 +58,6 @@ function submitForm() {
 
 <script lang="ts">
 export default {
-    layout: Site,
+    layout: App,
 };
 </script>

@@ -3,7 +3,7 @@
         <meta name="description" head-key="description" content="A modern bookmark manager for the DIY enthusiasts." />
     </Head>
     <div class="bg-slate-700 text-white min-h-screen p-1">
-        <main class="flex flex-col justify-between gap-2 relative z-10">
+        <main class="flex flex-col justify-between gap-2 relative z-10 mx-auto max-w-2xl">
             <slot />
         </main>
 

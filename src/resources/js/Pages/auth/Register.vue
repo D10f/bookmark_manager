@@ -7,53 +7,31 @@
     <!--         Don't have an account? -->
     <!--     </ButtonLink> -->
     <!-- </aside> -->
-    <CardContainer title="Register New Account">
+    <CardContainer title="Register New Account" class="mt-2">
         <template #actions>
             <Link :href="auth_login">
-                <Tooltip tooltip="Already have an account?">
-                    <IconProfile
-                        class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full"
-                    />
-                </Tooltip>
+            <Tooltip tooltip="Already have an account?" position="bottom">
+                <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
+            </Tooltip>
             </Link>
         </template>
         <form class="px-4 py-2" @submit.prevent="submitForm">
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Email"
-                    name="email"
-                    autofocus
-                    v-model="form.email"
-                    :error="form.errors.email"
-                />
+                <BaseInput label="Email" name="email" autofocus v-model="form.email" :error="form.errors.email" />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Password"
-                    type="text"
-                    name="password"
-                    v-model="form.password"
-                    :error="form.errors.password"
-                />
+                <BaseInput label="Password" type="text" name="password" v-model="form.password"
+                    :error="form.errors.password" />
             </div>
 
             <div class="py-2 flex flex-col gap-1">
-                <BaseInput
-                    label="Confirm Password"
-                    type="text"
-                    name="confirmPassword"
-                    v-model="form.password_confirmation"
-                    :error="form.errors.password_confirmation"
-                />
+                <BaseInput label="Confirm Password" type="text" name="confirmPassword" v-model="form.password_confirmation"
+                    :error="form.errors.password_confirmation" />
             </div>
 
             <div class="py-2">
-                <BaseButton
-                    :loading="form.processing"
-                    class="mt-2"
-                    type="submit"
-                >
+                <BaseButton :loading="form.processing" class="mt-2" type="submit">
                     Sign Up
                     <template #loading> ... </template>
                 </BaseButton>
@@ -63,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import Site from "@/layouts/Site.vue";
+import App from "@/layouts/App.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import Tooltip from "@/components/Tooltip.vue";
@@ -86,6 +64,6 @@ function submitForm() {
 
 <script lang="ts">
 export default {
-    layout: Site,
+    layout: App,
 };
 </script>

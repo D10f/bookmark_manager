@@ -39,6 +39,4 @@ const dragStore = useDragStore();
 const isTouchDevice = computed(
     () => usePointer().pointerType.value === "touch",
 );
-
-console.log(isTouchDevice.value);
 </script>

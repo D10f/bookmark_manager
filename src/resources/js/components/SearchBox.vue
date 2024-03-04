@@ -1,5 +1,5 @@
 <template>
-    <BaseButton intent="rounded" @click="showSearchModal = true">
+    <BaseButton intent="rounded" @click="showSearchModal = true" v-show="show">
         <Tooltip tooltip="Search bookmarks" position="bottom">
             <IconSearch class="w-8 h-8 p-2" />
         </Tooltip>
@@ -46,6 +46,8 @@ export type BookmarkSearchResult = Pick<
 > & {
     path: string;
 };
+
+withDefaults(defineProps<{ show: boolean }>(), { show: true });
 
 const categoryStore = useCategoryStore();
 const showSearchModal = ref(false);

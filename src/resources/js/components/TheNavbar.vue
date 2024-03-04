@@ -1,10 +1,11 @@
 <template>
     <header
         class="relative z-50 font-bold text-md text-white bg-slate-950 border-b border-b-slate-700 rounded-md shadow-y shadow-sm shadow-slate-900 p-4 flex justify-between items-center">
-        <h3>Welcome back, {{ username }}</h3>
+        <h3 v-if="username">Welcome back, {{ username }}</h3>
+        <h3 v-else>Welcome, Guest</h3>
 
         <div class="flex gap-2 text-xl">
-            <SearchBox />
+            <SearchBox :show="Boolean(username)" />
 
             <!-- <BaseButton as="Link" href="#" intent="rounded" @click=""> -->
             <!--     <Tooltip tooltip="Settings" position="bottom"> -->
@@ -22,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import IconProfile from "@/components/icons/IconProfile.vue";
 import IconCog from "@/components/icons/IconCog.vue";
@@ -32,5 +34,5 @@ import SearchBox from "@/components/SearchBox.vue";
 const page = usePage<App.Inertia.Middleware>();
 
 const profileUrl = page.props.profile_url;
-const username = page.props.auth?.user.name;
+const username = computed(() => page.props.auth?.user?.name);
 </script>
