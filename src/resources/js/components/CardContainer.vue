@@ -4,7 +4,8 @@
         <header class="md:group flex justify-between items-center bg-slate-950 font-bold text-md rounded-t-md p-3">
             <h3 class="flex justify-start items-center">
                 <slot name="title" />
-                <span v-show="title">{{ title }}</span>
+                <span v-show="title" :title="title" class="whitespace-nowrap overflow-hidden text-ellipsis">{{ title
+                }}</span>
             </h3>
 
             <div class="flex gap-3 text-xl">
