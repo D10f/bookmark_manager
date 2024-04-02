@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import { onClickOutside, onKeyDown } from "@vueuse/core";
+
 withDefaults(
     defineProps<{
         show: boolean;
@@ -6,36 +9,25 @@ withDefaults(
     }>(),
     { headless: false },
 );
-defineEmits<{
+const emit = defineEmits<{
     closeModal: [];
 }>();
+
+const modalRef = ref(null);
+
+onClickOutside(modalRef, () => emit("closeModal"));
+onKeyDown("Escape", () => emit("closeModal"));
 </script>
 
 <template>
-    <Transition
-        enter-from-class="opacity-0 scale-125"
-        enter-to-class="opacity-1 scale-100"
-        enter-active-class="transition duration-300"
-        leave-active-class="transition duration-200"
-        leave-from-class="opacity-1"
-        leave-to-class="opacity-0"
-    >
-        <aside
-            v-show="show"
-            class="flex justify-center items-center fixed inset-0 bg-slate-800/80 backdrop-blur-sm z-50"
-        >
-            <div
-                class="bg-slate-700 text-white p-4 border border-white rounded-md w-[90%] max-w-[500px]"
-            >
-                <header
-                    v-show="!headless"
-                    class="flex justify-between items-center text-2xl mb-2"
-                >
+    <Transition enter-from-class="opacity-0 scale-125" enter-to-class="opacity-1 scale-100"
+        enter-active-class="transition duration-300" leave-active-class="transition duration-200"
+        leave-from-class="opacity-1" leave-to-class="opacity-0">
+        <aside v-show="show" class="flex justify-center items-center fixed inset-0 bg-slate-800/80 backdrop-blur-sm z-50">
+            <div ref="modalRef" class="bg-slate-700 text-white p-4 border border-white rounded-md w-[90%] max-w-[500px]">
+                <header v-show="!headless" class="flex justify-between items-center text-2xl mb-2">
                     <slot name="header" />
-                    <button
-                        class="scale-125 hover:text-amber-400 focus:text-amber-400"
-                        @click="$emit('closeModal')"
-                    >
+                    <button class="scale-125 hover:text-amber-400 focus:text-amber-400" @click="$emit('closeModal')">
                         &times;
                     </button>
                 </header>
