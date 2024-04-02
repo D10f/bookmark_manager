@@ -2,9 +2,10 @@
     <section
         class="bg-slate-900 bg-opacity-80 border-b border-b-slate-700 rounded-md shadow-y shadow-sm shadow-slate-900 z-10">
         <header class="md:group flex justify-between items-center bg-slate-950 font-bold text-md rounded-t-md p-3">
-            <h3 class="flex justify-start items-center">
+            <h3 class="flex justify-start items-center whitespace-nowrap overflow-hidden text-ellipsis">
                 <slot name="title" />
-                <span v-show="title" :title="title" class="whitespace-nowrap overflow-hidden text-ellipsis">{{ title
+                <span v-show="title" :title="title" class="max-w-[50%]">{{
+                    title
                 }}</span>
             </h3>
 
