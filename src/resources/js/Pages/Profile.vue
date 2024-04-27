@@ -25,8 +25,8 @@
 
             <BaseButton intent="rounded" @click="showDeleteModal = true" aria-label="delete account">
                 <Tooltip tooltip="Delete account">
-                    <IconTrash v-if="!showDeleteConfirmation" class="w-8 h-8 p-2" />
-                    <div v-else class="w-8 h-8 text-2xl">&times;</div>
+                    <!-- <IconTrash v-if="!showDeleteConfirmation" class="w-8 h-8 p-2" /> -->
+                    <div class="w-8 h-8 text-2xl">&times;</div>
                 </Tooltip>
             </BaseButton>
 
@@ -206,6 +206,7 @@ const props = defineProps<{
     update_url: string;
     delete_url: string;
     logout_url: string;
+    import_url: string;
 }>();
 
 /** ------------------------ Update --------------------------------- */
@@ -254,7 +255,9 @@ function logoutProfile() {
 
 const htmlImport = ref(null);
 
-function handleFilePicker(event) {
+const importForm = useForm({});
+
+async function handleFilePicker(event) {
     const file = event.target.files[0];
 
     if (file.size > 5_000_000) {
@@ -267,7 +270,15 @@ function handleFilePicker(event) {
         return;
     }
 
-    new BookmarkParser(file).parse().then(console.log).catch();
+    try {
+        const bp = new BookmarkParser();
+        const bookmarks = await bp.parse(file);
+        importForm
+            .transform(() => ({ data: bookmarks }))
+            .post(props.import_url);
+    } catch (e) {
+        console.log((e as Error).message);
+    }
 }
 </script>
 

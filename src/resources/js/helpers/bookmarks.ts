@@ -1,15 +1,8 @@
 export default class BookmarkParser {
-    constructor(private bookmarkFile: File) { }
-
-    async parse() {
-        const bookmarks = {
-            type: "Category",
-            bookmarks: [],
-        };
-
-        const rootNode = await this.read();
-        this._parse(rootNode as Node, bookmarks);
-        return bookmarks;
+    async parse(bookmarkFile: File, bookmarkMap = { bookmarks: [] }) {
+        const rootNode = await this.read(bookmarkFile);
+        this._parse(rootNode as Node, bookmarkMap);
+        return bookmarkMap;
     }
 
     private _parse(root: Node, tree: Record<string, any>) {
@@ -57,7 +50,7 @@ export default class BookmarkParser {
         return null;
     }
 
-    private read() {
+    private read(bookmarkFile: File) {
         const reader = new FileReader();
 
         return new Promise((resolve, reject) => {
@@ -81,7 +74,7 @@ export default class BookmarkParser {
 
             reader.onabort = () => reject("Error reading file.");
 
-            reader.readAsText(this.bookmarkFile);
+            reader.readAsText(bookmarkFile);
         });
     }
 }
