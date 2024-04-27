@@ -8,6 +8,7 @@ use App\Models\Bookmark;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
+use DiDom\Document;
 
 class BookmarkController extends Controller
 {
@@ -76,6 +77,30 @@ class BookmarkController extends Controller
         ]);
 
         return response($bookmark->toJson(), 201);
+    }
+
+    public function importBookmarks()
+    {
+        $validated = Request::validate([
+            'data' => ['required']
+        ]);
+
+        // dd($validated['bookmarks']);
+
+        return redirect(route('home'));
+
+        // ---
+
+        // $compressed_input = file_get_contents("php://input");
+
+        // if (mb_strlen($compressed_input, 'UTF-8') > 5242880)
+        // {
+        //     return response('File size exceeds maximum allwowed of 5MB', 400);
+        // }
+
+        // $bookmark_data = gzinflate(substr($compressed_input, 10));
+
+        // return response($compressed_input);
     }
 
     public function delete(Bookmark $bookmark)

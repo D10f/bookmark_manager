@@ -93,7 +93,9 @@ Route::middleware('auth')->prefix('app')->group(function() {
     Route::get('/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
     Route::post('/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
     Route::post('/bookmarks/{bookmark}/update', [BookmarkController::class, 'update'])->name('bookmarks.update');
+    Route::post('/bookmarks/import', [BookmarkController::class, 'importBookmarks'])->name('bookmarks.import');
     Route::delete('/bookmarks/{bookmark}/delete', [BookmarkController::class, 'delete'])->name('bookmarks.delete');
+
 
     /*
     |--------------------------------------------------------------------------
