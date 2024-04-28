@@ -6,7 +6,7 @@
                 <slot name="title" />
                 <span v-show="title" :title="title" class="max-w-[50%]">{{
                     title
-                }}</span>
+                    }}</span>
             </h3>
 
             <div class="flex gap-3 text-xl">
@@ -41,7 +41,7 @@
             </div>
         </header>
 
-        <div class="overflow-hidden transition-all duration-300 px-4 py-2 max-h-[50vh] will-change-auto" tabindex="-1"
+        <div class="overflow-auto transition-all duration-300 px-4 py-2 max-h-[50vh] will-change-auto" tabindex="-1"
             :class="{
                 '!max-h-0 !duration-200 !py-0': isCollapsed,
                 // 'overflow-scroll': !isCollapsing,
