@@ -1,3 +1,5 @@
+import { midString } from "./lexicographic";
+
 export default class BookmarkParser {
     async parse(bookmarkFile: File, bookmarkMap = { bookmarks: [] }) {
         const rootNode = await this.read(bookmarkFile);
@@ -20,9 +22,13 @@ export default class BookmarkParser {
                 };
                 this._parse(dl, tree[nextNode.title]);
             } else if (nextNode.type === "bookmark") {
+                const lastItem = tree.bookmarks[tree.bookmarks.length - 1];
+                const lastItemOrder = lastItem ? lastItem.order : "";
+
                 tree.bookmarks.push({
                     title: nextNode.title,
                     url: nextNode.url,
+                    order: midString(lastItemOrder, ""),
                 });
             }
         }
