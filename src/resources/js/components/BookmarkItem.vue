@@ -7,8 +7,8 @@
             :tabindex="isCollapsed ? -1 : 0" :href="bookmark.url ?? '#'" target="_blank" :title="bookmark.name">{{
                 bookmark.name }}</a>
 
-        <BaseButton as="Link" :href="bookmark.edit_url" intent="rounded" :tabindex="isCollapsed ? -1 : 0" class="visible"
-            :class="!isTouchDevice &&
+        <BaseButton as="Link" :href="bookmark.edit_url" intent="rounded" :tabindex="isCollapsed ? -1 : 0"
+            class="visible" :class="!isTouchDevice &&
                 'invisible group-hover/item:visible group-focus-within/item:visible'
                 ">
             <!-- class="opacity-100 sm:opacity-25 group-hover/item:opacity-100 group-focus-within/item:opacity-100"> -->
@@ -36,7 +36,6 @@ defineProps<{ bookmark: App.Models.Bookmark }>();
 const isCollapsed = inject("isCollapsed");
 const dragStore = useDragStore();
 
-const isTouchDevice = computed(
-    () => usePointer().pointerType.value === "touch",
-);
+const pointer = usePointer();
+const isTouchDevice = computed(() => pointer.pointerType.value === "touch");
 </script>
