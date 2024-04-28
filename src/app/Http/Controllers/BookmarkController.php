@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Jobs\DownloadFavicon;
 use App\Http\Requests\StoreBookmarkRequest;
 use App\Models\Bookmark;
+use App\Helpers\BookmarkManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
-use DiDom\Document;
 
 class BookmarkController extends Controller
 {
@@ -79,13 +79,17 @@ class BookmarkController extends Controller
         return response($bookmark->toJson(), 201);
     }
 
+    /**
+     * Given a structured JSON array, re-creates the necessary categories and
+     * bookmarks, following the provided structure.
+     */
     public function importBookmarks()
     {
         $validated = Request::validate([
             'data' => ['required']
         ]);
 
-        // dd($validated['bookmarks']);
+        BookmarkManager::import($validated['data']);
 
         return redirect(route('home'));
 
