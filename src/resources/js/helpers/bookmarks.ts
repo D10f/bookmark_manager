@@ -31,23 +31,25 @@ export default class BookmarkParser {
     private peek(node: Node) {
         const nextNode = node.childNodes[0] as HTMLElement;
 
+        if (nextNode.nodeName !== "H3" && nextNode.nodeName !== "A") {
+            return null;
+        }
+
+        const title = nextNode.textContent as string;
         if (nextNode.nodeName === "H3") {
             return {
                 type: "category",
-                title: nextNode.textContent as string,
+                title: title || "Empty Folder",
                 bookmarks: [],
             };
         }
 
-        if (nextNode.nodeName === "A") {
-            return {
-                type: "bookmark",
-                title: nextNode.textContent as string,
-                url: nextNode.getAttribute("HREF"),
-            };
-        }
-
-        return null;
+        const url = nextNode.getAttribute("HREF") as string;
+        return {
+            type: "bookmark",
+            title: title || url,
+            url,
+        };
     }
 
     private read(bookmarkFile: File) {
