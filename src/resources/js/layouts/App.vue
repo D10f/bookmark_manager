@@ -9,7 +9,7 @@
     <div class="bg-slate-700 text-white min-h-screen p-2 lg:px-4">
         <TheNavbar />
 
-        <main class="flex flex-col gap-2 z-50 lg:mx-auto" :class="isDashboard ? 'max-w-[1200px] 2xl:max-w-[1600px]' : 'max-w-2xl'
+        <main class="flex flex-col gap-2 z-50 mx-auto" :class="isDashboard ? 'max-w-[1200px] 2xl:max-w-[1600px]' : 'max-w-2xl'
             ">
             <slot />
         </main>
