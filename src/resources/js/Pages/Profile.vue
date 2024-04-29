@@ -25,8 +25,9 @@
 
             <BaseButton intent="rounded" @click="showDeleteModal = true" aria-label="delete account">
                 <Tooltip tooltip="Delete account">
+                    <IconTrash class="w-8 h-8 p-2" />
                     <!-- <IconTrash v-if="!showDeleteConfirmation" class="w-8 h-8 p-2" /> -->
-                    <div class="w-8 h-8 text-2xl">&times;</div>
+                    <!-- <div v-else class="w-8 h-8 text-2xl">&times;</div> -->
                 </Tooltip>
             </BaseButton>
 
@@ -104,7 +105,7 @@
             </div>
 
             <div class="py-2">
-                <BaseButton :loading="form.processing" class="mt-2" type="submit">
+                <BaseButton :loading="form.processing" :disabled="allowUpdate" class="mt-2" type="submit">
                     Update Profile
                     <template #loading> ... </template>
                 </BaseButton>
@@ -125,6 +126,13 @@
     </CardContainer>
 
     <CardContainer title="Shortcuts" collapsable>
+        <div class="px-4 py-2">
+            <div class="py-2">
+                <Keybind :keys="['ctrl', 'k']">Search for bookmarks.</Keybind>
+                <Keybind :keys="['ctrl', 'p']">Open profile page.</Keybind>
+                <Keybind :keys="['ctrl', 'b']">Create new bookmark.</Keybind>
+            </div>
+        </div>
         <!-- TODO:
             Ctrl + K for search
             Ctrl + A to add new bookmark
@@ -133,23 +141,24 @@
         -->
     </CardContainer>
 
-    <CardContainer title="Import / Export" collapsable>
-        <!-- TODO:
-            Import / Export Bookmarks
-        -->
+    <CardContainer title="Import" collapsable>
         <div class="px-4 py-2">
             <div class="py-2">
                 <p>
-                    Import bookmarks from another browser backup (HTML file
-                    only).
+                    Import bookmarks from another browser backup. Supported
+                    formats: HTML.
                 </p>
                 <input type="file" class="invisible w-0 h-0" aria-hidden ref="htmlImport" @change="handleFilePicker" />
                 <BaseButton class="my-2" @click="() => htmlImport.click()">Import</BaseButton>
             </div>
+        </div>
+    </CardContainer>
 
+    <CardContainer title="Export" collapsable>
+        <div class="px-4 py-2">
             <div class="py-2">
                 <p>Export bookmark data ready to be used by browsers.</p>
-                <BaseButton class="my-2">Export</BaseButton>
+                <BaseButton disabled class="my-2">Export</BaseButton>
             </div>
         </div>
     </CardContainer>
@@ -189,15 +198,16 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
-import { getCookie } from "@/helpers/api";
 import BookmarkParser from "@/helpers/bookmarks";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import CardContainer from "@/components/CardContainer.vue";
+import Keybind from "@/components/Keybind.vue";
 import Modal from "@/components/TheModal.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import IconChevron from "@/components/icons/IconChevron.vue";
 import IconLogout from "@/components/icons/IconLogout.vue";
+import IconTrash from "@/components/icons/IconTrash.vue";
 
 const props = defineProps<{
     user: App.Models.User;
@@ -221,6 +231,14 @@ const form = useForm({
 function updateProfile() {
     form.post(props.update_url);
 }
+
+const allowUpdate = computed(
+    () =>
+        form.name === props.user.name &&
+        form.email === props.user.email &&
+        form.password === "" &&
+        form.password_confirmation === "",
+);
 
 /** ------------------------ Delete --------------------------------- */
 
@@ -251,7 +269,7 @@ function logoutProfile() {
     form.post(props.logout_url);
 }
 
-/** ------------------------ Import bookmarks ----------------------- */
+/** -------------------- Import/Export Settings ---------------------- */
 
 const htmlImport = ref(null);
 
@@ -284,7 +302,6 @@ async function handleFilePicker(event) {
 
 <script lang="ts">
 import App from "@/layouts/App.vue";
-import IconTrash from "@/components/icons/IconTrash.vue";
 export default {
     layout: App,
 };
