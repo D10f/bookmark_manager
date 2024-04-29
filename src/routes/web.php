@@ -91,6 +91,7 @@ Route::middleware('auth')->prefix('app')->group(function() {
     */
     Route::get('/bookmarks/create', [BookmarkController::class, 'create'])->name('bookmarks.create');
     Route::get('/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
+    Route::get('/bookmarks/export', [BookmarkController::class, 'export'])->name('bookmarks.export');
     Route::post('/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
     Route::post('/bookmarks/{bookmark}/update', [BookmarkController::class, 'update'])->name('bookmarks.update');
     Route::post('/bookmarks/import', [BookmarkController::class, 'importBookmarks'])->name('bookmarks.import');

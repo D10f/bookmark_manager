@@ -107,6 +107,11 @@ class BookmarkController extends Controller
         // return response($compressed_input);
     }
 
+    public function export()
+    {
+        return BookmarkManager::export();
+    }
+
     public function delete(Bookmark $bookmark)
     {
         $bookmark->delete();

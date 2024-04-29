@@ -18,21 +18,22 @@ class BookmarkManager
     {
         $user_id = auth()->user()->id;
 
-        foreach ($bookmarks as $key => $val)
+        foreach ($bookmarks as $category => $props)
         {
-            if ($key === 'bookmarks' || $key === 'Other Bookmarks') continue;
+            // ignore this for now...
+            if ($category === 'bookmarks' || $category === 'Other Bookmarks') continue;
 
             $new_category = Category::create([
-                'title' => $key,
+                'title' => $category,
                 'order' => Category::lowestOrder(null, $user_id) ?? 'a',
                 'user_id' => $user_id,
                 'parent_id' => $parent_category_id
             ]);
 
-            if (key_exists('bookmarks', $val) && count($val['bookmarks']) > 0)
+            if (key_exists('bookmarks', $props) && count($props['bookmarks']) > 0)
             {
                 $bulk_bookmarks = [];
-                foreach ($val['bookmarks'] as $bookmark)
+                foreach ($props['bookmarks'] as $bookmark)
                 {
                     array_push($bulk_bookmarks, [
                         'name' => $bookmark['title'],
@@ -45,10 +46,42 @@ class BookmarkManager
                 Bookmark::insert($bulk_bookmarks);
             }
 
-            // foreach ($val as $sub_category)
-            // {
-            //     BookmarkManager::import($sub_category, $new_category['id']);
-            // }
+            unset($props['bookmarks']);
+            BookmarkManager::import($props, $new_category['id']);
         }
+    }
+
+    /**
+     * Creates a JSON representation of a user's bookmarks
+     *
+     * @return array JSON representation of user's bookmarks.
+     */
+    static public function export()
+    {
+        return auth()
+            ->user()
+            ->categories()
+            ->select('id','title','order','parent_id')
+            ->orderBy('order')
+            ->with(['bookmarks' => function ($query) {
+                $query->select('id', 'name', 'url', 'order', 'category_id');
+                $query->orderByDesc('order');
+            }])
+            ->get()
+            ->map(fn ($category) => [
+                'id' => $category->id,
+                'title' => $category->title,
+                'order' => $category->order,
+                'parent_id' => $category->parent_id,
+                'bookmarks' => $category->bookmarks->map(fn ($bookmark) => [
+                    'id' => $bookmark->id,
+                    'name' => $bookmark->name,
+                    'url' => $bookmark->url,
+                    'order'=> $bookmark->order,
+                    'category_id'=> $bookmark->category_id,
+                    'edit_url' => route('bookmarks.edit', $bookmark->id)
+                ]),
+                'edit_url' => route('categories.edit', $category->id)
+            ]);
     }
 }
