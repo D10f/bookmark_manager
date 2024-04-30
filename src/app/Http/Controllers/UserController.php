@@ -20,6 +20,7 @@ class UserController extends Controller
             'delete_url' => route('profile.delete'),
             'logout_url' => route('auth.destroy'),
             'import_url' => route('bookmarks.import'),
+            'export_url' => route('bookmarks.export'),
                 // ->with(['categories' => function ($query) {
                 //     $query->select('id','title','order','parent_id');
                 //     $query->orderByDesc('order');

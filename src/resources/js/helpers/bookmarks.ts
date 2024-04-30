@@ -1,6 +1,6 @@
 import { midString } from "./lexicographic";
 
-export default class BookmarkParser {
+export class BookmarkParser {
     async parse(bookmarkFile: File, bookmarkMap = { bookmarks: [] }) {
         const rootNode = await this.read(bookmarkFile);
         this._parse(rootNode as Node, bookmarkMap);
@@ -84,5 +84,60 @@ export default class BookmarkParser {
 
             reader.readAsText(bookmarkFile);
         });
+    }
+}
+
+export class BookmarkExporter {
+    private document: Document;
+
+    constructor(private bookmarkData: App.Models.Category[]) {
+        this.document = new DOMParser().parseFromString(
+            `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+            <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+            <TITLE>Bookmarks</TITLE>
+            <H1>Bookmarks</H1>
+            <DL><p></DL><p>`,
+            "text/html",
+        );
+    }
+
+    export() {
+        this.bookmarkData
+            .filter((category) => category.parent_id === null)
+            .forEach((c) => {
+                const node = this.makeCategoryMarkup(c);
+                this.document.querySelector("dl")?.appendChild(node);
+            });
+        return this.document;
+    }
+
+    private makeCategoryMarkup(category: App.Models.Category) {
+        const dt = this.document.createElement("dt");
+        const h3 = this.document.createElement("h3");
+        h3.textContent = category.title;
+        dt.appendChild(h3);
+
+        const dl = this.document.createElement("dl");
+        const p = this.document.createElement("p");
+        dl.appendChild(p);
+
+        category.bookmarks.forEach((bookmark) => {
+            const bookmarkDT = this.document.createElement("dt");
+            const a = this.document.createElement("a");
+            a.href = bookmark.url;
+            a.textContent = bookmark.name;
+            bookmarkDT.appendChild(a);
+            dl.appendChild(bookmarkDT);
+        });
+
+        this.bookmarkData
+            .filter((c) => c.parent_id === category.id)
+            .map(this.makeCategoryMarkup.bind(this))
+            .forEach((childCategory) => {
+                dl.insertAdjacentElement("afterbegin", childCategory);
+            });
+
+        dt.insertAdjacentElement("beforeend", dl);
+        return dt;
     }
 }

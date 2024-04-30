@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Services;
 
 use App\Models\Category;
 use App\Models\Bookmark;
 
-class BookmarkManager
+class BookmarkService
 {
     /**
      * Creates bookmark and category.
@@ -47,7 +47,7 @@ class BookmarkManager
             }
 
             unset($props['bookmarks']);
-            BookmarkManager::import($props, $new_category['id']);
+            BookmarkService::import($props, $new_category['id']);
         }
     }
 
@@ -74,14 +74,10 @@ class BookmarkManager
                 'order' => $category->order,
                 'parent_id' => $category->parent_id,
                 'bookmarks' => $category->bookmarks->map(fn ($bookmark) => [
-                    'id' => $bookmark->id,
                     'name' => $bookmark->name,
                     'url' => $bookmark->url,
                     'order'=> $bookmark->order,
-                    'category_id'=> $bookmark->category_id,
-                    'edit_url' => route('bookmarks.edit', $bookmark->id)
                 ]),
-                'edit_url' => route('categories.edit', $category->id)
             ]);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\DownloadFavicon;
 use App\Http\Requests\StoreBookmarkRequest;
 use App\Models\Bookmark;
-use App\Helpers\BookmarkManager;
+use App\Services\BookmarkService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -89,7 +89,7 @@ class BookmarkController extends Controller
             'data' => ['required']
         ]);
 
-        BookmarkManager::import($validated['data']);
+        BookmarkService::import($validated['data']);
 
         return redirect(route('home'));
 
@@ -109,7 +109,7 @@ class BookmarkController extends Controller
 
     public function export()
     {
-        return BookmarkManager::export();
+        return BookmarkService::export();
     }
 
     public function delete(Bookmark $bookmark)
