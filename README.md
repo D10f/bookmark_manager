@@ -6,14 +6,20 @@ An intuitive and customizable way to handle bookmarks.
 
 - [x] Organize bookmarks hierarchically.
 - [ ] Sort categories and bookmarks:
-    - [x] drag and drop (lexicographical).
-    - [ ] alphabetical.
-    - [ ] frequently used.
+  - [x] drag and drop (lexicographical).
+  - [ ] alphabetical.
+  - [ ] frequently used.
 - [x] Fuzzy find bookmarks.
 - [x] Keyboard navigation.
-- [ ] Import/export bookmark data.
+- [x] Import/export bookmark data.
 - [ ] Multi-factor authentication.
 - [ ] Theme picker.
+
+## Anti-Features
+
+I've designed this web application around my own personal use case. Browser bookmarks can have keywords and tags assign to them, designed to make them easier to organize and find. However, I never found this useful; I normally have a rough idea of what I'm looking for by name and the address bar brings up those results quickly. Otherwise, I tend to use folders to keep bookmarks oragnized in categories which I can also search for easily.
+
+Therefore, one anti-feature of this project is that bookmarks don't have either tags nor bookmarks. This simplifies the database schema and speeds up queries.
 
 ## How To Run
 
