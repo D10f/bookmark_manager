@@ -15,7 +15,6 @@ class UserController extends Controller
         return Inertia::render('Profile', [
             'user' => Auth::user()->setVisible(['id', 'name', 'email']),
             'delete_confirmation' => fake()->bothify('????####'),
-            'home_url' => route('home'),
             'update_url' => route('profile.update'),
             'delete_url' => route('profile.delete'),
             'logout_url' => route('auth.destroy'),

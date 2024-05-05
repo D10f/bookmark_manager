@@ -22,7 +22,6 @@ class CategoryController extends Controller
     {
         return Inertia::render('categories/Edit', [
             'category' => $category,
-            'home_url' => route('home'),
             'update_url' => route('categories.update', ['category' => $category->id]),
             'delete_url' => route('categories.delete', ['category' => $category->id]),
         ]);

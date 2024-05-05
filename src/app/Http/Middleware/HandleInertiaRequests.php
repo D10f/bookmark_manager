@@ -49,6 +49,7 @@ class HandleInertiaRequests extends Middleware
                 : null,
             'profile_url' => route('profile.me'),
             'new_bookmark' => $request->session()->get('new_bookmark'),
+            'home_url' => route('home')
         ]);
     }
 }

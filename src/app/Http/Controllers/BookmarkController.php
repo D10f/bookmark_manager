@@ -33,7 +33,6 @@ class BookmarkController extends Controller
     {
         return Inertia::render('bookmarks/Create', [
             'categories' => auth()->user()->categories()->select('id', 'title', 'parent_id')->get(),
-            'home_url' => route('home'),
             'store_url' => route('bookmarks.store'),
             'create_category_url' => route('categories.create')
         ]);
@@ -43,7 +42,6 @@ class BookmarkController extends Controller
     {
         return Inertia::render('bookmarks/Edit', [
             'bookmark' => $bookmark,
-            'home_url' => route('home'),
             'update_url' => route('bookmarks.update', ['bookmark' => $bookmark->id]),
             'delete_url' => route('bookmarks.delete', ['bookmark' => $bookmark->id]),
         ]);
