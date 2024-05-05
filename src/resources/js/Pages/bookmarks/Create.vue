@@ -1,16 +1,4 @@
 <template>
-    <aside class="flex justify-end items-center mt-2 z-10">
-        <BaseButton as="Link" :href="home_url">
-            <IconChevron class="rotate-90 fill-current w-4 h-4" />
-            Back
-        </BaseButton>
-        <!-- <BaseButton :as="Link" :href="home_url"> -->
-        <!--     <template #leftIcon> -->
-        <!--         <IconChevron class="fill-current w-4 h-4 rotate-90" /> -->
-        <!--     </template> -->
-        <!--     Back -->
-        <!-- </BaseButton> -->
-    </aside>
     <CardContainer title="Create New Bookmark">
         <form class="px-4 py-2" @submit.prevent="createNewBookmark">
             <div class="py-2 flex flex-col gap-1">
@@ -39,18 +27,16 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useForm, Link } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { useCategoryStore } from "@/stores/category";
 import { buildUrl } from "@/helpers/urlExtractor";
 import Combobox from "@/components/Combobox.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import CardContainer from "@/components/CardContainer.vue";
-import IconChevron from "@/components/icons/IconChevron.vue";
 
 const props = defineProps<{
     categories: App.Models.Category[];
-    home_url: string;
     store_url: string;
 }>();
 
@@ -106,8 +92,9 @@ async function createCategory(categoryName: string) {
 
 <script lang="ts">
 import App from "@/layouts/App.vue";
+import Page from "@/layouts/Page.vue";
 import { midString } from "@/helpers/lexicographic";
 export default {
-    Layout: App,
+    layout: [App, Page],
 };
 </script>

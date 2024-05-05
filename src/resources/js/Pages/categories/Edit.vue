@@ -1,14 +1,4 @@
 <template>
-    <aside class="flex justify-end items-center mt-2 z-10">
-        <BaseButton as="Link" :href="home_url">
-            <IconChevron class="rotate-90 fill-current w-4 h-4" />
-            Back
-        </BaseButton>
-        <!-- <ButtonLink :to="home_url"> -->
-        <!--     <IconChevron class="rotate-90 group-hover:fill-slate-950 fill-current w-4 h-4 mr-2" /> -->
-        <!--     Back -->
-        <!-- </ButtonLink> -->
-    </aside>
     <CardContainer title="Edit Category">
         <template #actions>
             <!-- <button @click="showDeleteModal = true"> -->
@@ -71,16 +61,13 @@ import { buildUrl } from "@/helpers/urlExtractor";
 import Modal from "@/components/TheModal.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import Combobox from "@/components/Combobox.vue";
-import ButtonLink from "@/components/ButtonLink.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import CardContainer from "@/components/CardContainer.vue";
-import IconChevron from "@/components/icons/IconChevron.vue";
 import IconTrash from "@/components/icons/IconTrash.vue";
 
 const props = defineProps<{
     category: App.Models.Category;
-    home_url: string;
     update_url: string;
     delete_url: string;
 }>();
@@ -109,7 +96,8 @@ function deleteCategory() {
 
 <script lang="ts">
 import App from "@/layouts/App.vue";
+import Page from "@/layouts/Page.vue";
 export default {
-    Layout: App,
+    layout: [App, Page],
 };
 </script>
