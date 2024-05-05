@@ -5,7 +5,6 @@ use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Inertia\Inertia;
 
 /*
@@ -33,43 +32,16 @@ Route::middleware('auth')->prefix('app')->group(function() {
 
     /*
     |--------------------------------------------------------------------------
-    | Home route
+    | Bookmark routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/', function() {
-        // TODO: Get only top-level categories
-        // ->where('parent_id', '=', null)
-        $categories = auth()
-            ->user()
-            ->categories()
-            ->select('id','title','order','parent_id')
-            ->orderBy('order')
-            ->with(['bookmarks' => function ($query) {
-                $query->select('id', 'name', 'url', 'order', 'category_id');
-                $query->orderByDesc('order');
-            }])
-            ->get()
-            ->map(fn ($category) => [
-                'id' => $category->id,
-                'title' => $category->title,
-                'order' => $category->order,
-                'parent_id' => $category->parent_id,
-                'bookmarks' => $category->bookmarks->map(fn ($bookmark) => [
-                    'id' => $bookmark->id,
-                    'name' => $bookmark->name,
-                    'url' => $bookmark->url,
-                    'order'=> $bookmark->order,
-                    'category_id'=> $bookmark->category_id,
-                    'edit_url' => route('bookmarks.edit', $bookmark->id)
-                ]),
-                'edit_url' => route('categories.edit', $category->id)
-            ]);
-
-        return Inertia::render('Home', [
-            'categories' => $categories,
-            'create_bookmark_url' => route('bookmarks.create')
-        ]);
-    })->name('home');
+    Route::get('/', [BookmarkController::class, 'index'])->name('home');
+    Route::get('/bookmarks/create', [BookmarkController::class, 'create'])->name('bookmarks.create');
+    Route::get('/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
+    Route::post('/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
+    Route::post('/bookmarks/{bookmark}/update', [BookmarkController::class, 'update'])->name('bookmarks.update');
+    Route::post('/bookmarks/import', [BookmarkController::class, 'importBookmarks'])->name('bookmarks.import');
+    Route::delete('/bookmarks/{bookmark}/delete', [BookmarkController::class, 'delete'])->name('bookmarks.delete');
 
     /*
     |--------------------------------------------------------------------------
@@ -81,19 +53,6 @@ Route::middleware('auth')->prefix('app')->group(function() {
     Route::post('/categories/create', [CategoryController::class, 'store'])->name('categories.store');
     Route::post('/categories/{category}/update', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}/delete', [CategoryController::class, 'delete'])->name('categories.delete');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Bookmark routes
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/bookmarks/create', [BookmarkController::class, 'create'])->name('bookmarks.create');
-    Route::get('/bookmarks/{bookmark}/edit', [BookmarkController::class, 'edit'])->name('bookmarks.edit');
-    Route::post('/bookmarks/create', [BookmarkController::class, 'store'])->name('bookmarks.store');
-    Route::post('/bookmarks/{bookmark}/update', [BookmarkController::class, 'update'])->name('bookmarks.update');
-    Route::post('/bookmarks/import', [BookmarkController::class, 'importBookmarks'])->name('bookmarks.import');
-    Route::delete('/bookmarks/{bookmark}/delete', [BookmarkController::class, 'delete'])->name('bookmarks.delete');
-
 
     /*
     |--------------------------------------------------------------------------

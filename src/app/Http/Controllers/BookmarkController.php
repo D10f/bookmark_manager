@@ -12,22 +12,39 @@ use Inertia\Inertia;
 
 class BookmarkController extends Controller
 {
-    // public function index()
-    // {
-    //     return Inertia::render('bookmarks/Index', [
-    //         'bookmarks' => auth()->user()->bookmarks()->get()->map(function($bookmark) {
-    //             return [
-    //                 'id' => $bookmark->id,
-    //                 'name' => $bookmark->name,
-    //                 'url' => $bookmark->url,
-    //                 'order' => $bookmark->order,
-    //                 'category_id' => $bookmark->category_id,
-    //                 'edit_url' => route('bookmarks.edit', $bookmark->id),
-    //             ];
-    //         }),
-    //         'create_url' => route('bookmarks.create')
-    //     ]);
-    // }
+    public function index()
+    {
+        $categories = auth()
+            ->user()
+            ->categories()
+            ->select('id','title','order','parent_id')
+            ->orderBy('order')
+            ->with(['bookmarks' => function ($query) {
+                $query->select('id', 'name', 'url', 'order', 'category_id');
+                $query->orderByDesc('order');
+            }])
+            ->get()
+            ->map(fn ($category) => [
+                'id' => $category->id,
+                'title' => $category->title,
+                'order' => $category->order,
+                'parent_id' => $category->parent_id,
+                'bookmarks' => $category->bookmarks->map(fn ($bookmark) => [
+                    'id' => $bookmark->id,
+                    'name' => $bookmark->name,
+                    'url' => $bookmark->url,
+                    'order'=> $bookmark->order,
+                    'category_id'=> $bookmark->category_id,
+                    'edit_url' => route('bookmarks.edit', $bookmark->id)
+                ]),
+                'edit_url' => route('categories.edit', $category->id)
+            ]);
+
+        return Inertia::render('Home', [
+            'categories' => $categories,
+            'create_bookmark_url' => route('bookmarks.create')
+        ]);
+    }
 
     public function create()
     {
