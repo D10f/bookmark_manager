@@ -11,6 +11,7 @@ export const useDragStore = defineStore("drag", () => {
     const categoryItems = ref<
         (App.Models.Category | App.Models.Bookmark)[] | null
     >(null);
+    const droppedCategory = ref<App.Models.Category | null>(null);
     // const previousCategory = ref<number | null>(null);
 
     const categoryStore = useCategoryStore();
@@ -85,6 +86,7 @@ export const useDragStore = defineStore("drag", () => {
         categoryIndex.value = -1;
         categoryCardId.value = -1;
         categoryItems.value = null;
+        droppedCategory.value = null;
         // previousCategory.value = null;
     }
 
@@ -93,6 +95,7 @@ export const useDragStore = defineStore("drag", () => {
         categoryIndex,
         categoryCardId,
         categoryItems,
+        droppedCategory,
         getIndex,
         commit,
         reset,
