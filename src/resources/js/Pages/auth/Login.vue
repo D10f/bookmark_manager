@@ -14,6 +14,12 @@
                 <IconProfile class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
             </Tooltip>
             </Link>
+            <Link :href="forgot_password">
+            <Tooltip tooltip="Forgot password" position="bottom">
+                <IconPasswordReset
+                    class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
+            </Tooltip>
+            </Link>
         </template>
         <form class="px-4 py-2" @submit.prevent="submitForm">
             <div class="py-2 flex flex-col gap-1">
@@ -40,9 +46,14 @@ import BaseButton from "@/components/BaseButton.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import CardContainer from "@/components/CardContainer.vue";
 import IconProfile from "@/components/icons/IconProfile.vue";
+import IconPasswordReset from "@/components/icons/IconPasswordReset.vue";
 import { useForm } from "@inertiajs/vue3";
 
-const props = defineProps<{ auth_register: string; auth_login: string }>();
+const props = defineProps<{
+    auth_register: string;
+    auth_login: string;
+    forgot_password: string;
+}>();
 
 const form = useForm({
     email: "",

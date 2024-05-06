@@ -35,6 +35,7 @@ services:
       - ./src:/var/www/html
     depends_on:
       - mariadb
+      - mailpit
 
   composer:
     build:
@@ -105,6 +106,12 @@ services:
       - ./src/.env
     depends_on:
       - mariadb
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - 1025:1025
+      - 8025:8025
 
 volumes:
   db_data:

@@ -28,6 +28,16 @@ Route::post('/login', [LoginController::class, 'login'])->name('auth.login');
 Route::post('/register', [LoginController::class, 'store'])->name('auth.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('auth.destroy');
 
+/*
+|--------------------------------------------------------------------------
+| Password reset routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/forgot-password', [LoginController::class, 'passwordResetShow'])->name('password.index');
+Route::get('/forgot-password/{token}', [LoginController::class, 'passwordResetForm'])->name('password.reset');
+Route::post('/forgot-password', [LoginController::class, 'passwordResetEmail'])->name('password.email');
+Route::post('/password-reset', [LoginController::class, 'passwordResetUpdate'])->name('password.update');
+
 Route::middleware('auth')->prefix('app')->group(function() {
 
     /*
