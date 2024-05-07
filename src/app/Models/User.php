@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $this->hasMany(Bookmark::class, 'user_id');
     }
 
+    public function rsa_keys(): HasMany
+    {
+        return $this->hasMany(RSAKey::class, 'user_id');
+    }
+
     // public function setPasswordAttribute($value)
     // {
     //     $this->attributes['password'] = bcrypt($value);

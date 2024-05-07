@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+
+use App\Models\RSAKey;
+// use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Inertia\Inertia;
@@ -114,5 +116,22 @@ class UserController extends Controller
         }
 
         return 'Wrong username or password.';
+    }
+
+    public function storeRSAKey(Request $request)
+    {
+        $validated = $request->validate([
+            'key' => ['required']
+        ]);
+
+        RSAKey::create([
+            'hash' => '',
+            'content' => $validated['key'],
+            'user_id' => auth()->user()->id
+        ]);
+
+        return response(json_encode([
+            'message' => 'New RSA key added.'
+        ]), 201);
     }
 }
