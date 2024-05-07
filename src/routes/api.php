@@ -32,5 +32,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/categories/bookmark/{category}', [CategoryController::class, 'getBookmarks'])->name('categories.api.getBookmarks');
 
     Route::get('/bookmarks/export', [BookmarkController::class, 'export'])->name('bookmarks.export');
+
+    Route::post('/user/add-key', [UserController::class, 'storeRSAKey'])->name('user.store.rsa');
 });
 
