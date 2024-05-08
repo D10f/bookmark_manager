@@ -1,7 +1,9 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
-import { getCookie } from "@/helpers/api";
+import { makeFetch } from "@/helpers/api";
 import { midString } from "@/helpers/lexicographic";
+
+const createCategoryRequest = makeFetch("/api/categories/create", "post");
 
 export const useCategoryStore = defineStore("category", () => {
     const categories = ref<App.Models.Category[]>([]);
@@ -72,13 +74,21 @@ export const useCategoryStore = defineStore("category", () => {
                 ? midString("", categoryChildren[0].order)
                 : midString("", "");
 
-        const res = await fetch("/api/categories/create", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-            },
+        // const res = await fetch("/api/categories/create", {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Content-Type": "application/json",
+        //         "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+        //     },
+        //     body: JSON.stringify({
+        //         title: categoryName.split("/").slice(-1)[0],
+        //         parent_id,
+        //         order,
+        //     }),
+        // });
+
+        const res = await createCategoryRequest({
             body: JSON.stringify({
                 title: categoryName.split("/").slice(-1)[0],
                 parent_id,

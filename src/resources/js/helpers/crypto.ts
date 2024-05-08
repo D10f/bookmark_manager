@@ -1,7 +1,20 @@
-import { getCookie } from "@/helpers/api";
+import { makeFetch } from "@/helpers/api";
 
 export default class PublicCrypto {
-    public keys: CryptoKeyPair | null = null;
+    private keys: CryptoKeyPair | null = null;
+
+    private uploadPublicKeyRequest: (
+        options?: RequestInit,
+    ) => Promise<Response>;
+
+    private keyBasedAuthenticationRequest: (
+        options?: RequestInit,
+    ) => Promise<Response>;
+
+    constructor() {
+        this.uploadPublicKeyRequest = makeFetch("/api/user/add-key", "post");
+        this.keyBasedAuthenticationRequest = makeFetch("/login-key", "post");
+    }
 
     base64Encode(buffer: ArrayBuffer) {
         const keyString = String.fromCharCode.apply(
@@ -111,13 +124,7 @@ export default class PublicCrypto {
     }
 
     async uploadPublicKey() {
-        const res = await fetch("/api/user/add-key", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-            },
+        const res = await this.uploadPublicKeyRequest({
             body: JSON.stringify({
                 key: this.base64Encode(await this.publicKey()),
             }),

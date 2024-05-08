@@ -23,6 +23,7 @@ import IconPlus from "@/components/icons/IconPlus.vue";
 import CategoryCard from "@/components/CategoryCard.vue";
 import { useCategoryStore } from "@/stores/category";
 import { useDragStore } from "@/stores/drag";
+import { makeFetch } from "@/helpers/api";
 
 const props = defineProps<{
     categories: App.Models.Category[];
@@ -62,17 +63,26 @@ useSortable(sortableCardContainer, test, {
         const order = midString(prev, next);
         dragStore.item.order = order;
 
-        fetch(`/api/categories/update/${dragStore.item.id}`, {
-            method: "PUT",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-            },
-            body: JSON.stringify({
-                order,
-            }),
+        const updateCategoryRequest = makeFetch(
+            `/api/categories/update/${dragStore.item?.id}`,
+            "put",
+        );
+
+        updateCategoryRequest({
+            body: JSON.stringify({ order }),
         });
+
+        // fetch(`/api/categories/update/${dragStore.item.id}`, {
+        //     method: "PUT",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Content-Type": "application/json",
+        //         "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+        //     },
+        //     body: JSON.stringify({
+        //         order,
+        //     }),
+        // });
     },
 });
 </script>
@@ -81,7 +91,6 @@ useSortable(sortableCardContainer, test, {
 import App from "@/layouts/App.vue";
 import { SortableEvent } from "sortablejs";
 import { midString } from "@/helpers/lexicographic";
-import { getCookie } from "@/helpers/api";
 export default {
     layout: App,
 };
