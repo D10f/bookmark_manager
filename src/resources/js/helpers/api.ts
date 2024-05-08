@@ -4,9 +4,10 @@ export function getCookie(key: string) {
     return cookie ? decodeURIComponent(cookie[1]) : "";
 }
 
-export function authFetchFactory(token: string) {
-    return function resourceHandlerFactory(url: string) {
+function authFetchFactory(token: string) {
+    return function resourceHandlerFactory(url: string, method: string) {
         return function resourceHandler(options: RequestInit = {}) {
+            options.method = method;
             options.headers = {
                 ...(options.headers || {}),
                 "Content-Type": "application/json",
@@ -16,3 +17,5 @@ export function authFetchFactory(token: string) {
         };
     };
 }
+
+export const makeFetch = authFetchFactory(getCookie("XSRF-TOKEN"));
