@@ -1,5 +1,5 @@
 <template>
-    <CardContainer title="Profile" collapsable>
+    <CardContainer title="Account" collapsable>
         <template #actions>
             <BaseButton intent="rounded" @click="logoutProfile" aria-label="logout">
                 <Tooltip tooltip="Log out">

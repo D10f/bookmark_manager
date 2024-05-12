@@ -1,13 +1,9 @@
 <template>
     <div class="relative group inline" ref="tooltipRef">
         <slot />
-        <span
-            v-text="tooltip"
-            v-show="showTooltip"
-            ref="contentRef"
+        <span v-text="tooltip" v-show="tooltip && showTooltip" ref="contentRef"
             class="absolute z-50 bg-slate-100 text-slate-900 text-sm w-max max-w-4xl rounded-md p-1 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-100 delay-500"
-            v-bind="$attrs"
-        />
+            v-bind="$attrs" />
     </div>
 </template>
 
