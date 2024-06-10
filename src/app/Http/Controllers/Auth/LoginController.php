@@ -22,7 +22,20 @@ class LoginController extends Controller
         return Inertia::render('auth/Login', [
             'auth_register' => route('auth.register'),
             'auth_login' => route('auth.login'),
-            'forgot_password' => route('password.index')
+            'forgot_password' => route('password.index'),
+            'auth_key' => route('auth.key'),
+        ]);
+    }
+
+    /**
+     * Displays the login with keyfile page
+     */
+    public function showLoginKey()
+    {
+        return Inertia::render('auth/LoginWithKeyfile', [
+            'auth_register' => route('auth.register'),
+            'auth_login' => route('auth.login'),
+            'auth_verify' => route('auth.verify')
         ]);
     }
 

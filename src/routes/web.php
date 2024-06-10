@@ -23,8 +23,10 @@ Route::get('/', function() {
 |--------------------------------------------------------------------------
 */
 Route::get('/login', [LoginController::class, 'show'])->name('login');
+Route::get('/login-key', [LoginController::class, 'showLoginKey'])->name('auth.key');
 Route::get('/register', [LoginController::class, 'create'])->name('auth.register');
 Route::post('/login', [LoginController::class, 'login'])->name('auth.login');
+Route::post('/login-key', [LoginController::class, 'loginWithKey'])->name('auth.verify');
 Route::post('/register', [LoginController::class, 'store'])->name('auth.store');
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('auth.destroy');
 

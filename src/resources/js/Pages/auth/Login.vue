@@ -1,13 +1,5 @@
 <template>
-    <!-- <aside class="flex justify-end items-center mt-2 z-10"> -->
-    <!--     <ButtonLink to="#"> -->
-    <!--         <IconProfile -->
-    <!--             class="group-hover:fill-slate-950 fill-white w-4 h-4 mr-2" -->
-    <!--         /> -->
-    <!--         Don't have an account? -->
-    <!--     </ButtonLink> -->
-    <!-- </aside> -->
-    <CardContainer title="Login" class="mt-2">
+    <CardContainer title="Login with password" class="mt-2">
         <template #actions>
             <Link :href="auth_register">
             <Tooltip tooltip="Don't have an account?" position="bottom">
@@ -18,6 +10,11 @@
             <Tooltip tooltip="Forgot password" position="bottom">
                 <IconPasswordReset
                     class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
+            </Tooltip>
+            </Link>
+            <Link :href="auth_key">
+            <Tooltip tooltip="Login with keyfile" position="bottom">
+                <IconKey class="flex justify-center items-center hover:bg-slate-600 w-8 h-8 p-2 rounded-full" />
             </Tooltip>
             </Link>
         </template>
@@ -47,12 +44,14 @@ import Tooltip from "@/components/Tooltip.vue";
 import CardContainer from "@/components/CardContainer.vue";
 import IconProfile from "@/components/icons/IconProfile.vue";
 import IconPasswordReset from "@/components/icons/IconPasswordReset.vue";
+import IconKey from "@/components/icons/IconKey.vue";
 import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps<{
     auth_register: string;
     auth_login: string;
     forgot_password: string;
+    auth_key: string;
 }>();
 
 const form = useForm({
